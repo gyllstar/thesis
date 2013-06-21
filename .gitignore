@@ -1,0 +1,17 @@
+/full/compile.out
+*~
+*.aux
+*.blg
+/full/thesis.aux
+/full/thesis.blg
+/full/thesis.lof
+/full/thesis.log
+/full/thesis.lot
+/full/thesis.out
+/full/thesis.tex~
+/proposal/.DS_Store
+*swp
+*.swp
+/.DS_Store
+*.log
+/proposal/x.log
