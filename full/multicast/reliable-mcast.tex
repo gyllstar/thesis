@@ -459,16 +459,19 @@ splits when the tree branches at $b$ into multicast flows $a,\{e,f\}$ and $a,\{g
 
 %OpenFlow does not explicitly provide a multicast implementation, rather, in keeping with its role as a general framework providing necessary services for programmable networks,
 In keeping with its role as a general framework providing necessary services for programmable networks, OpenFlow does not explicitly provide an implementation for multicast and multicast flows.
-%multicast implementation that provides all necessary features required by multicast flows. 
-Instead, OpenFlow switches support a \emph{group table} abstraction that is principally used to implement multicast \cite{OpenFlowSpec1.1}. 
-Akin to flow table entries for unicast flows, group tables consist of group entries. Each group entry matches incoming packets based on a packet's group ID field
--- packets are expected to have a unique group ID value in its header -- and when appropriate (i.e., when the multicast tree branches at the switch being considered) 
-clones the packet to be sent out along each of the switch's outgoing links in the multicast tree. 
-\footnote{In addition to the group ID, a group entry can optionally match packets using patterns defined over other packet header fields (in the same way we saw with flow entries) such as the source address.} 
-This how the concept of ``splitting''  a flow (introduced in the previous paragraph) is implemented.
-%A group entry is a four-tuple: group identifier, group type, counters, and action buckets.  
+Our initial plan was to use the group table abstraction described in the OpenFlow 1.1 specification \cite{OpenFlowSpec1.1} to implement multicast but, unfortunately,
+as of the writing of this paper, this feature is not yet supported by the POX controller \footnote{\url{https://github.com/noxrepo/pox}} used to implement our algorithms and 
+the Mininet \footnote{\url{http://mininet.org/}} emulator used in our simulations.  Instead, we assign a multicast IP address to each multicast group and use this abstraction to setup 
+the flow tables at the multicast tree switches. Because multicast group membership is static in our power grid application (Section \ref{subsec:pmu-requirements}, 
+we simply determine the members of each multicast group by reading their static assignment from a text file.  Note that if dynamic group membership were to be required, we could 
+replace this static policy using a protocol like IGMP. 
 
-One way to implement multicast in OpenFlow is to leverage existing IP multicast protocols as detailed by Kotani et al. \cite{Kotani12}.  
+As with any unicast flow, each switch matches a multicast packet using the {\tt(src\_ip,dst\_ip)} tuple.  If the multicast tree branches, the switch copies the packet 
+to be sent out along each of the switch's outgoing links in the multicast tree.  This how the concept of ``splitting''  a flow (introduced in the previous paragraph) is implemented.
+If a switch is adjacent to a downstream host in the multicast group, the switch rewrites the destination layer 2 and 3 addresses to those of its adjacent downstream hosts 
+(these fields were previously populated with the multicast addresses). 
+
+Another way to implement multicast in OpenFlow is to leverage existing IP multicast protocols as detailed by Kotani et al. \cite{Kotani12}.  
 In this approach, the controller assigns a unique group ID to each multicast tree and creates a group table entry, that uses the group ID, at each switch along the multicast tree.  
 Meanwhile, the sender and its first-hop switch use IGMP to set up and manage the controller-generated group IDs. Finally, the sender embeds the group ID in each multicast packet's destination 
 field, allowing for each switch in the multicast tree to identify and forward multicast packets appropriately. 
@@ -628,7 +631,7 @@ where $w$ is the length of time packets are counted at $u$ and $d$. For each win
 
 	\item 
 	\textbf{After $w$ time units, turns tagging off at $u$.} To do so, \pcnt simply switches the priority of $e'$ and $e$ at $u$. 
-	\footnote{\xxn{Unforuntately, OpenFlow does not allow a flow's priority to be modified.  As a workaround, we install a copy of $e$ and $e'$, which we refer to as $e_c$ and $e'_c$, respectively.
+	\footnote{\xxn{Unfortunately, OpenFlow does not allow a flow's priority to be modified.  As a workaround, we install a copy of $e$ and $e'$, which we refer to as $e_c$ and $e'_c$, respectively.
 	We ensure that $e_c$ has a higher priority than $e'_c$.  Finally, we delete flows $e$ and $e'$. }}
 
 	\item
