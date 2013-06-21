@@ -1,0 +1,30 @@
+\section{Approximation Algorithms}
+\label{sec:approx}
+
+Because \maxincs, \xvals, and \xvalpart are NP-Complete problems, we propose greedy approximation algorithms for each problem, which iteratively add 
+a PMU in each step to the node which observes the maximum number of new nodes. 
+
+{\bf \maxinc Greedy Algorithm}. We start with $\Phi = \emptyset$.  At each iteration, we add a PMU to the node that results in the observation of the maximum number of 
+new nodes. The algorithm terminates when all PMUs are placed.  This is the same greedy algorithm proposed by Aazami and Stilp \cite{Aazami07}. 
+
+{\bf \xval and \xvalpart Greedy Algorithm}. The greedy algorithm is almost identical to \maxincs's, except that PMUs are added in pairs such that the selected pair observe
+the maximum number of nodes under the condition that the PMU pair satisfy one of the cross-validation rules. % and observe the maximum number of new nodes.
+
+
+
+
+%\xvals's greedy algorithm can either:
+%\begin{itemize}
+%	\item Add pairs of PMUs at each iteration such the selected pair of nodes observes the most nodes. both nodes need to be unobserved. pros/cons
+%	\begin{itemize}
+%		\item ignores odd number of PMUs
+%	\end{itemize}
+%	\item Add a single PMU at each iteration so the PMU is cross-validated and observes the maximum nodes (among the cross-validated options). pros/cons
+%	\begin{itemize}
+%		\item may be better to add PMUs in pairs
+%
+%		\item may restrict options by having to place nodes near each other ...
+%	\end{itemize}
+%
+%\end{itemize}
+

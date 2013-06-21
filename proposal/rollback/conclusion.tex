@@ -1,0 +1,14 @@
+\section{Conclusions}
+\label{sec:rollback-conclude}
+
+In this chapter, we developed methods for recovery in scenarios where a malicious node injects false state into a distributed system.  
+We studied an instance of this problem in distance vector routing.
+We presented and evaluated three new algorithms for recovery in such scenarios. %from false state in distance vector routing 
+Among our three algorithms, our results show that \cpr -- a checkpoint-rollback based algorithm -- yields the lowest message and time overhead over topologies
+with fixed link costs.  However, \cpr has storage overhead and requires loosely synchronized clocks.
+In the case of topologies with changing link costs, \purge performs best by avoiding the problems that plague \cpr and \seconds.
+Unlike \cprs, \purge has no stale state to update because \purge does not rollback in time.  
+The \infinity problem results in high message overhead for \seconds, while \purge eliminates the \infinity problem by globally purging false state before finding new least cost paths.
+
+
+

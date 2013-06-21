@@ -1,0 +1,25 @@
+\section{Related Work}
+\label{sec:related}
+
+The PMUP problem -- find the minimum number and placement of PMUs to allow a bus system to be fully observable -- is well-studied \cite{Baldwin93,Brueni05,Haynes02, Mili90, Xu04}. 
+Although similar, the \maxinc problem differs from the PMUP problem: \maxinc considers the more general case in which a constant number of PMUs are given and the task is to 
+place the PMUs such that the maximum number of nodes are observed.
+Haynes et al. \cite{Haynes02} and Brueni and Heath \cite{Brueni05} both prove PMUP is NP-Complete.  We leverage these proofs in our NP-Completeness proofs.  
+
+The power systems literature generally ignores the fact that PMUP is NP-Complete because, in practice, power system graphs are small enough to allow for an exact solution to be found.
+Xu and Abur \cite{Xu04,Xu05} use integer programming to find the optimal PMU placement when a subset of buses are zero injection. O2 can only be applied to zero injection buses.  As a result,
+the PMUP problem is simplified when only some buses are zero injection.
+Baldwin et al. \cite{Baldwin93} and Mili et al. \cite{Mili90} use simulated annealing to determine PMU placement. 
+%The work of Xu and Abur \cite{Xu04} and Phadke et al. are representive of the power systems approach to the problem: formulate the problem as integer 
+%program and use an integer programming solver to find the optimal PMU placement.  
+
+Aazami and Stilp \cite{Aazami07} investigate approximation algorithms for the PMUP problem.  They derive a hardness approximation threshold of $2^{\log^{1 -\epsilon}n}$ for PMUP.  
+Also they prove that in the worst case, the same greedy algorithm presented in Section \ref{sec:approx} does no better $\Theta(n)$ of the optimal solution.  
+%We leverage this approximation result in proving the approximation ratios of our heuristic-based algorithms.
+
+Chen and Abur \cite{Abur06} and Vanfretti et al. \cite{Vanfretti10} both study the problem of bad PMU data. Chen and Abur \cite{Abur06} formulate their problem differently than \xval and \xvalparts.  
+They consider graphs that are already fully observable and then add PMUs to the system to make all existing PMU measurements non-critical 
+(a critical measurement is one in which the removal of a PMU makes the system
+no longer fully observable). Vanfretti et al. \cite{Vanfretti10} define the cross-validation rules used in this paper.  They also derive a
+lower bound on the number of PMUs needed to ensure all PMUs are cross-validated and the system is fully observable. 
+

@@ -1,0 +1,261 @@
+\unnumberedchapter{Introduction}
+
+%\begin{framed}
+%		\begin{enumerate}
+%			\item \xxxn{components fail}
+%			\item \xxxn{mention the disruption they can cause.   problematic for critical apps.  (probably not example b/c this is brief) }
+%			\item \xxxn{want fast recovery and provision network to make networks robust    }
+%		\end{enumerate}
+%\end{framed}
+
+Communication network components (routers, links, and sensors) fail. %over the lifetime of the network 
+These failures can cause widespread network service disruption and outages, and potentially critical errors for network applications.
+In this thesis, we examine \textit{how networks -- traditional networks and networked cyber-physical systems, such as the smart grid -- can be made more robust to component failure.}
+%We propose, design, and evaluate algorithms that make these networks robust to failures. %provide fast recovery 
+
+We propose on-demand recovery algorithms for distributed network algorithms that optimize for control message overhead and convergence time,
+and preplanned approaches to recovery for electric power grid applications, where reliability is key. 
+An electric power grid consists of a set of buses -– electric substations, power generation centers, or aggregation points of electrical loads -– and transmission lines connecting those buses.
+We refer to modern and future electric power grids that automate power grid operations using sensors and wide-area communication as the \emph{smart grid}.
+%We refer to the many proposed electric power grids, actively being worked on throughout the world, that plan to automate power grid operations through
+%sensor deployment and wide-area communication, as the \emph{smart grid}.
+
+%\xxxn{maybe want to point out how the requirements are very different across the Smart Grid and traditional networks?}
+%We propose on-demand recovery algorithms for distributed network algorithms that must optimize for control message overhead and convergence time,
+%and preplanned recovery for electric power grid applications, where reliability is the most important requirement.
+%We propose algorithms that provide on-demand recovery for distributed applications that must optimize for control state storage and maintenance overhead and
+%preplanned recovery for electric power grid applications, where reliability is the most important requirement.
+%We propose algorithms that provide preplanned contingency plans for Smart Grid applications where reliability is the most important requirement and on-demand recovery 
+%from component failure for distributed applications that must consider control state storage and maintenance overhead.
+
+
+
+
+\section{Thesis Overview}
+
+\subsection{Component Failure in Communication Networks}
+
+%\begin{framed}
+%\xxxn{Section Outline}
+%\begin{enumerate}
+%	\item \xxxn{robustness issue for applications in the Internet, sensor nets, and  smart grid.}
+%	\item \xxxn{component failure particularly important for critical applications}
+%	\item \xxxn{give a few examples: (a) router failure in Internet, (b) 2003 blackout}
+%\end{enumerate}
+%
+%\end{framed}
+
+
+
+%\xxxn{Insert topic sentence here. }
+%In the Internet, sensor networks, and the smart grid componenet failure
+In this thesis, we consider three separate but related problems: node (i.e., switch or router) failure in traditional networks such as the Internet or wireless sensor networks,
+the failure of critical sensors that measure voltage and current throughout the smart grid, and link failures in a smart grid communication network.
+% false routing state problems
+For distributed network algorithms, a malicious or misconfigured node can inject and spread incorrect state throughout the distributed system. 
+Such false state can degrade the performance of the network or render it unusable. For example, in 1997 a significant portion of Internet traffic was routed through a 
+single misconfigured router that had spread false routing state to several Internet routers.  As a result, a large potion of the Internet became inoperable for several hours \cite{Neumann97}. 
+
+
+% pmu error problems
+In a smart grid, especially, component failure can be catastrophic. 
+For example, if smart grid sensors or links in its supporting communication network fail, smart grid applications can make incorrect decisions and take corresponding (incorrect) actions. 
+Critical smart grid applications required to operate and manage a power grid are especially vulnerable to such failures because typically these applications have strict data delivery requirements,
+needing both ultra low latency and assurance that data is received correctly. 
+%The failure of its components such as sensors or communication links can exasperate the problem for smart grid communication networks.
+In the worst case, component failure can lead to a cascade of power grid failures like the August 2003 blackout in the USA \cite{2003Blackout} and the 
+recent power grid failures in India \cite{IndiaBlackout}.
+
+
+
+
+
+
+\subsection{Approaches to Making Networks More Robust to Failures}
+
+%\begin{framed}
+%\xxxn{Section Outline}
+%\begin{enumerate}
+%	\item \xxxn{with distributed algorithms fast convergence time and low control message overhead are key to recovery from component failure.  on-demand. network state distributed across all nodes (mention ?)}
+%	\item \xxxn{to make problem concrete, study distance vector (1st sentence of 2nd paragraph). use example of distance of $0$ (all of 3rd paragraph)}
+%	\item \xxxn{in smart grid, reliability is most important. introduce PMUs }
+%	\item \xxxn{measurement error detection by placing PMUs near each other. }
+%	\item \xxxn{smart grid communication network used by PMUs, etc can have link failures.  to recover need to (a) detect and (b) repair. }
+%\end{enumerate}
+%\xxxn{may want to use (a) last few sentences of abstract and (b) first few sentences from the abstract}
+%\end{framed}
+
+
+For most distributed systems, recovery algorithms operate on-demand (as opposed to being preplanned) because algorithm and system state is typically distributed throughout the network of nodes.  
+As a result, fast convergence time and low control message overhead are key requirements for efficient recovery from component failure. 
+%For most distributed algorithms, fast convergence time and low control message overhead are key to recovery from component failure. 
+%Recovery algorithms are necessarily on-demand (as opposed to preplanned) because algorithm and system state are typically distributed throughout the network of nodes.  
+In order to make the problem of on-demand recovery in a distributed system concrete, we investigate distance vector routing as an instance of this problem.
+Distance vector forms the basis for many routing algorithms widely used in the Internet (e.g., BGP, a path-vector algorithm) and in multi-hop wireless networks (e.g., AODV, diffusion routing).
+
+In the first technical chapter of this thesis, we design, develop, and evaluate three different approaches for correctly recovering from the injection of false distance vector routing state (e.g., a compromised node incorrectly
+claiming a distance of $0$ to all destinations). Such false state, in turn, may propagate to other routers through the normal execution of distance vector routing, causing other nodes to (incorrectly) route via the misconfigured node,
+making this a network-wide problem. Recovery is correct if the routing tables in all nodes have converged to a global state in which all nodes have removed each compromised node as a destination,
+and no node has a least cost path to any destination that routes through a compromised node.  
+
+%Because reliability is the highest priority in the electric power grid and smart grid proposals, the supporting communication network must be robust to component failure.  
+%This is the topic of our second and third thesis chapters. 
+The second and third thesis chapters consider robustness from component failure specifically in the context of the smart grid. Because reliability is a key requirement for the smart grid, we focus on 
+preplanned approaches to failure recovery.
+
+In our second thesis chapter, we study a type of sensor, a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
+PMUs provide voltage and current measurements at a sampling rate orders of magnitude higher than the status quo.  As a result, PMUs can 
+both drastically improve existing power grid operations and enable an entirely new set of applications, such as the reliable integration of renewable energy resources. 
+We formulate a set of problems that consider PMU measurement errors, which have been observed in practice.  Specifically, we specify four PMU placement problems
+that aim to satisfy two constraints: place PMUs ``near'' each other to allow for measurement error detection and use the minimal number of PMUs to infer the state of the maximum number of system buses and transmission lines. 
+For each PMU placement problem, we prove it is NP-Complete, propose a simple greedy approximation algorithm, and evaluate our greedy solutions.
+
+In our final technical thesis chapter, we present the initial design for algorithms that provide recovery from link failures in a smart grid communication network.  Broadly speaking, 
+these recovery algorithms aim to maximize the long-term survivability of the smart grid.
+The recovery problem divides into two parts: (a) link failure detection and (b) algorithms for pre-computing backup multicast trees.  
+To address (a), we sketch the design of a link-failure detection and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
+OpenFlow is an open source framework that cleanly separates the control and data planes for use in centralized network management and control.
+For part (b), we propose initial outlines for a set of algorithms that precompute backup multicast trees to be installed after a link failure.
+%Each algorithm aims to minimize end-to-end packet loss and delay but each uses different optimization criteria to
+%achieve this goal: minimize control signalling overhead, ensure that across all network links the backup multicast trees distribute flows such tha
+%minimize the number of affected flows across all multicast trees, and minimize the number of affected sink nodes across all multicast trees.
+As future work, we plan to implement these algorithms in Openflow and evaluate them.
+
+
+
+
+
+
+\section{Thesis Contributions}
+
+
+%\begin{framed}
+%\xxxn{''Here are the main contributions of this thesis ...''}
+%\begin{enumerate}
+%	\item \xxxn{Summary of rollback algorithms.  Prove correct}
+%	\item \xxxn{Results for rollback algorithms.  Communication complexity analysis confirm that ...}
+%	\item \xxxn{State 4 PMU placement problems (use intro-level description). Prove each is NPC}
+%	\item \xxxn{Propose simple greedy algorithms, prove correct, and give complexity bound (?).  Simulations  show greedy is close to optimal and XV incurs small overhead.}
+%	\item \xxxn{Define new problems for multicast tree repair. } 
+%	\item \xxxn{Outline algorithm sketches.}
+%\end{enumerate}
+%\end{framed}
+
+
+The main contributions of this thesis are:
+\begin{itemize}
+
+	\item  We design, develop, and evaluate three different algorithms -- \seconds, \purges, and \cpr -- for correctly recovering from the injection of false routing state in distance vector routing.
+		\second performs localized state invalidation, followed by network-wide recovery using the traditional distance vector algorithm. 
+		\purge first globally invalidates false state and then uses distance vector routing is used to recompute distance vectors.  \cpr takes and stores local routing table snapshots at each router, and then uses 
+		a rollback mechanism to implement recovery. We prove the correctness of each algorithm for scenarios of single and multiple compromised nodes.
+
+	
+	%\second performs localized state invalidation, followed by network-wide recovery using the traditional distance vector algorithm (Section \ref{subsubsec:second}).
+	%The \purge algorithm performs global false state invalidation by using diffusing computations to invalidate distance vector 
+	%entries (network-wide) that routed through a compromised node (Section \ref{subsubsec:purge}). Then, traditional distance vector routing is used to recompute distance vectors.
+	%\cpr uses local snapshots and a rollback mechanism to implement recovery (Section \ref{subsubsec:cpr}). 
+
+	%A recovery algorithm is correct if the routing tables for all nodes have converged to a global state in which all nodes 
+	%have removed each compromised node as a destination and no node bears a least cost path to any destination that routes through a compromised node.
+
+
+	\item We use simulations and analysis to evaluate \seconds, \purges, and \cpr in terms of control message overhead and convergence time. We find that \second performs poorly due to routing loops.  
+	Over topologies with fixed link costs, \purge performs nearly as well as \cpr even though our simulations and analysis assume near perfect conditions for \cprs.
+	Over more realistic scenarios in which link weights can change, we find that \purge yields lower message complexity and faster convergence time than \cpr and \seconds. 
+	%\cpr requires synchronized clocks and the frequency of when snapshots are taken needs to be set.
+
+	%\xxxn{{\bf SELF-NOTE: Rollback results }}
+	%\begin{enumerate}
+	%	\item \xxxn{\purge is almost as good as \cpr for fixed link costs even though: (a) the conditions are ideal for \cpr and (b) \cpr assumes perfectly syncrhonized clocks.}
+	%	\item \xxxn{\purge is close or better that \cpr when there are link cost changes, plus \cpr requires synchronized clocks and the frequency of when snapshots are taken needs to be set.}
+	%	\item \xxxn{\second suffers from routing loops and therefore the \infinity problem.}
+	%\end{enumerate}
+	
+	%	\item We derive communication complexity bounds for each algorithm over a synchronous communication model 
+	%	We find all three algorithms are bounded above by $O(mnd)$ -- where $d$ is the diamter, $n$ is the number of nodes, and $m$ the maximum out-degree of any node -- in scenarios where 
+	%link costs remain fixed.  In scenarios where link costs can change, \cpr incurs additional overhead (not experieced by \second and \purges) because \cpr must update stale
+	%state after rolling back.  This leads to an additional term for \cpr in its $O(mnd)$ upper bound. 
+
+	%\item Using simulations, we evaluate the efficiency of each algorithm in terms of message overhead and convergence time in scenarios with single and 
+	%multiple compromised nodes. (Section \ref{sec:eval}).
+	%Our simulations show that \cpr using poison reverse outperforms \second and \purge (with and without poison reverse) -- at the cost of checkpoint memory --
+	%over topologies with fixed and changing link costs. This is because \cpr efficiently removes all false state by rolling back to a checkpoint
+	%immediately preceding the injection of false routing state. 
+
+	%\item We show through simulations that \purge using poison reverse yields performance close to \cpr with poison reverse in scenarios where link costs can change
+	%(Section \ref{subsec:change}). \purge makes use of computations subsequent to the injection of false routing state that do not depend on false routing state, while \cpr 
+	%must process all valid link cost changes that occurred since false routing state was injected.  Finally, our simulations show that poison reverse significantly improves 
+	%performance for all three algorithms, especially for topologies with changing link costs (Section \ref{subsubsec:pr-fixed} and \ref{subsubsec:pr-change})
+
+	\item We define four PMU placement problems, three of which are completely new, that place PMUs at a subset of electric power grid buses. 
+		Two PMU placement problems consider measurement error detection by requiring PMUs to be placed ``near'' each other to allow for their measurements to be cross-validated. 
+		For each PMU placement problem, we prove it is NP-Complete and propose a simple greedy approximation algorithm. 
+
+	%\xxxn{State 4 PMU placement problems (use intro-level description). Prove each is NPC}
+	
+	\item We prove our greedy approximations for PMU placement are correct and give complexity bounds for each.  Through simulations over synthetic topologies generated using real portions of the 
+		North American electric power grid as templates, we find that our greedy approximations yield results that are close to optimal: on average, within $97\%$ of optimal.  We also find that 
+		imposing our requirement of cross-validation to ensure PMU measurement error detection comes at small marginal cost: on average, only $5\%$ fewer power grid buses are observed (covered) 
+		when PMU placements require cross-validation versus placements that do not. %between PMU placements that require cross-validation and those that do not. 
+	
+	%\xxxn{Propose simple greedy algorithms, prove correct, and give complexity bound (?).  Simulations  show greedy is close to optimial and XV incurs small overhead.}
+
+	\item We propose initial sketches of algorithms for preplanned recovery from link failures in a smart grid communication network.
+	Our proposed research divides into two parts: link failure detection and algorithms for pre-computing backup multicast trees.  For the first part, we design algorithms 
+	that use OpenFlow to detect and report link failures when and where they occur, \emph{inside} the network.  To address the second part, we 
+	propose a set of algorithms, each of which computes backup multicast trees that are installed after a link failure.  Each algorithm computes backup multicast trees that aim to
+	minimize end-to-end packet loss and delay, but each algorithm uses different optimization criteria in achieving this goal: minimizing control overhead, 
+	minimizing the number of affected flows across all multicast trees, and minimizing the number of affected sink nodes across all multicast trees. 
+	These optimization criteria differ from those proposed in the literature.
+
+		
+		
+		%We design link-detection failure and reporting mechanisms that use OpenFlow  \cite{OpenFlow08} -- an open source framework that centralizes network management and control -- 
+		%to detect link failures when and where they occur, \emph{inside} the network.  %In-network detection is used to reduce the time between when the loss occurs and when it is detected. 
+
+	%	We propose a set of a lgorithms, each of which computes backup multicast trees that are installed after a link failure. We also implement these algorithms in OpenFlow and demonstrate their performance.
+	%	Each algorithm computes backup multicast trees that aim to minimize end-to-end packet loss and delay, but each algorithm uses different optimization criteria in achieving this goal: minimizing control overhead, minimizing 
+%		the number of affected flows across all multicast trees, and minimizing the number of affected sink nodes across all multicast trees.  These optimization criteria differ from those proposed in the literature.
+%	consider criteria across multiple MTs
+
+
+	
+%In this last piece of our research, we design algorithms for fast recovery from link failures in a Smart Grid communication network. 
+%Informally, we consider a link that fails to meet its packet delivery requirement (either due to excessive delay or actual packet loss) as failed.  Our proposed research divides broadly into two parts:
+%\begin{itemize}
+%	\item {\bf Link detection failure.} 
+%		Here, we design link-detection failure and reporting mechanisms that use OpenFlow  \cite{OpenFlow08} -- an open source framework that centralizes network management and control -- 
+%		to detect link failures when and where they occur, \emph{inside} the network.  In-network detection is used to reduce the time between when the loss occurs and when it is detected. 
+%		In contrast, most previous work \cite{badbing,ping,zing} focuses on measuring end-to-end packet loss, resulting in slower detection times. 
+%
+%	\item {\bf Algorithms for pre-computing backup multicast trees.} 
+%		Inspired by the MPLS fast-reroute algorithms used in practice to quickly reroute time-critical unicast IP flows over pre-computed backup paths \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97}, 
+%		we propose a set of algorithms, each of which computes backup multicast trees that are installed after a link failure. We also implement these algorithms in OpenFlow and demonstrate their performance.
+%		
+%		Each algorithm computes backup multicast trees that aim to minimize end-to-end packet loss and delay, but each algorithm uses different optimization criteria in achieving this goal: minimizing control overhead (\mcs), minimizing 
+%		the number of affected flows across all multicast trees (\mfs),
+%  		and minimizing the number of affected sink nodes across all multicast trees (\mds).  These optimization criteria differ from those proposed in the literature.
+%		For example, most previous work \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97} uses optimization criteria specified over a \emph{single} multicast tree, while we must consider 
+%		criteria specified across \emph{multiple} multicast trees. Finally, because the Smart Grid is many orders of magnitudes smaller than the Internet (between $10^3$ and $10^4$ routers/switches for the entire Smart Grid versus $10^8$ Internet routers) 
+%		and multicast group membership is mostly static in the Smart Grid, we can for the most part avoid the scalability issues of Internet-based
+%		solutions \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97}.
+%\end{itemize}
+
+
+
+\end{itemize}
+
+
+
+
+\section{Thesis Outline}
+
+%\begin{framed}
+%\xxxn{''This thesis is organized as follows ...''}
+%\end{framed}
+
+The rest of this thesis proposal is organized as follows.  We present algorithms for recovery from false routing state in distributed routing algorithms in Chapter \ref{ch:rollback}.  In Chapter \ref{ch:pmu-placement} we formulate
+PMU placement problems that provide measurement error detection.  Chapter \ref{ch:reliable-mcast} presents the algorithm sketches for efficient recovery from link failures in a smart grid communication network.  We conclude
+by outlining our planned future work in Chapter \ref{ch:conclusion}.
+

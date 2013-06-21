@@ -1,0 +1,316 @@
+\documentclass[proposal]{umthesis}          % for Ph.D. dissertation or proposal
+%\documentclass{umthesis}          % for Ph.D. dissertation or proposal
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{cancel}
+\usepackage{fancyhdr}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{epstopdf}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{subfigure}
+
+\usepackage{rotating}
+\usepackage{framed}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{cancel}
+\usepackage{endnotes}
+\usepackage{datetime}
+\usepackage{hyperref}  %does not compile when using this line
+
+
+\newtheorem{theorem}{Theorem}[chapter]
+%\setcounter{theorem}{0}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{meta-proposition}[theorem]{Meta-Proposition}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{proviso}[theorem]{Proviso}         
+\newtheorem{question}[theorem]{Question}         
+\newtheorem{remark}[theorem]{Remark}         
+\newtheorem{define}{Definition}     
+
+
+%%%%%%%%%%%%%%%  ROLLBACK MACROS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\minv}{$\overrightarrow{min}$ }
+\newcommand{\minvi}{$\overrightarrow{min}_i$ }
+\newcommand{\minvis}{$\overrightarrow{min}_i$}
+\newcommand{\minvj}{$\overrightarrow{min}_j$ }
+\newcommand{\minvjs}{$\overrightarrow{min}_j$}
+\newcommand{\minvv}{$\overrightarrow{min}_v$ }
+\newcommand{\minvvs}{$\overrightarrow{min}_v$}
+\newcommand{\dmatrix}{$dmatrix$ }
+\newcommand{\dmatrixs}{$dmatrix$}
+\newcommand{\dmatrixi}{$dmatrix_i$ }
+\newcommand{\dmatrixis}{$dmatrix_i$} 
+\newcommand{\dmatrixj}{$dmatrix_j$ }
+\newcommand{\dmatrixjs}{$dmatrix_j$} 
+\newcommand{\dmatrixv}{$dmatrix_v$ }
+\newcommand{\dmatrixvs}{$dmatrix_v$} 
+\newcommand{\dv}{{DV$^+$ }}
+\newcommand{\Bad}{{$\overline{V}$ }}
+\newcommand{\Bads}{{$\overline{V}$}}
+\newcommand{\bad}{{$\overline{v}$ }}
+\newcommand{\bads}{{$\overline{v}$}}
+\newcommand{\alg}{{DV$^+$ }}
+%\newcommand{\infinity}{{count-to-$\infty$ }}
+\newcommand{\infinity}{{count-to-infinity }}
+
+
+\newcommand{\second}{\textsc{2nd-Best} }
+\newcommand{\seconds}{\textsc{2nd-Best}}  
+%\newcommand{\second}{{{\tt 2}$^{{\tt nd}}$ {\tt best} }}
+%\newcommand{\seconds}{{{\tt 2}$^{{\tt nd}}$ {\tt best}}}
+\newcommand{\purge}{{\textsc{Purge} }}
+\newcommand{\purges}{{\textsc{Purge}}}
+\newcommand{\cpr}{\textsc{CPR} }
+\newcommand{\cprs}{\textsc{CPR}}
+%\newcommand{\second}{{{\tt 2}$^{{\tt nd}}$ {\tt best} }}
+%\newcommand{\seconds}{{{\tt 2}$^{{\tt nd}}$ {\tt best}}}
+%\newcommand{\purge}{{{\tt purge} }}
+%\newcommand{\purges}{{{\tt purge}}}
+%\newcommand{\cpr}{{\tt cpr} }
+%\newcommand{\cprs}{{\tt cpr}}
+
+\newcommand{\badvector}{$\overrightarrow{bad}$ }
+\newcommand{\badvectors}{$\overrightarrow{bad}$}
+\newcommand{\oldvector}{$\overrightarrow{old}$ }
+\newcommand{\oldvectors}{$\overrightarrow{old}$}
+\newcommand{\finalvector}{{$v_{final}$ }}
+\newcommand{\illigit}{{illegitimate path} }
+\newcommand{\illigits}{{illegitimate paths} }
+\newcommand{\lcd}{$\Delta_{lc}$ }
+\newcommand{\lcds}{$\Delta_{lc}$s }
+
+\newcommand{\er}{Erd\"{o}s-R\'enyi }
+\newcommand{\ers}{Erd\"{o}s-R\'enyi} 
+
+\newcommand{\etal}{el al.}
+
+
+
+%%%%%%%%%%%%%%%  PMU PLACEMENT MACROS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\sat}{{\textsc{P3SAT} }}
+\newcommand{\sats}{{\textsc{P3SAT}}}
+\newcommand{\full}{{\textsc{FullObserve} }}
+\newcommand{\fulls}{{\textsc{FullObserve}}}
+\newcommand{\maxinc}{{\textsc{MaxObserve} }}
+\newcommand{\maxincs}{{\textsc{MaxObserve}}}
+\newcommand{\xval}{{\textsc{FullObserve-XV} }}
+\newcommand{\xvals}{{\textsc{FullObserve-XV}}}
+\newcommand{\xvalpart}{{\textsc{MaxObserve-XV} }}
+\newcommand{\xvalparts}{{\textsc{MaxObserve-XV}}}
+
+
+%%%%%%%%%%%%%%%  MULTICAST RECOVERY MACROS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\pcnt}{\textsc{Pcount} }
+\newcommand{\pcnts}{\textsc{Pcount}}
+
+\newcommand{\cnt}{{\tt count} }
+\newcommand{\cnts}{{\tt count}}
+
+\newcommand{\fls}{\textsc{Failed-Link}}
+\newcommand{\fl}{\textsc{Failed-Link} }
+
+\newcommand{\net}{\textsc{Pmu-Network} }
+\newcommand{\nets}{\textsc{Pmu-Network}}
+
+\newcommand{\myopic}{\textsc{Myopic Multicast Tree Repair} }
+\newcommand{\myopics}{\textsc{Myopic Multicast Tree Repair}}
+\newcommand{\bigpic}{\textsc{Multi-step Multicast Tree Repair} }
+\newcommand{\bigpics}{\textsc{Multi-step Multicast Tree Repair}}
+\newcommand{\mc}{\textsc{Min-Control} }
+\newcommand{\mcs}{\textsc{Min-Control}}
+\newcommand{\mf}{\textsc{Min-Flows} }
+\newcommand{\mfs}{\textsc{Min-Flows}}
+\newcommand{\mds}{\textsc{Min-Sinks}}
+\newcommand{\md}{\textsc{Min-Sinks} }
+\newcommand{\mdj}{\textsc{Max-Disjoint} }
+\newcommand{\mdjs}{\textsc{Max-Disjoint}}
+
+%\newcommand{\mdr}{\textsc{Monitor-Detect-Recover} }
+%\newcommand{\mdrs}{\textsc{Monitor-Detect-Recover}}
+\newcommand{\mdr}{\textsc{Appleseed} }
+\newcommand{\mdrs}{\textsc{Appleseed}}
+
+
+
+%%%%%%%%%%%%%%%  SELF-NOTE AND TODO  MACROS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\xx}[1] {\textcolor{purple}{ {\bf \underline{Question}: #1 ????}}} %question
+\newcommand{\xxn}{}
+%\newcommand{\xxn}[1] {\textcolor{purple}{#1}}  % question
+
+\newcommand{\xxx}[1] {\textcolor{orange}{\textit{\underline{Self Note}: #1}}} % Self-Note
+\newcommand{\xxxe}[1] {\endnote{ \textcolor{orange}{#1}}} % Self-Note
+\newcommand{\xxxn}[1] {\textcolor{orange}{#1}} % Self-Note
+
+\newcommand{\xxxx}[1] {\textcolor{cyan}{\textit{{\bf TODO}  #1}}} % Todo notes
+\newcommand{\xxxxe}[1] {\endnote{ \textcolor{cyan}{\textit{{\bf TODO}  #1}}}} % Todo notes
+\newcommand{\xxxxn}[1] {\textcolor{cyan}{#1}} %  % Todo notes
+
+\newcommand{\yy}[1] {\endnote{ {\textcolor{gray}{\underline{Comment}: {\it #1}}}} }  %maybe text
+\newcommand{\yyn}[1] {\textcolor{gray}{#1}} %maybe text
+
+%\newcommand{\un}[1]{%
+%    \ifmmode \@@underline{#1} \else %
+%             $\@@underline{\hbox{#1}}$\fi}
+
+\begin{document}
+
+\title{Making Networks Robust to Component Failure}
+\author{Daniel P. Gyllstrom}
+%\date{(Compiled on \mmddyyyydate\today\ at \currenttime)}
+%\date{January 2013} % The date you'll actually graduate -- must be
+                     % February, May, or September
+\copyrightyear{2013}
+\bachelors{B.Sc.}{Trinity College}
+\masters{M.Sc.}{University of Massachusetts Amherst} 
+\committeechair{Jim Kurose}
+\firstreader{Prashant Shenoy}
+\secondreader{Deepak Ganesan}
+\thirdreader{Lixin Gao}  
+\departmentchair{Lori Clarke}
+\departmentname{Computer Science}
+
+\degree{Doctor of Philosophy}{Ph.D.}
+
+%%
+%% These lines produce the title, copyright, and signature pages.
+%% They are Mandatory; except that you could leave out the copyright page
+%% if you were preparing an M.S. thesis instead of a PhD dissertation.
+\frontmatter
+\maketitle
+\copyrightpage     %% not required for an M.S. thesis
+\signaturepage
+
+%%
+%% Dedication is optional -- but this is how you create it
+%\begin{dedication}              % Dedication page
+%  \begin{center}
+%    \emph{For myself.}
+%  \end{center}
+%\end{dedication}
+
+
+%\chapter{Acknowledgments}             % Acknowledgements page
+%  Thanks to me. 
+
+
+\input{thesis-abstract}
+
+
+%%
+%% Table of contents is mandatory, lists of tables and figures are 
+%% mandatory if you have any tables or figures; must be in this order.
+\tableofcontents                % Table of contents
+\listoftables                   % List of Tables
+\listoffigures                  % List of Figures
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Time for the body of the dissertation
+\mainmatter   %% <-- This line is mandatory
+
+%%
+%% If you want an introduction, which is not a numbered chapter, insert
+%% the following two lines.  This is OPTIONAL:
+
+%\unnumberedchapter{Introduction}
+
+\input{intro.tex}
+
+\chapter{Recovery from False Routing State in Distributed Routing Algorithms}
+\label{ch:rollback}
+
+\input{rollback/intro.tex}
+
+
+\input{rollback/problem-stmt}
+
+\input{rollback/algorithms}
+
+
+\input{rollback/analysis}
+
+\input{rollback/experiments}
+
+\input{rollback/related}
+
+
+\input{rollback/conclusion}
+
+
+%\chapter{??? Background: Smart Grid and PMU Sensors ???}
+
+
+
+\chapter{PMU Sensor Placement for Measurement Error Detection in the Smart Grid}
+\label{ch:pmu}
+
+\input{pmu/intro}
+
+\input{pmu/prelim}
+
+\input{pmu/problem-stmt-inject}
+
+
+\input{pmu/approx} 
+
+
+\input{pmu/simulations-inject}
+
+\input{pmu/related}
+
+\input{pmu/conclude}
+
+\chapter{Recovery from Link Failures in a Smart Grid Communication Network}
+\label{ch:reliable-mcast}
+
+%\input{multicast/reliable-mcast-tmp-placeholder.tex}
+\input{multicast/reliable-mcast.tex}
+
+\chapter{Thesis Timeline and Future Work}
+\label{ch:conclusion}
+
+\input{future.tex}
+
+
+%% End of body
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\appendix
+%\chapter{THE FIRST APPENDIX TITLE}
+%...
+
+
+%%
+%% Beginning of back matter
+\backmatter  %% <--- mandatory
+
+%%
+%% We don't support endnotes
+
+%%
+%% A bibliography is required.
+\bibliographystyle{umthesis}
+\bibliography{thesis-proposal}
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

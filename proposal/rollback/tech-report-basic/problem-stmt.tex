@@ -1,0 +1,54 @@
+%%%%%%%%%%%%%%% For synthesis report - Defines problem statement %%%%%%%%%
+\section{Problem Formulation}
+\label{sec:problem}
+
+We consider distance vector routing \cite{Gall87} over arbitrary network topologies. We model a network as an undirected graph, $G=(V,E)$,
+with a link weight function $w: E \rightarrow \mathbb{N}$.
+{\footnote {\small Recovery is simple with link state routing: each node uses its complete topology map to compute new least cost paths that avoid all compromised nodes.
+Thus we do not consider link state routing in this paper.}}
+Each node, $v$, maintains the following state as part of distance vector: a vector of all adjacent nodes ($adj(v)$), a vector of least cost distances to all
+nodes in $G$ (\minvvs), and a \emph{distance matrix} that contains distances to every node in the network via each adjacent node (\dmatrixvs). 
+
+For simplicity, we present our recovery algorithms in the case of a single compromised node. We describe the necessary extensions to handle multiple compromised nodes in Section \ref{subsec:mult}.
+
+We assume that the identity of the compromised node is provided by a different algorithm, and thus do not consider this problem in this paper.
+Examples of such algorithms include \cite{Arini,Feam,Vishal02,Pad03,Paul02}. %\cite{Arini}, \cite{Feam}, \cite{Feldmann} %\cite{Arini, Feam, Feldmann}
+%in the context of wired networks and \cite{Paul02} in the wireless setting.
+Specifically, we assume that at time $t_b$, this algorithm is used to notify all neighbors of the 
+compromised node. Let $t'$ be the time the node was compromised.
+
+For each of our algorithms, the goal is for all nodes to recover ``correctly'': all nodes should remove the compromised nodes as a destination and find
+new least cost distances that do not use a compromised node. If the network becomes disconnected as a result of removing the compromised node, all
+nodes need only compute new least cost distances to all other nodes within their connected component.
+For simplicity, let \bad denote the compromised node, let \oldvector refer to $\overrightarrow{min}_{\overline{v}}$ 
+before \bad was compromised, and let \badvector denote $\overrightarrow{min}_{\overline{v}}$ after \bad has been compromised.
+Intuitively, \oldvector and \badvector are snapshots of the compromised node's least cost vector taken at two different timesteps: \oldvector marks the snapshot taken before \bad was compromised and 
+\badvector represents a snapshot taken after \bad was compromised.
+
+Table \ref{tab:abbrev} summarizes the notation used in this document. 
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{l l} 
+\hline \hline
+   	{\bf Abbreviation} & {\bf Meaning} \\
+		  \hline 
+			\minvi & node $i$'s the least cost vector \\
+			\dmatrixi & node $i$' distance matrix \\
+		%	\lcd & link cost change event \\
+			DV & Distance Vector \\
+			\hline
+			$t_b$ & time the compromised node is detected \\
+			$t'$ & time the compromised node was compromised \\
+			\badvector & compromised node's least cost vector at and after $t$  \\
+			\oldvector & compromised node's least cost vector at and before $t'$ \\
+			\bad & compromised node \\ 
+			$adj(v)$ & nodes adjacent to $v$ in $G'$ \\ 
+			\hline \hline
+			\end{tabular}
+			\end{center}
+\caption{Table of abbreviations.} 
+			%* The distance matrix for node $v$ contains $v$'s distance to all nodes $v_d \in V$ via all $v_n: v_n \in adj(v)$.}
+\label{tab:abbrev}
+\end{table}
+

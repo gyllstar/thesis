@@ -1,0 +1,21 @@
+\section{Conclusions and Future Work}
+\label{sec:conclude}
+
+In conclusion, we have formulated three PMU placement problems: \maxincs, \xvals, and \xvalparts. \maxinc aims to observe the maximum number of nodes given a constant number of PMUs.
+The observability rules from Brueni and Heath \cite{Brueni05} were used to determine when the voltage phasor of non-PMU nodes can estimated.
+%which nodes  become observed based on a PMU placement. 
+Like \maxincs, \xval and \xvalpart 
+have the goal of observing the maximum number of nodes but also require that PMUs be placed near each other so their measurements can be validated.  We called this 
+cross-validation, a term which we formalized. Cross-validation is possible when two or more PMUs measure the current on the same transmission line or the voltage of the same (adjacent) bus.
+
+We proved that \maxincs, \xvals, and \xvalpart are all NP-Complete.  For this reason, we presented a simple greedy algorithm which iteratively adds a PMU to the node which 
+observes the maximum of number of nodes.  In a simulation study, we compared our greedy algorithm with a brute-force optimal algorithm over several
+IEEE bus systems and synthetic graphs.  For all three placement problems, our greedy algorithm, on average, yielded a PMU placement within $96\%$ of optimal.
+
+As future work, we plan to derive theoretical bounds on worst case performance of each greedy algorithm.
+Also, it would be interesting to relax our assumption that all buses are zero injection and evaluate our greedy algorithms over graphs with a 
+mixture of zero and non-zero injection buses. 
+%As future work, we plan to derive theoretical bounds on worst case performance .  In particular, proving the performance ratio of each greedy algorithm would 
+%strengthen our analysis. Also, it would be interesting to relax our assumption that all buses are zero injection and evaluate our greedy algorithms over graphs with a 
+%mixture of zero and non-zero injection buses. 
+

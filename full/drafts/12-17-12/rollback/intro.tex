@@ -1,0 +1,59 @@
+
+\section{Introduction}
+\label{sec:intro}
+
+\begin{framed}
+\xxxxn{mention that distance vector needs to consider control (storage and maintainence) overhead.  The lack of control state stored at a given node can be a benefit to some applications.
+For example, military applications may not want all control state to be stored on a given node.}
+\end{framed}
+
+Malicious and misconfigured nodes can degrade the performance of a distributed system by injecting incorrect state information. Such false state can then be further propagated 
+through the system either directly in its original form or indirectly, e.g., by diffusing computations initially using this false state.  In this paper, we consider 
+the problem of removing such false state from a distributed system.
+
+In order to make the false-state-removal problem concrete, we investigate distance vector routing as an instance of this problem. Distance vector forms the basis for many routing 
+algorithms widely used in the Internet (e.g., BGP, a path-vector algorithm) and in multi-hop wireless networks (e.g., AODV, diffusion routing). However, distance vector is vulnerable 
+to compromised nodes that can potentially flood a network with false routing information, resulting in erroneous least cost paths, packet loss, and congestion. Such scenarios have occurred in practice. 
+For example, in 1997 a significant portion of Internet traffic was routed through a single misconfigured router, rendering a large part of the Internet inoperable for several hours \cite{Neumann97}. 
+%For example, in 2009 \cite{Google}, a routing error forced Google to redirect its traffic through Asia, causing congestion that left many Google services unreachable. 
+Distance vector currently has no mechanism to recover from such scenarios. Instead, human operators are left to manually reconfigure routers. It is in this context that we propose and
+evaluate automated solutions for recovery.
+
+In this paper, we design, develop, and evaluate three different approaches for correctly recovering from the injection of false routing state (e.g., a compromised node incorrectly
+claiming a distance of $0$ to all destinations). Such false state, in turn, may propagate to other routers through the normal execution of distance vector routing, making this
+a network-wide problem. Recovery is correct if the routing tables in all nodes have converged to a global state in which all nodes have removed each compromised node as a destination,
+and no node has a least cost path to any destination that routes through a compromised node.
+
+Specifically, we develop three novel distributed recovery algorithms: \seconds, \purges, and \cprs. \second performs localized state invalidation, followed by network-wide recovery. 
+Nodes directly adjacent to a compromised node locally select alternate paths that avoid the compromised node; the traditional distributed distance vector algorithm is then executed to 
+remove remaining false state using these new distance vectors. The \purge algorithm performs global false state invalidation by using diffusing computations to invalidate distance vector 
+entries (network-wide) that routed through a compromised node. As in \seconds, traditional distance vector routing is then used to recompute distance vectors. 
+\cpr uses snapshots of each routing table (taken and stored locally at each router) and a rollback mechanism to implement recovery.
+Although our solutions are tailored to distance vector routing, we believe they represent approaches that are applicable to other instances of this problem.
+
+For each algorithm, we prove correctness, dervive communication complexity bounds, and evaluate its efficiency in terms of message overhead and convergence time via simulation. 
+Our simulations show that when considering topologies in which link costs remain fixed, \cpr outperforms both \purge and \second (at the cost of checkpoint memory). This is because \cpr can efficiently remove all false state by simply rolling back
+to a checkpoint immediately preceding the injection of false routing state. In scenarios where link costs can change, \purge outperforms \cpr and \seconds. \cpr performs poorly because, following 
+rollback, it must process the valid link cost changes that occurred since the false routing state was injected;  \second and \purges, however, can make use of computations subsequent to the 
+injection of false routing state that did not depend on the false routing state. We will see, however, that \second performance suffers because of the so-called \infinity problem.
+
+
+Recovery from false routing state has similarities to the problem of
+recovering from malicious transactions \cite{Liu98, Liu00} in
+distributed databases. Our problem is also similar to that of rollback
+in optimistic parallel simulation \cite{Jeff}. However, we are unaware
+of any existing solutions to the problem of recovering from false
+routing state. A related problem to the one considered in this
+paper is that of discovering misconfigured nodes. In
+Section~\ref{sec:problem}, we discuss existing solutions to this
+problem. In fact, the output of these algorithms serve as input to the
+recovery algorithms proposed in this paper.
+
+This chapter has six sections. In Section \ref{sec:problem} we define the problem and state our assumptions.
+We present our three recovery algorithms in Section \ref{sec:algs}.  Then, in Section \ref{sec:analysis}, we briefly state the results of our complexity analysis.
+Section \ref{sec:eval} describes our simulation study. We detail related work in Section \ref{sec:related-rollback} and finally we conclude and 
+comment on directions for future work in Section \ref{sec:future}.
+
+
+
+

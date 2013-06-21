@@ -1,0 +1,23 @@
+\section{Todo}
+
+{\bf Writing Todos}
+
+{\it 
+\begin{itemize}
+
+	\item do all of our recovery algorithms requires loose synchronization assumption since the oracle notification includes time $t'$?
+
+	\item if there is a \lcd then the node must send
+
+\end{itemize}
+}
+
+{\bf Miscallaneous Text}
+
+\begin{itemize}
+	\item Although we only explicitly consider flat topologies, we believe that the recovery algorithms studied in this work can be applied to hierarchical topologies. 
+	{\it this text was in the Problem Formulation section, at the end of the first paragraph}
+
+\end{itemize}
+
+

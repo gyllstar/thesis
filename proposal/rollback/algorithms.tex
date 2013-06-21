@@ -1,0 +1,101 @@
+%%%%%%%%%% Recovery Algorithms Descriptions %%%%%%%%%%%%%%%%%%
+\section{Recovery Algorithms}
+\label{sec:algs}
+
+In this section we propose three recovery algorithms: \seconds, \purges, and \cprs.  
+With one exception, the input and output of each algorithm is the same: 
+{\footnote {\small Additionally, as input \cpr requires that each $v \in adj($\bads$)$ is notified of the time, $t'$, in which \bad was compromised.}}
+\begin{itemize}
+	\item \underline{Input}:  Undirected graph, $G=(V,E)$, with weight function $w: E \rightarrow \mathbb{N}$.  $\forall v \in V$,  \minv and \dmatrix are computed
+(using distance vector). Also, each $v \in adj($\bads$)$ is notified that \bad was compromised.
+
+	\item \underline{Output}: Undirected graph, $G'=(V',E')$, where $V' = V -\{$\bads$\}$, $E'=E - \{(\bar{v},v_i)$ $|$ $v_i \in adj(\bar{v}) \}$,
+and link weight function $w:E \rightarrow \mathbb{N}$.  \minvv and \dmatrixv are computed via the algorithms discussed below $\forall  v \in V'$. 
+\end{itemize}
+Before we describe each recovery algorithm, we outline a preprocessing procedure common to all three recovery algorithms. %Then we describe each recovery algorithm. 
+
+
+\subsection{Preprocessing Algorithm}
+\label{subsec:preprocess}
+All three recovery algorithms share a common preprocessing procedure.  The procedure removes \bad as a destination and finds the node IDs in each connected component. 
+This could be implemented (as we have done here) using diffusing computations \cite{Dijkstra80} initiated at each $v \in adj($\bads$)$. 
+%A diffusing computation is a distributed algorithm started at a source node which grows by sending queries along a spanning tree, constructed
+%simultaneously as the queries propagate through the network.  When the computation reaches the leaves of the spanning tree, replies travel back along the tree towards the
+%source causing the tree to shrink. The computation eventually terminates when the source receives replies from each of its children in the tree. 
+In our case, each diffusing computation message contains a vector of node IDs.  When 
+a node receives a diffusing computation message, the node adds its ID to the vector and removes \bad as a destination. At the end of the diffusing computation, 
+each $v \in adj($\bads$)$ has a vector that includes all nodes in $v$'s connected component. Finally, each $v \in adj($\bads$)$ broadcasts the vector of node IDs to 
+all nodes in their connected component. In the case where removing \bad partitions the network, each node will only compute shortest paths to nodes in the vector. 
+
+
+\subsection{The 2$^{nd}$ best Algorithm}
+\label{subsec:second}
+\second invalidates state locally and then uses distance vector to implement network-wide recovery.  Following the preprocessing described in Section \ref{subsec:preprocess}, 
+each neighbor of the compromised node locally invalidates state by selecting the least cost pre-existing alternate path that does not use the compromised node as the first hop.
+The resulting distance vectors trigger the execution of traditional distance vector to remove the remaining false state.
+
+\second is simple and makes no synchronization assumptions. 
+However, \second is vulnerable to the \infinity problem. Because each node only has local information, the newly selected shortest paths may continue to use \bads.
+We will see in our simulation study that the \infinity problem can incur significant message and time costs.
+
+
+
+\subsection{The purge Algorithm}
+\label{subsec:purge}
+
+
+\purge globally invalidates all false state using a diffusing computation and then uses distance vector to compute new distance values that avoid all invalidated paths.
+The diffusing computation is initiated at the neighbors of \bad because only these nodes are 
+aware if \bad is used an intermediary node. The diffusing computations spread from \bads's neighbors to the network edge, invalidating false state at each node along the way. 
+Then ACKs travel back from the network edge to the neighbors of \bads, indicating that the diffusing computation is complete. 
+Next, \purge uses distance vector to recompute least cost paths invalidated by the diffusing computations.
+
+%Note that a consequence of the diffusing computation is that not only is all \badvector state deleted, but all \oldvector state as well.  
+%Consider the case when \bad is detected before node $i$ receives \badvectors.
+%It is possible that $i$ uses \oldvector to reach a destination, $d$. In this case, the diffusing computation will set $i$'s distance to $d$ to $\infty$.
+
+
+\subsection{The cpr Algorithm}
+\label{subsec:cpr}
+
+\cprs {\footnote {\small The name is an abbreviation for {\bf C}heck{\bf P}oint and {\bf R}ollback. }} is our third and final recovery algorithm. 
+Unlike \second and \purges, \cpr requires that clocks across different nodes be loosely synchronized i.e., the maximum clock offset between
+any two nodes is bounded. Here we present \cpr assuming all clocks are perfectly synchronized. 
+%Extensions to handle loosely synchronized clocks should be clear. 
+%Accordingly, we assume that all neighbors of \bads, are notified of the time, $t'$, at which \bad was compromised.
+
+For each node, $i \in G$, \cpr adds a time dimension to \minvi and \dmatrixis, which \cpr then uses to locally archive a complete history of values.  
+Once the compromised node is discovered, the archive allows each node to rollback to a system snapshot from a time before \bad was compromised. 
+\cpr does so using diffusing computations.  Then, \cpr removes all \badvector and \oldvector state while updating stale distance values resulting from link cost changes that
+occurred between the time the snapshot was taken and the ``current'' time.
+This last step is executed by initiating a distance vector computation from the neighbors of the compromised node.
+%To resolve these issues, each neighbor, $i$, of \bads, sets its distance to \bad to $\infty$ and then selects new least cost values that avoid the compromised node, triggering
+%the execution of distance vector to update the remaining distance vectors. 
+
+
+%{\bf Step 1: Create a \minv and \dmatrix archive.} 
+%	We define a  \emph{snapshot} of a data structure to be a copy of all current distance values along with a timestamp.
+%	{\footnote {\small In practice, we only archive distance values that have changed. Thus each distance value is associated with its own timestamp.}}
+%	The timestamp marks the time at which that set of distance values start being used. 
+%	\minv and \dmatrix are the only data structures that need to be archived. This approach is similar to ones used in temporal databases 
+%  \cite{Lomet06,Jensen91}.
+
+
+{%\bf Step 2: Rolling back to a valid snapshot.} 
+%Rollback is implemented using diffusing computations initiated at the neighbors of the compromised node. T
+%he diffusing computation ensures that all nodes roll back to their most recent snapshot taken before $t'$.
+%(Note that this rollback algorithm ensures that no reinstated distance value uses \badvector because every node rolls back to a snapshot with a timestamp less that $t'$. )
+
+
+%{\bf Step 3: Steps after rollback.} After Step 2 completes, the algorithm in Section \ref{subsec:preprocess} is executed.
+%There are two issues to address.
+%First, some nodes may be using \oldvectors.  Second, some nodes may have stale state as a result of link cost changes that occurred during $[t',t]$ and 
+%consequently are not reflected in the snapshot. 
+%To resolve these issues, each neighbor, $i$, of \bads, sets its distance to \bad to $\infty$ and then selects new least cost values that avoid the compromised node, triggering
+%the execution of distance vector to update the remaining distance vectors.  
+
+
+
+
+
+

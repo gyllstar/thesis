@@ -1,0 +1,47 @@
+\begin{titlepage}
+ 
+\begin{center}
+ 
+ 
+	% Upper part of the page
+	\includegraphics[width=0.20\textwidth]{figs/logo.pdf}\\[2cm]
+ 
+	%\textsc{\LARGE University of Massachusetts Amherst}\\[1.5cm]
+	\textsc{\LARGE University of Massachusetts Amherst}\\[1.1cm]
+ 
+	\textsc{\Large Department of Computer Science}\\[0.5cm]
+
+	\textsc{\Large Technical Report}\\[0.5cm]
+ 
+
+ 
+	% Title
+	%\HRule \\[0.4cm]
+	\HRule \\[.6cm]
+
+	%{ \huge \bfseries Recovery from False State in Distance Vector Routing}\\[0.4cm]
+	{ \LARGE \bfseries Recovery from False State in Distance Vector Routing}\\[0.4cm]
+	\HRule \\[1.5cm]
+ 
+	% Author and supervisor
+	%\begin{minipage}{0.4\textwidth}
+		\large
+	\emph{Authors:}\\
+		 \textsc{Daniel Gyllstrom} \\
+		\textsc{James Kurose}\\
+		\textsc{Sudarshan Vasudevan}\\
+		\textsc{Gerome Miklau}\\
+		
+	 	 
+		\vfill
+		 
+		% Bottom of the page
+	
+	\vspace{3cm}
+	{\large \today} {\large (\timestamp)}
+	%\end{minipage} 
+
+\end{center}
+ 
+\end{titlepage}
+

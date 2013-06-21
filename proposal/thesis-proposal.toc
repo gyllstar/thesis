@@ -1,0 +1,62 @@
+\contentsline {FrontMatter}{\MakeTextUppercase {\uppercase {Abstract}}}{iv}{chapter*.1}
+\contentsline {FrontMatter}{\MakeTextUppercase {List of Tables}}{x}{chapter*.3}
+\contentsline {FrontMatter}{\MakeTextUppercase {List of Figures}}{xi}{chapter*.4}
+\contentsline {Chapter}{\MakeTextUppercase {Introduction}}{1}{chapter*.5}
+\contentsline {section}{\numberline {0.1}Thesis Overview}{1}{section.0.1}
+\contentsline {subsection}{\numberline {0.1.1}Component Failure in Communication Networks}{1}{subsection.0.1.1}
+\contentsline {subsection}{\numberline {0.1.2}Approaches to Making Networks More Robust to Failures}{2}{subsection.0.1.2}
+\contentsline {section}{\numberline {0.2}Thesis Contributions}{4}{section.0.2}
+\contentsline {section}{\numberline {0.3}Thesis Outline}{6}{section.0.3}
+\contentsline {Chapter}{\numberline {1.}\MakeTextUppercase {Recovery from False Routing State in Distributed Routing Algorithms}}{7}{chapter.1}
+\contentsline {section}{\numberline {1.1}Introduction}{7}{section.1.1}
+\contentsline {section}{\numberline {1.2}Problem Formulation}{9}{section.1.2}
+\contentsline {section}{\numberline {1.3}Recovery Algorithms}{10}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Preprocessing Algorithm}{11}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}The 2$^{nd}$ best Algorithm}{11}{subsection.1.3.2}
+\contentsline {subsection}{\numberline {1.3.3}The purge Algorithm}{11}{subsection.1.3.3}
+\contentsline {subsection}{\numberline {1.3.4}The cpr Algorithm}{12}{subsection.1.3.4}
+\contentsline {section}{\numberline {1.4}Analysis of Algorithms}{12}{section.1.4}
+\contentsline {section}{\numberline {1.5}Simulation Study}{13}{section.1.5}
+\contentsline {subsection}{\numberline {1.5.1}Simulations using Graphs with Fixed Link Weight}{15}{subsection.1.5.1}
+\contentsline {subsection}{\numberline {1.5.2}Simulations using Graphs with Changing Link Weights}{16}{subsection.1.5.2}
+\contentsline {subsection}{\numberline {1.5.3}Summary of Simulation Results}{18}{subsection.1.5.3}
+\contentsline {section}{\numberline {1.6}Related Work}{19}{section.1.6}
+\contentsline {section}{\numberline {1.7}Conclusions}{20}{section.1.7}
+\contentsline {Chapter}{\numberline {2.}\MakeTextUppercase {PMU Sensor Placement for Measurement Error Detection in the Smart Grid}}{22}{chapter.2}
+\contentsline {section}{\numberline {2.1}Introduction}{22}{section.2.1}
+\contentsline {section}{\numberline {2.2}Preliminaries}{25}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Assumptions, Notation, and Terminology}{25}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Observability Rules}{25}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Cross-Validation Rules}{26}{subsection.2.2.3}
+\contentsline {section}{\numberline {2.3}Four NP-Complete PMU Placement Problems}{26}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Overview of NPC Proof Strategy}{27}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}Problem Statements and NPC Proof Sketches}{29}{subsection.2.3.2}
+\contentsline {section}{\numberline {2.4}Approximation Algorithms}{31}{section.2.4}
+\contentsline {section}{\numberline {2.5}Simulation Study}{32}{section.2.5}
+\contentsline {section}{\numberline {2.6}Related Work}{34}{section.2.6}
+\contentsline {section}{\numberline {2.7}Conclusions}{36}{section.2.7}
+\contentsline {Chapter}{\numberline {3.}\MakeTextUppercase {Recovery from Link Failures in a Smart Grid Communication Network}}{37}{chapter.3}
+\contentsline {section}{\numberline {3.1}Introduction}{37}{section.3.1}
+\contentsline {section}{\numberline {3.2}Background and Related Work}{39}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}PMU Applications and Their QoS Requirements}{39}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}OpenFlow}{40}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Related Work}{41}{subsection.3.2.3}
+\contentsline {subsubsection}{\numberline {3.2.3.1}Smart Grid Communication}{41}{subsubsection.3.2.3.1}
+\contentsline {subsubsection}{\numberline {3.2.3.2}Detecting Packet Loss}{42}{subsubsection.3.2.3.2}
+\contentsline {subsubsection}{\numberline {3.2.3.3}Multicast Tree Recovery}{43}{subsubsection.3.2.3.3}
+\contentsline {section}{\numberline {3.3}Proposed Research}{47}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Preliminaries}{47}{subsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.1.1}Example Scenario}{47}{subsubsection.3.3.1.1}
+\contentsline {subsubsection}{\numberline {3.3.1.2}General Problem Scenario and Basic Notation}{47}{subsubsection.3.3.1.2}
+\contentsline {subsection}{\numberline {3.3.2}Overview of Our Recovery Solutions and Section Outline}{50}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Link Failure Detection using OpenFlow}{52}{subsection.3.3.3}
+\contentsline {subsection}{\numberline {3.3.4}Uninstalling Failed Trees and Installing Backup Trees}{55}{subsection.3.3.4}
+\contentsline {subsection}{\numberline {3.3.5}Computing Backup Multicast Trees}{56}{subsection.3.3.5}
+\contentsline {subsubsection}{\numberline {3.3.5.1}\textsc {Min-Flows} Algorithm}{57}{subsubsection.3.3.5.1}
+\contentsline {subsubsection}{\numberline {3.3.5.2}\textsc {Min-Sinks} Algorithm}{58}{subsubsection.3.3.5.2}
+\contentsline {subsubsection}{\numberline {3.3.5.3}\textsc {Min-Control} Algorithm}{60}{subsubsection.3.3.5.3}
+\contentsline {section}{\numberline {3.4}Chapter Conclusion and Future Work}{61}{section.3.4}
+\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{62}{chapter.4}
+\contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{62}{section.4.1}
+\contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{63}{section.4.2}
+\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{65}{chapter*.6}

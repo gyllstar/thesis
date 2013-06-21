@@ -1,0 +1,24 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Message overhead as function of the number of hops false routing state has spread from the compromised node ($k$), over Erd\"{o}s-R\'enyi graphs with fixed link weights. The Erd\"{o}s-R\'enyi graphs are generated using $n=100$, and $p=.05$, yielding an average diameter of $6.14$.}}{16}{figure.1.1}
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Section \ref {subsec:simulation-lc} plots. Both plots consider Erd\"{o}s-R\'enyi graphs with changing link costs generated using $n=100$ and $p=.05$. The average diameter of the generated graphs is $6.14$.}}{18}{figure.1.2}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Message overhead as a function of the number of hops false routing state has spread ($k$) where $\lambda =4$ link cost changes occur at each timestep.}}}{18}{figure.1.2}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Message overhead as function of varying the checkpoint frequency, $z$. $z=0$ implies checkpointing occurs at every timestep, $z=1$ creates checkpoints every other timestamp, etc.}}}{18}{figure.1.2}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces The figure in (a) shows $G(\varphi )=(V(\varphi ),E(\varphi ))$ using example formula, $\varphi $, from Equation (\ref {eqn:varphi}). (b) shows the new graph formed by replacing each variable node in $G(\varphi )$ -- as specified by the Theorem \ref {thm:npc-full} proof -- with the Figure \ref {fig:diamond-gadget} variable gadget. }}{29}{figure.2.1}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {$G(\varphi )$ formed from $\varphi $ in Equation (\ref {eqn:varphi}).}}}{29}{figure.2.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Graph formed from $\varphi $ formula in Theorem \ref {thm:npc-full} proof.}}}{29}{figure.2.1}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Gadgets used in Theorem \ref {thm:npc-full} - \ref {thm:npc-xvalpart}. $Z_i$ in Figure \ref {fig:diamond-gadget}, $Z_i^t$ in Figure \ref {fig:xval-gadget}, and $Z_i^b$ in Figure \ref {fig:xval-gadget} are the only zero-injection nodes. The dashed edges in Figure \ref {fig:diamond-gadget} and Figure \ref {fig:xval-gadget} are connections to clause gadgets. Likewise, the dashed edges in Figure (b) are connections to variable gadgets. In Figure \ref {fig:xval-gadget}, superscript, $t$, denotes nodes in the upper subgraph and superscript, $b$, indexes nodes in the lower subgraph.}}{30}{figure.2.2}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Variable gadget used in Theorem \ref {thm:npc-full} and \ref {thm:npc-maxinc}.}}}{30}{figure.2.2}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Theorem \ref {thm:npc-maxinc} clause gadget.}}}{30}{figure.2.2}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Variable gadget used in Theorem \ref {thm:npc-xval}, containing two disconnected subgraphs.}}}{30}{figure.2.2}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Mean number of observed nodes over synthetic graphs based on IEEE bus $57$ when varying number of PMUs. The $90\%$ confidence interval is shown.}}{35}{figure.2.3}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {{\tt greedy} vs {\tt optimal}}}}{35}{figure.2.3}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {{\tt xvgreedy} vs {\tt xvoptimal}}}}{35}{figure.2.3}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Example used in Section \ref {subsec:mdr}. The shaded nodes are members of the source-based multicast tree rooted at $a$. The lightly shaded nodes are not a part of the multicast tree.}}{48}{figure.3.1}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Before link $(b,c)$ fails.}}}{48}{figure.3.1}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {After link $(b,c)$ fails.}}}{48}{figure.3.1}
+\addvspace {10\p@ }

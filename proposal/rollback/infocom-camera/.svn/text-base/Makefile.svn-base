@@ -1,0 +1,34 @@
+# generic GNU make Makefile for .tex -> .pdf.
+# dpg@cs.umass.edu, September 2008.
+
+TARGET = infocom
+BIBFILES = infocom.bib $(wildcard *.bib)
+
+PDFLATEX = pdflatex
+BIBTEX = bibtex
+PDFVIEWER = open -a Preview
+
+# .PHONY names all targets that aren't filenames
+.PHONY: all clean pdf view
+
+all: clean pdf view
+
+pdf: $(TARGET).pdf
+
+view: $(TARGET).pdf
+	$(PDFVIEWER) $(TARGET).pdf
+
+clean:
+	rm -f $(TARGET).aux $(TARGET).log $(TARGET).out \
+		$(TARGET).pdf $(TARGET).blg $(TARGET).bbl
+
+%.pdf: %.tex $(BIBFILES)
+	$(PDFLATEX) $*
+
+ifneq ($(strip $(BIBFILES)),)
+	@if grep -q "undefined references" $*.log; then \
+		$(BIBTEX) $* && $(PDFLATEX) $*; fi
+endif
+	@while grep -q "Rerun to" $*.log; do \
+		$(PDFLATEX) $*; done
+	#./double.pl $<

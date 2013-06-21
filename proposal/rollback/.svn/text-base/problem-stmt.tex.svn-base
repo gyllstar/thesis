@@ -1,0 +1,139 @@
+%%%%%%%%%%%%%%% For synthesis report - Defines problem statement %%%%%%%%%
+\section{Formal Problem Statement and Notation}
+\label{sec:problem}
+
+We consider distance vector routing \cite{Gall87,Ford62} over arbitrary network topologies. We model a network as an undirected graph, $G=(V,E)$,
+with a link weight function $w: E \rightarrow \mathbb{N}$.
+{\footnote {\small Recovery is simple with link state routing: each node uses its complete topology map to compute new least cost paths that avoid all compromised nodes.
+Thus we do not consider link state routing in this paper.}}
+Each node, $v$, maintains the following state as part of distance vector: a vector of all adjacent nodes ($adj(v)$), a vector of least cost distances to all
+nodes in $G$ (\minvvs), and a \emph{distance matrix} that contains distances to every node in the network via each adjacent node (\dmatrixvs). 
+
+We make the following assumptions about the distance vector computation. All initial \dmatrix values are non-negative. Furthermore, all \minv values periodically
+exchanged between neighboring nodes are non-negative. All $v \in V$ know their adjacent link costs. All link weights in $G$ are non-negative and do not change.
+$G$ is finite and connected. Finally, we assume reliable communication. 
+
+We assume that the identity of the compromised nodes -- which we refer to as $\overline{V}$ -- are provided by a different algorithm \cite{Arini,Feam,Vishal02,Pad03,Paul02}.
+Specifically, we assume that at time $t_b$, this algorithm detects all compromised nodes and notifies the neighbors of each compromised node.  Let $t'$ be the time the first node was compromised.
+
+For each algorithm, the goal is for all nodes to recover correctly: all nodes should remove all compromised nodes as a destination and find
+new least cost distances that do not use a compromised node. If the network becomes disconnected as a result of removing the compromised nodes, all
+nodes need only compute new least cost distances to all other nodes within their connected component.  With one exception, the input and output of each algorithm is the same. 
+{\footnote {\small Additionally, as input \cpr requires that each $v \in adj($\bads$)$ is notified of the time, $t'$, in which \bad was compromised.}}
+\begin{itemize}
+
+	\item {\bf Input:}  Undirected graph, $G=(V,E)$, with weight function $w: E \rightarrow \mathbb{N}$.  $\forall v \in V$,  \minvv and \dmatrixv are computed
+	(using distance vector). Also, each $v \in adj($\bads$)$ is notified that \bad was compromised.
+
+	\item {\bf Output:} $G'=(V',E')$, where $V' = V - \overline{V}$, $E'=E - \{(\overline{v},v_i)$ $|$ $\overline{v} \in \overline{V} \wedge v_i \in adj(\overline{v}) \}$.
+	%Undirected graph, $G'=(V',E')$, where $V' = V -\{$\bads$\}$, $E'=E - \{(\bar{v},v_i)$ $|$ $v_i \in adj(\bar{v}) \}$,
+\end{itemize}
+For convenience, $|V| = n$ and the diameter of $G'$ is $d$. Let $\displaystyle \max_{i \in V'}(|adj(i)|) = m$.  
+
+For an arbitrary $\overline{v} \in \overline{V}$ we use the following notation. \oldvector refer to $\overrightarrow{min}_{\overline{v}}$ before \bad was compromised.
+\badvector denotes $\overrightarrow{min}_{\overline{v}}$ after \bad has been compromised.
+Intuitively, \oldvector and \badvector are snapshots of the compromised node's least cost vector taken at two different timesteps: \oldvector marks the snapshot taken before \bad was compromised and 
+\badvector represents a snapshot taken after \bad was compromised.
+
+Let $\delta_t(i,j)$ be the least cost between nodes $i$ and $j$ -- used by node $i$ --  at time $t$ (we refer to this cost as $\delta(i,j)$).
+$p_t(i,j)$ refers to $i$'s actual least cost path to $j$ at time $t$.
+ $p_s(i,j)$ is the least cost path from node $i$ to $j$ used by $i$ at $t_b$
+and $\delta_s(i,j)$ is the cost of this path; $p_u(i,j)$ is $i$'s least cost path to $j$ at time $t \in [t_b,t^*]$ and $\delta_u(i,j)$ the cost of this path 
+{\footnote {\small $p_u(i,j)$ and $\delta_u(i,j)$ can change during $[t_b,t^*]$.}}; and $p_f(i,j)$ is $i$'s final least cost path to $j$ (least cost at $t^*$)
+ and has cost $\delta_f(i,j)$.  $\ell(i,j)$ is the minimum number of links between nodes $i$ and $j$ in $G'$.  
+
+
+For each algorithm, let $t^*$ mark the time when the recovery algorithm completes. Let $\hat{t}$ be the time all diffusing computations complete.  Recall with \purges, \bad is removed as a destination and 
+\badvector state is invalidated in the \emph{same} diffusing computations.   Likewise, each \cpr diffusing computation performs two actions: 
+the diffusing computations remove \bad as a destination \emph{and} implement the rollback.  For this reason, $\hat{t}$ marks the same time across all three recovery algorithms. 
+Let $C(i,j) = \delta_f(i,j) - \delta_{\hat{t}}(i,j)$.  That is, $C(i,j)$ refers to the magnitude of change in $\delta(i,j)$ after the diffusing computations for each algorithm complete.
+
+Table \ref{tab:abbrev} summarizes the notation used in this document and all important timesteps are shown in Figure \ref{fig:timeline}.
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{l l} 
+\hline \hline
+   	{\bf Notation} & {\bf Meaning} \\
+		  \hline 
+			$\overline{V}$ & set of compromised nodes \\ 
+		  	$G$ &  undirected graph $(V,E)$, with weight function $w: E \rightarrow \mathbb{N}$ \\
+			$G'$ & undirected graph $(V',E')$, where $V' = V - \overline{V}$,  \\
+			 & $E'=E - \{(\overline{v},v_i)$ $|$ $\overline{v} \in \overline{V} \wedge v_i \in adj(\overline{v}) \}$ \\
+			$adj(v)$ & nodes adjacent to $v$ in $G'$ \\ 
+ 		 	$n$ & $|V|$ \\
+			$d$ & diameter of $G'$  \\
+			$m$ & $\displaystyle \max_{i \in V'}(|adj(i)|) = m$  \\
+ 			$\ell(i,j)$ & minimum number of links between nodes $i$ and $j$ in $G'$ \\
+			\dmatrixi & node $i$' distance matrix \\
+			\minvi & node $i$'s the least cost vector \\
+			\badvector & compromised node's least cost vector at $t \geq t'$ \\ %and after $t$  \\
+			\oldvector & compromised node's least cost vector at $t < t'$ \\ %and before $t'$ \\
+			\hline
+			$p_t(i,j)$ & $i$'s actual least cost path to $j$ at time $t$. \\
+			$\delta_t(i,j)$ & $i$'s least cost between nodes to $j$ at time $t$ \\
+			$p_s(i,j)$ & $i$'s least cost path to $j$ at time $t_b$ \\
+			$\delta_s(i,j)$ & $i$'s least cost to $j$ at time $t_b$ \\
+			$p_u(i,j)$ & $i$'s least cost path to $j$ at time $t \in [t_b,t^*]$ \\
+			$\delta_u(i,j)$ & $i$'s least cost to $j$ at time $t \in [t_b,t^*]$ \\
+			$p_f(i,j)$ &  $i$'s least cost path to $j$ at $t^*$ \\
+			$\delta_f(i,j)$ &  $i$'s least cost to $j$ at $t^*$ \\
+			\hline
+			$t_b$ & time the compromised node is detected \\
+			$t'$ & time the compromised node was compromised \\
+			$t^*$ & time when recovery algorithm completes \\
+			$\hat{t}$ & time all diffusing computations complete \\
+			\hline \hline
+			\end{tabular}
+			\end{center}
+\caption{Notation Table}
+			%* The distance matrix for node $v$ contains $v$'s distance to all nodes $v_d \in V$ via all $v_n: v_n \in adj(v)$.}
+\label{tab:abbrev}
+\end{table}
+
+
+
+\begin{figure}
+\begin{center}
+\begin{picture}(200,55)
+\put(0,25){\vector(1,0){220}}  % pi and to the right
+\put(0,25){\vector(-1,0){20}}  % pi and to the right
+
+%tics
+\put(20,22){\line(0,1){6}} 
+\put(70,22){\line(0,1){6}} 
+\put(120,22){\line(0,1){6}} 
+\put(180,22){\line(0,1){6}}
+
+%\put(25,25){\vector(1,0){50}} % pi and to left
+%\put(25,25){\line(1,0){50}} % pi and to left
+\put(20,11){\makebox(0,0)[b]{$t'$}}
+\put(70,11){\makebox(0,0)[b]{$t_b$}}
+\put(120,11){\makebox(0,0)[b]{$\hat{t}$}}
+\put(185,11){\makebox(0,0)[b]{$t^*$}}
+
+\put(20,43){\makebox(0,0){{\footnotesize $\overline{v}$}}}
+\put(20,35){\makebox(0,0){{\footnotesize  compromised}}}
+\put(70,43){\makebox(0,0){{\footnotesize $\overline{v}$}}}
+\put(70,35){\makebox(0,0){{\footnotesize detected}}}
+\put(120,43){\makebox(0,0){{\footnotesize diffusing}}}
+\put(120,35){\makebox(0,0){{\footnotesize comp. complete}}}
+\put(185,43){\makebox(0,0){{\footnotesize recovery alg.}}}
+\put(185,35){\makebox(0,0){{\footnotesize complete}}}
+
+
+\end{picture}
+\end{center}
+\caption{Time line with important timesteps labeled.}
+\label{fig:timeline}
+\end{figure}
+
+
+
+
+
+
+
+
+
+

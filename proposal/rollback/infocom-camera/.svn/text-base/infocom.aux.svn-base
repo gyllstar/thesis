@@ -1,0 +1,126 @@
+\relax 
+\citation{Neumann97}
+\citation{Google}
+\citation{Liu98}
+\citation{Liu00}
+\citation{Jeff}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}}
+\newlabel{sec:intro}{{I}{1}}
+\citation{Gall87}
+\citation{Arini}
+\citation{Feam}
+\citation{Feldmann}
+\citation{Paul02}
+\citation{Tech}
+\citation{Dijkstra80}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Table of abbreviations.}}{2}}
+\newlabel{tab:abbrev}{{I}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Problem Formulation}{2}}
+\newlabel{sec:problem}{{II}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Recovery Algorithms}{2}}
+\newlabel{sec:algs}{{III}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Preprocessing}{2}}
+\newlabel{subsec:preprocess}{{\unhbox \voidb@x \hbox {III-A}}{2}}
+\citation{Lomet06}
+\citation{Jensen91}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}The 2$^{nd}$ best Algorithm}{3}}
+\newlabel{subsec:second}{{\unhbox \voidb@x \hbox {III-B}}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}The purge Algorithm}{3}}
+\newlabel{subsec:purge}{{\unhbox \voidb@x \hbox {III-C}}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}The cpr Algorithm}{3}}
+\newlabel{subsec:cpr}{{\unhbox \voidb@x \hbox {III-D}}{3}}
+\newlabel{fig:example-a}{{1(a)}{4}}
+\newlabel{sub@fig:example-a}{{(a)}{4}}
+\newlabel{fig:example-b}{{1(b)}{4}}
+\newlabel{sub@fig:example-b}{{(b)}{4}}
+\newlabel{fig:example-c}{{1(c)}{4}}
+\newlabel{sub@fig:example-c}{{(c)}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Three snapshots of a graph, $G$, where {$\overline {v}$ }is the compromised node: (a) $G$ before {$\overline {v}$ }goes bad, (b) $G$ after $\vbox {\mathsurround \z@ \everycr {}\tabskip \z@skip \halign {##\crcr $\mathsurround \z@ \relax \setbox \z@ \hbox {\color@begingroup -\color@endgroup }\ht \z@ \z@ \dp \z@ \z@ \box \z@ \mkern -7mu\cleaders \hbox {$\mkern -2mu\relax \setbox \z@ \hbox {\color@begingroup -\color@endgroup }\ht \z@ \z@ \dp \z@ \z@ \box \z@ \mkern -2mu$}\hfill \mkern -7mu\mathord \rightarrow $\crcr \noalign {\kern -\p@ \prevdepth -\@m \p@ } $\hfil \displaystyle {bad}\hfil $\crcr }}$ has finished propagating but before recovery has started, and (c) $G$ after recovery. The dashed lines in (b) indicate paths using $\vbox {\mathsurround \z@ \everycr {}\tabskip \z@skip \halign {##\crcr $\mathsurround \z@ \relax \setbox \z@ \hbox {\color@begingroup -\color@endgroup }\ht \z@ \z@ \dp \z@ \z@ \box \z@ \mkern -7mu\cleaders \hbox {$\mkern -2mu\relax \setbox \z@ \hbox {\color@begingroup -\color@endgroup }\ht \z@ \z@ \dp \z@ \z@ \box \z@ \mkern -2mu$}\hfill \mkern -7mu\mathord \rightarrow $\crcr \noalign {\kern -\p@ \prevdepth -\@m \p@ } $\hfil \displaystyle {bad}\hfil $\crcr }}$. $dmatrix_i$ and $dmatrix_j$, at the time of the snapshot, are displayed to the right of each sub-figure. The least cost values are underlined.}}{4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Before $t'$}}}{4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {$t' + \Delta $}}}{4}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {After recovery}}}{4}}
+\newlabel{fig:example}{{1}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Analysis of Algorithms}{4}}
+\newlabel{sec:analysis}{{IV}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Correctness of Recovery Algorithms}{4}}
+\newlabel{subsec:correct}{{\unhbox \voidb@x \hbox {IV-A}}{4}}
+\citation{Gall87}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Properties of Recovery Algorithms}{5}}
+\newlabel{subsec:trends}{{\unhbox \voidb@x \hbox {IV-B}}{5}}
+\citation{Tech}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Evaluation}{6}}
+\newlabel{sec:eval}{{V}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Fixed Link Weight Experiments}{6}}
+\newlabel{subsec:fixed}{{\unhbox \voidb@x \hbox {V-A}}{6}}
+\newlabel{subsubsec:expt1}{{\unhbox \voidb@x \hbox {V-A}1}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-A}1}Experiment 1 - Erd\"{o}s-R\'enyi Graphs with Fixed Unit Link Weights}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Time overhead for topologies $p=.05$ and diameter=$6.14$.}}{6}}
+\newlabel{fig:epoch}{{3}{6}}
+\citation{Tech}
+\citation{Tech}
+\citation{Rocketfuel}
+\citation{GT-ITM}
+\citation{Heckmann}
+\citation{Heckmann}
+\citation{Tech}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Message overhead for Erd\"{o}s-R\'enyi Graphs with Fixed Unit Link Weights generated over different $p$ values. Note that the y-axis have different scales.}}{7}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {$p=0.05$, diameter=$6.14$}}}{7}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {$p=0.15$, diameter=$3.01$}}}{7}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {$p=0.50$, diameter=$2$}}}{7}}
+\newlabel{fig:msg}{{2}{7}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Average number pairwise routing loops for {{\tt  2}$^{{\tt  nd}}$ {\tt  best} }in Experiment 1 and 2.}}{7}}
+\newlabel{tab:loop1}{{II}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Message overhead for Erd\"{o}s-R\'enyi graph with link weights selected uniformly random from $[1,100]$. $p=.05$ and diameter=$6.14$.}}{7}}
+\newlabel{fig:msg-rand}{{4}{7}}
+\newlabel{subsec:expt2}{{\unhbox \voidb@x \hbox {V-A}2}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-A}2}Experiment 2 - Erd\"{o}s-R\'enyi Graphs with Fixed but Randomly Chosen Link Weights}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Message overhead for Rocketfuel graph 6461. $n=141$, average node degree= $2.62$, and diameter=$8$.}}{7}}
+\newlabel{fig:msg-real}{{5}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-A}3}Experiment 3 - Internet-like Topologies}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Link Weight Change Experiments}{7}}
+\newlabel{subsec:change}{{\unhbox \voidb@x \hbox {V-B}}{7}}
+\citation{Tech}
+\citation{Liu98}
+\citation{Liu00}
+\citation{Liu00}
+\citation{Liu98}
+\citation{Mohan92}
+\citation{Arini}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}1}Experiment 4}{8}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}2}Experiment 5}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-C}}Summary}{8}}
+\newlabel{subsec:discuss}{{\unhbox \voidb@x \hbox {V-C}}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Message overhead for $p=0.05$ Erd\"{o}s-R\'enyi with link weights selected uniformly random with different $\lambda $ values. $z$ refers to the number of timesteps {\tt  cpr} must rollback.}}{8}}
+\newlabel{fig:lc-fixk}{{7}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Related Work}{8}}
+\newlabel{sec:related}{{VI}{8}}
+\citation{Jeff}
+\bibstyle{plain}
+\bibdata{infocom}
+\bibcite{Google}{1}
+\bibcite{Rocketfuel}{2}
+\bibcite{GT-ITM}{3}
+\bibcite{Lomet06}{4}
+\bibcite{Liu98}{5}
+\bibcite{Gall87}{6}
+\bibcite{Dijkstra80}{7}
+\bibcite{Arini}{8}
+\bibcite{Feam}{9}
+\bibcite{Feldmann}{10}
+\bibcite{Tech}{11}
+\bibcite{Heckmann}{12}
+\bibcite{Jeff}{13}
+\bibcite{Jensen91}{14}
+\bibcite{Liu00}{15}
+\bibcite{Mohan92}{16}
+\bibcite{Neumann97}{17}
+\bibcite{Paul02}{18}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Message overhead for $p=0.05$ Erd\"{o}s-R\'enyi with link weights selected uniformly random with different $\lambda $ values.}}{9}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {$p=0.05$, diameter=$6.14, \lambda =1$}}}{9}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {$p=0.05$, diameter=$6.14,\lambda =4$}}}{9}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {$p=0.05$, diameter=$6.14, \lambda =8$}}}{9}}
+\newlabel{fig:lc-p05}{{6}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusions and Future Work}{9}}
+\newlabel{sec:future}{{VII}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Acknowledgments}{9}}
+\@writefile{toc}{\contentsline {section}{References}{9}}

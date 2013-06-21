@@ -1,0 +1,437 @@
+%% 
+%% This is a sample doctoral dissertation.  It shows the appropriate
+%% structure for your dissertation.  It should handle most of the
+%% strange requirements imposed by the Grad school; like the different
+%% handling of titles of one/many appendices.  It will automatically
+%% handle the linespacing changes.  The body default is double-spaced
+%% (except when you use the singlespace or condensed options).  The
+%% default for quotations is single-space, and the default for tabular
+%% environments is also single-space.  
+%%
+%% This class adds the following commands and environments to the
+%% report class, upon which it is based:
+%% Commands
+%% ------------
+%% \degree{name}{abbrv} -- Sets the name and abbreviation for the degree.
+%%                         These default to ``Doctor of Philosopy''
+%%                         and ``Ph.D.'', respectively.
+%% \copyrightyear{year} -- for the copyright page.
+%% \bachelors{degree}{institution} -- for the abstract
+%% \masters{degree}{institution}   --  "
+%%     if you have other degrees you may use
+%% \secondbachelors{degree}{institution}
+%% \thirdbachelors{degree}{institution}
+%% \secondmasters{degree}{institution}
+%% \thirdmasters{degree}{institution}
+%% \priordoctorate{degree}{institution}
+%%
+%% \committeechair{name}           -- for the signature page
+%% or, if you have two co-chairs:
+%% \cochairs{first name}{second name}
+%%
+%% \firstreader{name}              --  "
+%% \secondreader{name}             --  "
+%% \thirdreader{name}              -- (optional)
+%% \fourthreader{name}             --  "
+%% \fifthreader{name}              --  "
+%% \sixthreader{name}              --  "
+%% \departmentchair{name}          -- for the signature page
+%% \departmentname{name}           --  "
+%%
+%% \copyrightpage                  -- produces the copyright page
+%% \signaturepage                  -- produces the signature page
+%%
+%% \frontmatter                    -- these are required in their various
+%% \mainmatter                     -- appropriate locations
+%% \backmatter                     --
+%%
+%% \unnumberedchapter[toc]{name}   -- like \chapter, except that it
+%%                                    produces an unnumbered chapter;
+%%                                    alternatively, like \chapter*,
+%%                                    except that it lists the chapter
+%%                                    in the table of contents.
+%%
+%% New environments:
+%%   dedication  -- for the dedication
+%%   abstract    -- for the abstract
+%%
+%% The thesis documentclass is built on top of the report document class.
+%% It accepts all of the options that the report class accepts, plus the
+%% following:
+%%     doublespace -- the default, indicates double spacing as per U.Mass.
+%%                    requirements.  You will need this when you do your
+%%                    final copy.
+%%     singlespace -- for earlier work, not acceptable to the Grad school
+%%     condensed   -- for earlier work, not acceptable to the Grad school,
+%%                    creates condensed versions of the frontmatter. 
+%%                    Condensed implies singlespace.
+%%     dissertation - the default, indicates that this document is a
+%%                    dissertation.
+%%     proposal    -- indicates that this document is a dissertation proposal,
+%%                    rather than a dissertation.  This will only change the
+%%                    wording on the title and signature pages.
+%%     thesis      -- indicates that this document is a Master's thesis 
+%%                    rather than a doctoral dissertation.  This also changes
+%%                    the default for \degree to Master of Science, M.S.
+%%     allowlisthypenation -- (the default), allows hyphenation of words in
+%%                    the table of contents, the list of figures, and the list
+%%                    of tables.  I believe that this is acceptable to the 
+%%                    Graduate School.
+%%     nolisthyphenation -- disallows hyphenation of words in the table of
+%%                    contents and the list of figures and tables.  Use this 
+%%                    option if the Grad School doesn't like your hyphenation.
+%%     nicerdraft  -- relaxes some of the Grad School's rules for working with
+%%                    drafts -- has no effect when doublespace is in effect
+%%     nonicerdraft -- the default, leaves things in draft as they will be in
+%%                     the final version
+%% umthesis changes the default font size to 12pt, but you may specify 10pt or
+%%   11pt in the options.
+\documentclass{umthesis}          % for Ph.D. dissertation or proposal
+% \documentclass[thesis]{umthesis}  % for Master's thesis
+
+%%
+%% If you have enough figures or tables that you run out of space for their
+%% numbers in the List of Tables or List of figures, you can use the following
+%% command to adjust the space left for numbers.  The default is shown:
+%%
+%% \setlength{\tablenumberwidth}{2.3em}
+
+\begin{document}
+
+%%
+%% You must fill in all of these appropriately
+\title{On the predilection of sheep for grass\\A really long
+  title\\with multiple lines}
+\author{I. M. Woolly}
+\date{February 1995} % The date you'll actually graduate -- must be
+                     % February, May, or September
+\copyrightyear{1995}
+\bachelors{B.Sc.}{University of Woolloomooloo}
+\masters{M.Sc.}{University of Back of Bourke}
+\secondmasters{M.Ed.}{Antioch College}
+\priordoctorate{M.D.}{University of Never-never-land}
+% \committeechair{B. B. Bahh}
+\cochairs{B. B. Bahh}{I. M. A. Wolf}
+\firstreader{Little Bo Peep}
+\secondreader{R. U. Sheepish}
+\thirdreader{Bill Shepherd}
+\fourthreader{Mary Lamb}   % Optional
+%\fifthreader{}            % Optional
+%\sixthreader{}            % Optional
+\departmentchair{Pete Shearer}
+\departmentname{Sheep Studies}
+
+%% If your degree is something other than a Ph.D. (for a dissertation), or
+%% an M.S. (for a thesis), you will need to uncomment the appropriate
+%% following line:
+%%
+%% \degree{Doctor of Education}{Ed.D.}
+%% \degree{Doctor of Philosophy}{Ph.D.}
+%%
+%% \degree{Master of Arts}{M.A.}
+%% \degree{Master of Arts in Teaching}{M.A.T.}
+%% \degree{Master of Business Administration}{M.B.A.}
+%% \degree{Master of Education}{M.Ed.}
+%% \degree{Master of Fine Arts}{M.F.A.}
+%% \degree{Master of Landscape Architecture}{M.L.A.}
+%% \degree{Master of Music}{M.M.}
+%% \degree{Master of Public Administration}{M.P.A.}
+\degree{Master of Public Health}{M.P.H.}
+%% \degree{Master of Regional Planning}{M.R.P.}
+%% \degree{Master of Science}{M.S.}
+%% \degree{Master of Science in Accounting}{M.S. Acctg.}
+%% \degree{Master of Science in Chemical Engineering}{M.S. Ch.E.}
+%% \degree{Master of Science in Civil Engineering}{M.S.C.E.}
+%% \degree{Master of Science in Electrical and Computer Engineering}{M.S.E.C.E.}
+%% \degree{Master of Science in Engineering Management}{M.S. Eng. Mgt.}
+%% \degree{Master of Science in Environmental Engineering}{M.S. Env. E.}
+%% \degree{Master of Science in Industrial Engineering and Operations Research}{M.S.I.E.O.R.}
+%% \degree{Master of Science in Manufacturing Engineering}{M.S. Mfg. Eng.}
+%% \degree{Master of Science in Mechanical Engineering}{M.S.M.E.}
+%%
+%% \degree{Professional Master of Business Administration}{P.M.B.A.}
+
+
+%%
+%% These lines produce the title, copyright, and signature pages.
+%% They are Mandatory; except that you could leave out the copyright page
+%% if you were preparing an M.S. thesis instead of a PhD dissertation.
+\frontmatter
+\maketitle
+\copyrightpage     %% not required for an M.S. thesis
+\signaturepage
+
+%%
+%% Dedication is optional -- but this is how you create it
+\begin{dedication}              % Dedication page
+  \begin{center}
+    \emph{To those little lost sheep.}
+  \end{center}
+\end{dedication}
+
+%%
+%% Epigraph goes here...(aka frontispiece)
+%% \chapter{Epigraph}?????
+
+%%
+%% Acknowledgements are optional...yeah, right.
+\chapter{Acknowledgments}             % Acknowledgements page
+  Thanks to all those fine shepherds. Not to mention all the great
+  border collies and suchlike fine animals.
+
+%%
+%% Abstract is MANDATORY. -- Except for MS theses
+\begin{abstract}                % Abstract
+  Sheep like grass.  Why?  Let me tell you.  Sheep are ruminants, like
+  cattle, deer, and horses.  They have stomachs that are specialized...
+\end{abstract}
+
+%%
+%% Preface goes here...would be just like Acknowledgements -- optional
+%% \chapter{Preface} 
+%% ...
+
+
+%%
+%% Table of contents is mandatory, lists of tables and figures are 
+%% mandatory if you have any tables or figures; must be in this order.
+\tableofcontents                % Table of contents
+\listoftables                   % List of Tables
+\listoffigures                  % List of Figures
+
+%%
+%% We don't handle List of Abbreviations
+%% We don't handle Glossary
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Time for the body of the dissertation
+\mainmatter   %% <-- This line is mandatory
+
+%%
+%% If you want an introduction, which is not a numbered chapter, insert
+%% the following two lines.  This is OPTIONAL:
+\unnumberedchapter{Introduction}
+Why on earth do I want to study sheep anyway?
+
+%%
+%% Some sample text
+\chapter{An Introduction to Sheep}
+Is there life after sheep.  Yes, I say there is.%\marginpar{Really?}
+
+\section{Pulling the wool over your eyes}
+
+Sheep are fabulous creatures.  The noises they make are truly stupendous
+\cite{Bah}.  We also want to refer to figure \ref{fig:circle} here.
+Here's some verbatim text to screw us up:
+
+{\small
+\begin{verbatim}
+xxx := y;
+xy := x;
+\end{verbatim}
+}
+
+\begin{figure}
+  \begin{center}
+    \begin{picture}(300,200)
+      \put(150,100){\circle{150}}
+      \put(1,1){\framebox(298,198){}}
+    \end{picture}
+    \caption{A circle in a square.}\label{fig:circle}
+  \end{center}
+\end{figure}
+
+\subsection{All about sheep noises}
+Lots of text here just to fill up some space so we can be sure that we
+really are double-spacing and doing all the other things that might be
+necessary in formatting a dissertation to U.Mass. guidelines.  We're
+also going to have another figure here, figure \ref{fig:disc}, just
+for fun, and to make sure that the list of figures is formatted
+correctly.  Now it's time for table \ref{table:somenumbers}.  We
+really are going to need a third figure, figure \ref{fig:discs}, two
+more tables, table \ref{table:morenumbers} and table
+\ref{table:evenmorenumbers} and a fourth figure, figure
+\ref{fig:circleanddisc}, just to really make sure.
+
+\begin{figure}
+  \begin{center}
+    \begin{picture}(300,200)
+      \put(150,100){\circle*{150}}
+      \put(1,1){\framebox(298,198){}}
+    \end{picture}
+    \caption{A disc in a square.}\label{fig:disc}
+  \end{center}
+\end{figure}
+
+\begin{table}[htbp]
+  \begin{center}
+    \caption{Some numbers.}
+    \label{table:somenumbers}
+    \begin{tabular}{|r|lll|}
+      \hline
+      & Minimum & Average & Maximum \\
+      Type of Animal & Observed & Observed & Observed \\ \hline
+      Cats & 12 & 20 & 24 \\
+      Dogs & 20 & 20 & 20 \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{figure}
+  \begin{center}
+    \begin{picture}(400,200)
+      \put(100,100){\circle*{150}}
+      \put(300,100){\circle*{150}}
+      \put(1,1){\framebox(398,198){}}
+    \end{picture}
+    \caption{Two discs in a rectangle.}\label{fig:discs}
+  \end{center}
+\end{figure}
+
+\begin{table}[htbp]
+  \begin{center}
+    \caption{More numbers.}
+    \label{table:morenumbers}
+    \begin{tabular}{|r|lll|}
+      \hline
+      Type of Animal & Arms & Legs & Ears \\ \hline
+      Person & 2 & 2 & 2 \\
+      Dog & 0 & 4 & 2 \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[htbp]
+  \begin{center}
+    \caption[Even more numbers; together with a caption long enough to ensure that multi-line caption formatting works correctly.]{Even more numbers; together with a caption long enough to ensure that multi-line caption formatting works correctly.  If you want a shorter caption to appear in the Table of Figures you're going to have to put the shorter caption in the \texttt{[]} as shown in this example.}
+    \label{table:evenmorenumbers}
+
+    \begin{tabular}{|r|lll|}
+      \hline
+      x & 1 & 1 & 1 \\ \hline
+      y & 2 & 2 & 2 \\
+      z & 3 & 3 & 3 \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{figure}
+  \begin{center}
+    \begin{picture}(400,200)
+      \put(100,100){\circle{150}}
+      \put(300,100){\circle*{150}}
+      \put(1,1){\framebox(398,198){}}
+    \end{picture}
+    \caption{A circle and a disc in a square.  We want this caption to
+      be very long to ensure that the formatting of very long captions
+      is handled correctly.  The case of short captions has already
+      been dealt with.}\label{fig:circleanddisc}
+  \end{center}
+\end{figure}
+
+
+
+\subsubsection{Baahs}
+\subsection{Even more about sheep noises}
+\subsection{And yet more about sheep noises}
+
+\section{What about wolves?}
+
+\section{What about shepherds?}
+What about shepherds?  I don't really know, but I want some text here
+to fill things in so that I can verify that everything is OK.
+\subsection{A subsection}
+This is a subsection of the subsection about shepherds.
+\subsection{Another subsection}
+This is another subsection of that section.
+\subsubsection{A subsubsection}
+This is a subsubsection of that subsection that will in turn havae a
+paragraph with a pair of subparagraphs.  I am aware that I shouldn't
+have only one subsubsection in the subsection...
+\paragraph{A Paragraph} 
+This is the text associated with this paragraph.  I really want enough
+text to make it look like a paragraph.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah. 
+\subparagraph{A Subparagraph} 
+This is the text associated with this subparagraph.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah. 
+\subparagraph{Another Subparagraph}
+Better not have subparagraphs without text in them.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah. 
+\paragraph{Another Paragraph}
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.
+
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.
+\subsubsection{Another Subsubsection}
+With some text.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah. 
+
+\chapter{Sheep and Grass}
+
+\section{Introduction}
+
+Grass is a wonderful food...  Baah, baah, baah.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah. 
+
+\chapter{A Wonderfully Long Chapter Title That Is This Long In Order
+  to Test the Chapter Heading Stuff}
+Note that we shouldn't really have a chapter heading with no body, so
+here is a body for this chapter.  Baah, baah, baah.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.
+Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah,
+baah.  Baah, baah, baah.  Baah, baah, baah.  Baah, baah, baah.  Baah,
+baah, baah.  Baah, baah, baah. 
+
+\section{The antidisestablishmentarainism supercalifragilisticexpialidocious longlonglonglonglongword}
+
+Some text for this section.
+
+
+%% End of body
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\chapter{THE FIRST APPENDIX TITLE}
+...
+\chapter{THE SECOND APPENDIX TITLE}
+...
+
+%%
+%% Beginning of back matter
+\backmatter  %% <--- mandatory
+
+%%
+%% We don't support endnotes
+
+%%
+%% A bibliography is required.
+\bibliographystyle{umthesis}
+\bibliography{umthsmpl}
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

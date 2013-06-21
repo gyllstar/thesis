@@ -1,0 +1,27 @@
+\section{Related Work}
+\label{sec:related}
+
+\full is well-studied \cite{Baldwin93,Brueni05,Haynes02, Mili90, Xu04}.  
+Haynes et al. \cite{Haynes02} and Brueni and Heath \cite{Brueni05} both prove \full is NPC.  
+However, their proofs make the unrealistic assumption that all nodes are zero-injection.  We drop this assumption and thereby generalize their NPC results for \fulls.
+Additionally, we leverage the proof technique from Brueni and Heath \cite{Brueni05} in all four of our NPC proofs, although our proofs
+differ considerably in their details. 
+
+%The power systems literature generally ignores the fact that PMUP is NP-Complete because, in practice, power system graphs are small enough to allow for an exact solution to be found.
+In the power systems literature, Xu and Abur \cite{Xu04,Xu05} use integer programming to solve \fulls, while Baldwin et al. \cite{Baldwin93} and Mili et al. \cite{Mili90} use simulated annealing 
+to solve the same problem. All of these works allow nodes to be either zero-injection or non-zero-injection.  However,
+these papers make no mention that \full is NPC, i.e., they do not characterize the fundamental complexity of the problem. 
+%The work of Xu and Abur \cite{Xu04} and Phadke et al. are representive of the power systems approach to the problem: formulate the problem as integer 
+%program and use an integer programming solver to find the optimal PMU placement.  
+
+Aazami and Stilp \cite{Aazami07} investigate approximation algorithms for \fulls.  They derive a hardness approximation threshold of $2^{\log^{1 -\epsilon}n}$.
+Also they prove that in the worst case, {\tt greedy} from Section \ref{sec:approx} does no better $\Theta(n)$ of the optimal solution.  However, this approximation ratio assumes that 
+all nodes are zero-injection.
+%We leverage this approximation result in proving the approximation ratios of our heuristic-based algorithms.
+
+Chen and Abur \cite{Abur06} and Vanfretti et al. \cite{Vanfretti10} both study the problem of bad PMU data. Chen and Abur \cite{Abur06} formulate their problem differently than \xval and \xvalparts.  
+They consider fully observed graphs and add PMUs to the system to make all existing PMU measurements non-critical 
+(a critical measurement is one in which the removal of a PMU makes the system
+no longer fully observable). Vanfretti et al. \cite{Vanfretti10} define the cross-validation rules used in this paper.  They also derive a
+lower bound on the number of PMUs needed to ensure all PMUs are cross-validated and the system is fully observable. 
+

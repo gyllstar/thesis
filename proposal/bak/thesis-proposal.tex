@@ -1,0 +1,203 @@
+\documentclass{umthesis}      
+
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{epsfig}
+\usepackage{amssymb,amsfonts,amsmath}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{rotating}
+\usepackage{algorithmic}
+\usepackage{epstopdf}
+\usepackage{framed}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{moreverb}
+\usepackage{cancel}
+\usepackage{endnotes}
+\usepackage{fancyhdr}
+\usepackage{datetime}
+\usepackage{hyperref}
+%\usepackage{doublespace}
+
+%\pagestyle{fancy}
+%\rfoot{Compiled on \today\ at \currenttime}
+%\lfoot{Page \thepage}
+
+
+
+
+
+\DeclareGraphicsRule{.tic}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\textwidth = 6.5 in
+\textheight = 9 in
+\oddsidemargin = 0.0 in
+\evensidemargin = 0.0 in
+\topmargin = 0.0 in
+\headheight = 0.0 in
+\headsep = 0.0 in
+%\parskip = 0.08in
+\parskip = 0.1in
+\parindent = 0.0in
+
+%\newtheorem{theorem}{Theorem}[section]
+%\setcounter{theorem}{0}
+%\newtheorem{algorithm}[theorem]{Algorithm}
+%\newtheorem{claim}[theorem]{Claim}
+%\newtheorem{conjecture}[theorem]{Conjecture}
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{fact}[theorem]{Fact}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{meta-proposition}[theorem]{Meta-Proposition}
+%\newtheorem{note}[theorem]{Note}
+%\newtheorem{observation}[theorem]{Observation}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{proviso}[theorem]{Proviso}         
+%\newtheorem{question}[theorem]{Question}         
+%\newtheorem{remark}[theorem]{Remark}         
+
+
+%\newcommand{\pcnt}{{\tt pcount} }
+%\newcommand{\pcnts}{{\tt pcount}}
+\newcommand{\pcnt}{\textsc{Pcount} }
+\newcommand{\pcnts}{\textsc{Pcount}}
+
+\newcommand{\cnt}{{\tt count} }
+\newcommand{\cnts}{{\tt count}}
+
+\newcommand{\fls}{\textsc{Failed-Link}}
+\newcommand{\fl}{\textsc{Failed-Link} }
+
+\newcommand{\net}{\textsc{Pmu-Network} }
+\newcommand{\nets}{\textsc{Pmu-Network}}
+
+\newcommand{\myopic}{\textsc{Myopic Multicast Tree Repair} }
+\newcommand{\myopics}{\textsc{Myopic Multicast Tree Repair}}
+\newcommand{\bigpic}{\textsc{Global Multicast Tree Repair} }
+\newcommand{\bigpics}{\textsc{Global Multicast Tree Repair}}
+\newcommand{\mc}{\textsc{Min-Control} }
+\newcommand{\mcs}{\textsc{Min-Control}}
+\newcommand{\mf}{\textsc{Min-Flows} }
+\newcommand{\mfs}{\textsc{Min-Flows}}
+\newcommand{\mds}{\textsc{Min-Sinks}}
+\newcommand{\md}{\textsc{Min-Sinks} }
+\newcommand{\mdj}{\textsc{Max-Disjoint} }
+\newcommand{\mdjs}{\textsc{Max-Disjoint}}
+
+%\newcommand{\xx}[1] {\textcolor{purple}{\textit{{\bf COPIED TEXT}: #1}}} % Self-Note
+%\newcommand{\xxn}[1] {\textcolor{purple}{\textit{#1}}} % Self-Note
+\newcommand{\xx}[1] {\textcolor{purple}{{\bf COPIED TEXT}: #1}}
+\newcommand{\xxn}[1] {\textcolor{purple}{#1}} 
+%\newcommand{\xxx}[1] {\textcolor{orange}{\textit{{\bf SELF NOTE}: #1}}} % Self-Note
+\newcommand{\xxx}[1] {\textcolor{orange}{\textit{\un{Self Note}: #1}}} % Self-Note
+\newcommand{\xxxn}[1] {\textcolor{orange}{#1}} % Self-Note
+\newcommand{\xxxe}[1] {\endnote{ \textcolor{orange}{#1}}} % Self-Note
+\newcommand{\xxxx}[1] {\textcolor{cyan}{\textit{{\bf TODO}  #1}}} % No Self-Note
+\newcommand{\xxxxe}[1] {\endnote{ \textcolor{cyan}{\textit{{\bf TODO}  #1}}}} % No Self-Note
+\newcommand{\xxxxn}[1] {\textcolor{cyan}{#1}} % No Self-Note
+\newcommand{\yy}[1] {\endnote{ {\textcolor{gray}{\un{Comment}: {\it #1}}}} }
+%\newcommand{\yy}[1] {\footnote{ {\textcolor{gray}{\un{Comment}: {\it #1}}}} }
+%\newcommand{\yy}[1] {\textcolor{gray}{\footnote{\un{Comment}: #1}}} 
+\newcommand{\yyn}[1] {\textcolor{gray}{#1}} 
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+
+
+\makeatletter
+\newcommand{\un}[1]{%
+    \ifmmode \@@underline{#1} \else %
+             $\@@underline{\hbox{#1}}$\fi}
+\makeatother
+\raggedbottom
+
+\begin{document}
+
+%\input{title}
+
+\title{Making Networks Robust to Component Failure}
+\author{Daniel P. Gyllstrom}
+\date{May 2013} % The date you'll actually graduate -- must be
+                     % February, May, or September
+\copyrightyear{2012}
+\bachelors{B.Sc.}{Trinity College}
+\masters{M.Sc.}{University of Massachusetts Amherst} 
+\committeechair{Jim Kurose}
+\firstreader{Jim Kurose}
+\secondreader{Prashant Shenoy}
+\thirdreader{Deepak Ganeson}
+\fourthreader{Lixin Gao}   % Optional
+\departmentchair{Andy Barto}
+\departmentname{Computer Science}
+
+\degree{Doctor of Philosophy}{Ph.D.}
+
+%%
+%% These lines produce the title, copyright, and signature pages.
+%% They are Mandatory; except that you could leave out the copyright page
+%% if you were preparing an M.S. thesis instead of a PhD dissertation.
+\frontmatter
+\maketitle
+\copyrightpage     %% not required for an M.S. thesis
+\signaturepage
+
+%%
+%% Dedication is optional -- but this is how you create it
+\begin{dedication}              % Dedication page
+  \begin{center}
+    \emph{For myself.}
+  \end{center}
+\end{dedication}
+
+
+
+\chapter{Acknowledgments}             % Acknowledgements page
+  Thanks to me. 
+
+%% Abstract is MANDATORY. -- Except for MS theses
+\begin{abstract}                % Abstract
+abstract text
+
+\end{abstract}
+
+%\input{thesis-abstract}
+
+%%
+%% Table of contents is mandatory, lists of tables and figures are 
+%% mandatory if you have any tables or figures; must be in this order.
+\tableofcontents                % Table of contents
+\listoftables                   % List of Tables
+\listoffigures                  % List of Figures
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Time for the body of the dissertation
+\mainmatter   %% <-- This line is mandatory
+
+%%
+%% If you want an introduction, which is not a numbered chapter, insert
+%% the following two lines.  This is OPTIONAL:
+\unnumberedchapter{Introduction}
+
+
+
+
+\chapter{Recovery from False Routing State in Distributed Routing Algorithms}
+
+
+\chapter{Background: Smart Grid and PMU Sensors}
+
+
+
+\chapter{PMU Sensor Placement for Measurement Error Detection in the Smart Grid}
+
+
+\chapter{Recovery from Link Failures in a Smart Grid Communication Network}
+
+
+\end{document}
+
+

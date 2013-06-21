@@ -1,0 +1,65 @@
+\section{Introduction}
+\label{subsec:rb-intro}
+
+%Distributed systems are vulnerable to malicious and misconfigured nodes which inject false system state. 
+
+Malicious and misconfigured nodes can degrade the performance of a distributed system by injecting incorrect state information. Such false state can then be further propagated 
+through the system either directly in its original form or indirectly, e.g., as a result of diffusing computations initially using this false state. 
+For example, consider distance vector routing.  If a compromised node incorrectly claims a distance of $0$ to all destinations, this false state would likely
+spread throughout the network, infecting shortest paths network-wide.
+%For example, with distance vector a compromised node incorrectly claiming a distance of $0$ to all destinations would likely infect shortest paths throughout the network.
+In this paper, we consider the problem of removing such false state. % from a distributed system.
+
+In order to make the false-state-removal problem concrete, we investigate distance vector routing as an instance of this problem. Distance vector forms the basis for many routing 
+algorithms widely used in the Internet (e.g., BGP, a path-vector algorithm) and in multi-hop wireless networks (e.g., AODV, diffusion routing). However, distance vector is vulnerable 
+to compromised nodes that can potentially flood a network with false routing information, resulting in erroneous least cost paths, packet loss, and congestion. Such scenarios have occurred
+in practice. For example, in 1997 a significant portion of Internet traffic was routed through a single misconfigured router, rendering a large part of the Internet inoperable for several
+hours \cite{Neumann97}. More recently \cite{Google}, a routing error forced Google to redirect its traffic through Asia, causing congestion that left many Google services unreachable. 
+Distance vector currently has no mechanism to recover from such scenarios. Instead, human operators are left to manually reconfigure routers. It is in this context that we propose and
+evaluate automated solutions for recovery.  We make the following contributions:
+
+\begin{itemize}
+
+\item We design, develop, and evaluate three different approaches -- \seconds, \purges, and \cpr -- for correctly recovering from the injection of false routing state (Section \ref{sec:idea}). 
+\second performs localized state invalidation, followed by network-wide recovery using the traditional distance vector algorithm (Section \ref{subsubsec:second}).
+The \purge algorithm performs global false state invalidation by using diffusing computations to invalidate distance vector 
+entries (network-wide) that routed through a compromised node (Section \ref{subsubsec:purge}). Then, traditional distance vector routing is used to recompute distance vectors.
+\cpr uses local snapshots and a rollback mechanism to implement recovery (Section \ref{subsubsec:cpr}). 
+
+\item We prove the correctness of each algorithm for scenarios of single and multiple compromised nodes (Section \ref{sec:correct}). 
+A recovery algorithm is correct if the routing tables for all nodes have converged to a global state in which all nodes 
+have removed each compromised node as a destination and no node bears a least cost path to any destination that routes through a compromised node.
+
+\item We derive communication complexity bounds for each algorithm over a synchronous communication model (Section \ref{sec:analysis}).  
+%In some scenarios, we find the exact number of messages each node sends in order recover. 
+We find all three algorithms are bounded above by $O(mnd)$ -- where $d$ is the diamter, $n$ is the number of nodes, and $m$ the maximum out-degree of any node -- in scenarios where 
+link costs remain fixed.  In scenarios where link costs can change, \cpr incurs additional overhead (not experieced by \second and \purges) because \cpr must update stale
+state after rolling back.  This leads to an additional term for \cpr in its $O(mnd)$ upper bound. %\cpr has an additional term
+
+\item Using simulations, we evaluate the efficiency of each algorithm in terms of message overhead and convergence time in scenarios with single and 
+multiple compromised nodes. (Section \ref{sec:eval}).
+Our simulations show that \cpr using poison reverse outperforms \second and \purge (with and without poison reverse) -- at the cost of checkpoint memory --
+over topologies with fixed and changing link costs. This is because \cpr efficiently removes all false state by rolling back to a checkpoint
+immediately preceding the injection of false routing state. 
+
+\item We show through simulations that \purge using poison reverse yields performance close to \cpr with poison reverse in scenarios where link costs can change
+(Section \ref{subsec:change}). \purge makes use of computations subsequent to the injection of false routing state that do not depend on false routing state, while \cpr 
+must process all valid link cost changes that occurred since false routing state was injected.  Finally, our simulations show that poison reverse significantly improves 
+performance for all three algorithms, especially for topologies with changing link costs (Section \ref{subsubsec:pr-fixed} and \ref{subsubsec:pr-change}). % by removing pairwise routing loops.
+
+\end{itemize}
+
+Recovery from false routing state is closely related to the problem of
+recovering from malicious transactions \cite{Liu98,Liu00} in
+distributed databases. Our problem is also similar to that of rollback
+in optimistic parallel simulation \cite{Jeff}. However, we are unaware
+of any existing solutions to the problem of recovering from false
+routing state. A closely related problem to the one considered in this
+paper is that of discovering misconfigured nodes. In
+Section~\ref{sec:problem}, we discuss existing solutions to this
+problem. In fact, the output of these algorithms serve as input to the
+recovery algorithms proposed in this paper.
+
+
+
+

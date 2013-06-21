@@ -1,0 +1,166 @@
+%%%%%%%%%%%%%% Related Work section %%%%%%%%%%%%%%%%%%
+\section{Related Work}
+\label{sec:related-rollback}
+
+
+%There is much research in detecting routing misconfiguration \cite{Arini}, \cite{Feam}, \cite{Feldmann} and forwarding misbehaviors \cite{Paul02}.
+%This research is vital to our work because the output of these algorithms (i.e., identity of the compromised node) is the input to our recovery algorithms. 
+
+%To the best our knowledge no existing approaches exist to address recovery from false routing state in distance vector. However,
+%work on recovery from malicious database transactions, database crash recovery, distributed rollback-recovery, 
+%and discrete parallel simulation are relevant to our problem.  We discuss each of these topics below.
+
+To the best our knowledge no existing approach exists to address recovery from false routing state in distance vector routing. However,
+our problem is similar to that of recovering from malicious but committed database transactions. Liu et al.
+\cite{Liu98} and Ammann et al \cite{Liu00} develop algorithms to restore a database to a valid state after a malicious transaction has been identified. 
+\purges's algorithm to globally invalidate
+false state can be interpreted as a distributed implementation of the dependency graph approach by Liu et al. \cite{Liu00}.  Additionally,
+if we treat link cost change events that occur after the compromised node has been discovered as database transactions, we face a similar design decision as in  \cite{Liu98}: 
+do we wait until recovery is complete before applying link cost changes or do we allow the link cost changes to execute concurrently?
+
+%the purge phase in effect finds all nodes that either directly or transitively use \bad as an intermediate node.
+
+Database crash recovery \cite{Mohan92} and message passing systems \cite{Arini} both use snapshots to restore the system in the event of a failure. In both 
+problem domains, the snapshot algorithms are careful to ensure snapshots are globally consistent. 
+In our setting, consistent global snapshots are not required for \cprs, since  
+distance vector routing only requires that all initial distance estimates be non-negative.
+
+Garcia-Lunes-Aceves's DUAL algorithm \cite{JJ93} uses diffusing computations to coordinate least cost updates in order to prevent routing loops. 
+In our case, \cpr and the prepossessing procedure (Section \ref{subsec:preprocess}) use diffusing computations for purposes other than updating least costs 
+(e.g., rollback to a checkpoint in the case of \cpr
+and remove \bad as a destination during preprocessing). Like DUAL, the purpose of \purges's diffusing computations is to prevent routing loops.  However, \purges's diffusing computations
+do not verify that new least costs preserve loop free routing (as with DUAL) but instead globally invalidate false routing state. 
+
+%In our case, the safe snapshot reflects the system  state before a node is compromised. 
+
+%Elnozahy et al \cite{Elno} survey rollback-recovery techniques for message passing systems. Each algorithm they survey relies on system-wide snapshots 
+%to restore system state in the event of a failure. Upon detecting a failure, a global snapshot is read from persistent storage and the system rolls back to this state. 
+%In order to preserve correctness, the algorithms are careful to ensure that snapshots reflect a consistent global state.
+%Similarly, our \cpr algorithm uses system snapshots to facilitate recovery. However, consistent global snapshots are not required in our setting 
+
+Jefferson \cite{Jeff} proposes a solution to synchronize distributed systems called Time Warp. Time Warp is a form of optimistic 
+concurrency control and, as such, occasionally requires rolling back to a checkpoint. Time Warp does so by ``unsending'' each message sent after the time the checkpoint was taken.
+With our \cpr algorithm, a node does not need to explicitly ``unsend'' messages after rolling back.  Instead, each node sends its \minv taken at the time of the snapshot, which
+implicitly undoes the effects of any messages sent after the snapshot timestamp.
+
+%Jefferson \cite{Jeff} proposes a solution to synchronizing distributed systems through an abstraction of real time called virtual time. Virtual time is implemented
+%using the time warp mechanism.  With time warp, each node is responsible for its own checkpointing and corrects errors independently of other nodes.  However, complications can 
+%arise if a node, $i$, locally rolls back to a checkpoint. If $i$ has sent messages to other nodes between the timestamp of the checkpoint and the current time, actions at other nodes
+%may need to be undone. Time warp does so using antimessages.  Each antimessage corresponds to a positive message.  When $i$ rolls back it sends an antimessage for each positive
+%message it sent between the timestamp of the checkpoint and ``now''.  Nodes receiving any such antimessage, undoes the actions (if necessary) of the corresponding positive message.  
+%This may involve rolling back and sending more antimessages.
+
+
+
+
+
+
+%Time warp's relaxed synchronization criteria makes it an attractive approach to increasing throughput in parallel discrete event simulation.  Rather than
+%force time-ordered event processing, time warp relaxes synchronization which provides flexibility for high degrees of parallelism.  
+
+%However, time warp must handle out-of-order events.  If an out-of-order event/message is received, a node must rollback to a checkpoint taken before the receive time 
+%of the message.  Also all messages sent after the snapshot is taken must be undone.  Time warp does so by sending antimessages.
+%does so 
+%Contrary to other approaches which force time-ordered event processing, time warp allows for out-of-order events processing.  Time warp can 	
+
+
+%loose synchronization
+%parallelizism
+%rollback and undo any events 
+
+
+%Distributed rollback and recovery has a rich history.  Jefferson \cite{Jefferson} proposed a solution to synchronizing 
+%distributed systems through an abstraction of real time, which he terms virtual time.  Virtual time allows each node to be organized around a global virtual clock, rather
+%than maintain a synchronized clock. Under this scheme, each node maintains a local virtual clock.  Messages are processed in the order of their virtual time.  Virtual time 
+%can increase system throughput by not having to agree on global virtual time.  
+
+%However, this optimistic approach to synchronization requires a rollback mechanism, in the case where a node receives a message ``in the past''. In the virtual time
+%implementation, called Time Warp, each node periodically checkpoints.  When a message from the past is received a node rollback to a checkpoint marking the node's state
+%just before the timestamp of the message.  In order to undo messages sent during this period, Time Warp introduces the notion of antimessages.  
+
+%Virtual time is implemented using Time Warp
+
+%{\bf Self-note:} {\it insert ``Virtual Time'' review}.
+
+%Our problem is simpler than that of database crash recovery so our algorithms do not need to address many of the challenges faced in the database setting.
+%The same reasoning can be applied to distributed database crash recovery as surveyed by Lin et al \cite{Lin97asurvey}.
+%Although many more differnces exist than those mentioned, the key point is that the two problems have a weak connection. i
+%To summarize, at a basic level both approaches leverage system snapshots for recovery but the connections do not run any deeper. 
+
+
+%Before describing our recovery algorithms, we first present a useful analogy: a link cost change event in distance vector is like a distributed 
+%database transaction. A database transaction is a sequence of read and writes of tuples. In a distributed database these read and writes can occur over several 
+%different sites. Similarly, in DV a \lcd can cause a sequence of reads and writes. If the \lcd
+%results in a new \minv, update messages are sent.  Nodes that receive these update messages  \emph{read} the new \minv values and update their 
+%distance matrix. If the received \minv results in a new least cost distance, a node will \emph{write} to its \minv and send a message, 
+%resulting in potentially more reads and writes. Note that we are not considering the update to the \dmatrix as a \emph{write}, only
+%updates to \minv. We use this analogy to help describe \second, \purge, and \cpr.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5 BEGIN COMMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+
+
+
+Superficially, principles from database crash recovery map well to our problem. However, crash recovery algorithms are more complex because they must address 
+a set of issues that do not exist in our setting. 
+For example, although snapshots are taken in our \cpr algorithm and with database checkpoints, the algorithms are fundamentally different because
+a database must address many problems that do not exist in our setting.
+%For example, system snapshots are leveraged in the \cpr algorithm to record a state of the system
+%before the compromised node goes bad. %to provide allowing for efficient recovery by rolling back to such a snapshot.  
+%This is similar to a database checkpoint because it too records system state. However,
+A database checkpoints must record the state of 
+in-memory data structure such as the Transaction Table and Dirty Page Table. 
+Also database checkpoints must address the issue of either quiescing the system
+to take a snapshot or take a fuzzy checkpoint that requires additional post-processing steps to provide a consistent state. With \cpr we do not face
+these issues. 
+
+Another difference is how state is stored. With \cpr we merely need to add a time dimension to each data structure, while
+database transaction logs are more complex. Because the transaction log is responsible for archiving many data structures it has a more 
+involved storage, indexing, and maintenance procedures. Another emphasis is that the transaction log physically reside on stable storage in order to
+insure against losing all database state in the event multiple crashes. In distance vector we need not be so careful because we
+can always rerun distance vector to produce valid distance values.
+
+%Although many more differnces exist than those mentioned, the key point is that the two problems have a weak connection. i
+To summarize, at a basic level both approaches leverage system snapshots for recovery but the connections do not run any deeper. The same reasoning
+can be applied to distributed database crash recovery as surveyed by Lin et al \cite{Lin97asurvey}.
+
+
+
+
+
+
+However, database checkpointing must address 
+a whole set of concerns that do not exist in our problem setting. These concerns include but are not limited to:
+%crash recovery vs. snapshot 
+\begin{itemize}
+	
+	\item Database crash recovery needs to be precise about what transactions are active in the system to ensure an accurate snapshot. Many transactions may 
+	be active when a snapshot is created.
+
+	\item Many in memory data structures and persistent state needs to be recovered after a crash.
+
+	\item There is a wealth of exception conditions to consider in crash recovery.  For example, the system may crash during recovery.
+
+	\item stable storage is required to keep persistent state.  without this insurance all db content can be lost.  with DV the values can
+	always be recomputed in the worst case by rerunning dv from scratch.
+
+\end{itemize}
+
+transaction log implementation, transaction table, dirty page table, what a checkpoint is, concurrency
+{\it Comment may want to move these comments to the bullet points themselves}
+A single distance vector node that wishes to archive the state of \minv and \dmatrix does not face these sorts of challenges. It only needs to record the
+before and after state of these data structures when an update message is processed. Unlike the database scenario, we do not have to consider the 
+case of concurrent messages.  Rather, a node need only consider the current message because messages are processed one at a time at a given node and 
+messages processed by other nodes can be locally ignored. Also, no in memory data structures need to be 
+restored in distance vector recovery and the only persist state recovered is contained in the snapshot itself.  
+Finally, {\it not sure about exception conditions}.
+
+We conclude that although the principle of using snapshots to improve recovery performance is consistent between the two problem domains, the 
+spirit of database checkpointing is quite different from what is required in distance vector recovery. For this reason, we do not explicitly apply techniques
+from database checkpointing algorithms. 
+
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5 END COMMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

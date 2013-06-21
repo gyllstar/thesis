@@ -1,0 +1,66 @@
+
+
+In this chapter we provide a timeline of planned future work (Section \ref{sec:future-timeline}) and
+briefly comment on additional topics for research that fall outside the scope of this thesis (Section \ref{sec:future-out-of-scope}).
+
+\section{Planned Future Work and Timeline}
+\label{sec:future-timeline}
+
+Because the work described in Chapters \ref{ch:rollback} and \ref{ch:pmu} is complete, all planned future work is focused on completing the research proposed in Chapter \ref{ch:reliable-mcast}.
+For each algorithm described in Chapter \ref{ch:reliable-mcast} -- \mdrs, \fls, \pcnts, \mfs, \mds, and \mc -- we plan to supplement its basic description with a detailed 
+specification of its algorithm steps, implement the algorithm in OpenFlow, and evaluate its implementation.  We estimate this requires six months of steady work to complete.  
+%The author believes this six month goal will be met without issue as the birth and care of a newborn child -- the author expects his first born child in January 2013 --
+%should introduce no delays nor complications.
+
+We now provide a more detailed specification of thesis milestones and anticipated dates of completion:
+\begin{enumerate}
+
+
+	\item Extend my unicast flow-based specification of \fl to work for multicast flows.  \hfill {\it (Feb.)}
+	
+	%\item Implement \fl in OpenFlow and using the POX controller \footnote{\url{https://openflow.stanford.edu/display/ONL/POX+Wiki}}. \hfill {\it (Feb.)}
+	\item Complete OpenFlow-based implementation for \fl using the POX controller \footnote{\url{https://openflow.stanford.edu/display/ONL/POX+Wiki}}. \hfill {\it (Feb.)}
+
+	\item Use OpenFlow emulator, Mininet \footnote{\url{http://yuba.stanford.edu/foswiki/bin/view/OpenFlow/Mininet}}, to test and profile \fls. \hfill {\it (March)}
+
+	\item Provide detailed design and specification of \mfs, \mds, and \mcs.  \hfill {\it (March)}
+	
+	\item Complete OpenFlow-based implementation for \mfs, \mds, and \mc using POX controller. \hfill {\it (April)}
+	
+	\item Complexity analysis of \mfs, \mds, and \mcs.  \hfill {\it (April)}
+
+	\item Run simulations to evaluate \mfs, \mds, and \mc using Mininet. \hfill {\it (May)}
+
+	\item Write conference paper based on Chapter \ref{ch:reliable-mcast} research. \hfill {\it (June)}
+
+
+\end{enumerate}
+Throughout this process, I plan to write the remaining sections of the last technical thesis chapter as dictated by the results derived from each step specified above. 
+
+\section{Future Work Outside the Scope of this Thesis}
+\label{sec:future-out-of-scope}
+
+%There are several topics for future work, noted here, but will not be considered as a part of this thesis.
+In this section, we comment on topics for future work that will not be considered as a part of this thesis.  
+\begin{itemize}
+	\item {\bf Chapter \ref{ch:rollback}}. 
+	One challenging problem is to find the worst possible false state a compromised node can inject.  Some options include the minimum distance to all nodes (e.g., 
+our choice for false state used in Chapter \ref{ch:rollback}), state that maximizes the effect of the \infinity problem, and false state that contaminates a bottleneck link. 
+
+	\item {\bf Chapter \ref{ch:pmu}}. 
+The success of the greedy algorithms suggests that the IEEE bus systems have special topological characteristics.  Finding and investigating these properties could be a fruitful 
+exercise that might provide more insight into why {\tt greedy} and {\tt xvgreedy} yield such encouraging results.
+Additionally, a valuable contribution would be to implement the integer programming approach proposed by Xu and Abur \cite{Xu04} to solve \fulls, as this would
+provide valuable data points to measure the relative performance of {\tt greedy}.
+	
+	\item {\bf Chapter \ref{ch:reliable-mcast}}. Because our algorithms for backup multicast tree computation are not fully specified, implemented, nor evaluated, we are unable to comment
+	on any future work related to this chapter.
+	
+\end{itemize}
+
+
+
+
+
+
+

@@ -1,0 +1,65 @@
+\section{Introduction}
+\label{sec:intro}
+
+% protection and control during abnormal conditions + help monitoring the system state`
+
+Significant investments have been made to deploy phasor measurement unit (PMUs) on electric power grids worldwide. A new generation of PMUs provide synchronized voltage and current measurements at a sampling rate orders of magnitude higher than the status quo: $10$ to $60$ samples per second rather than one 
+sample every $1$ to $4$ seconds. Consequently, PMUs have the potential to enable
+an entirely new set of applications for the power grid:  protection and control during abnormal conditions, real-time distributed control, postmortem analysis of system faults using time synchronized data, advanced state estimators for system monitoring, and the reliable integration of renewable
+energy resources \cite{Naspi10}. 
+
+An electric power system consists of a set of buses  -- an electric substation, power generation center, or aggregation of loads -- and transmission lines connecting those buses.
+The state of a power system is defined by the voltage phasor -- the magnitude and phase angle -- of all system buses and the current phasor of all transmission lines.  
+PMUs placed on buses provide real-time measurements of these system variables. % PMUs are placed on buses to measure the bus voltage phasor and the current phasor on all connected transmission lines. 
+%PMUs provide real-time measurements of these system variables. PMUs are placed on buses to measure the bus voltage phasor and the current phasor on all connected transmission lines. 
+However, because PMUs are expensive, they cannot be deployed on all system buses \cite{Baldwin93,LaRee10}. Fortunately, all system variables can be observed even when PMUs are placed at only a subset of system buses, by estimating the voltage phasor of buses without PMUs and the current phasors of unmeasured transmission lines using Ohm's and Kirchhoff's laws 
+\cite{Baldwin93,Brueni05}. 
+%system variables to be computed: the voltage phasor of buses without PMUs and current phasors of unmeasured transmission lines can be estimated using Ohm's and Kirchhoff's laws 
+%\cite{Baldwin93,Brueni05}. 
+
+In this work, we study two sets of PMU placement problems. The first problem -- \maxinc -- aims to observe the maximum number of system buses given a fixed number of PMUs.
+A bus is said to be {\em observed} if there is a PMU placed at it or if its voltage phasor can be estimated using Ohm's or Kirchhoff's Law.  
+\maxinc is closely related to another well-studied PMU placement problem: finding the minimum number of PMUs that can result in the observation of all system
+buses \cite{Baldwin93,Brueni05,Haynes02, Mili90, Xu04}.  However, the \maxinc problem formulation presented here is unique.
+
+The second set of placement problems aim to identify PMU errors, which have been recorded in PMUs used in practice \cite{Vanfretti10}. 
+Informally, the goal of the first such placement problem 
+(\xvalparts) is to observe, given a set of PMUs, the maximum number of
+buses while deploying PMUs ``near'' each other to enable them to cross-validate each other's measurements.  Next, 
+we formulate a placement problem similar to \xvalparts, called \xvals. In \xvals, the goal is to find the minimum number of PMUs such that all system buses are observed under 
+the constraint that each PMU is placed near enough to at least one other PMU to allow its PMU measurements to be cross-validated.
+
+%In this work, we study two sets of PMU placement problems. The first problem -- called \maxinc -- aims to observe the maximum number of system buses given a constant number of PMUs.
+%An observed bus is one with a PMU or a bus in which Ohm's Law or Kirchhoff's Current Law can be used to estimated the voltage phasor.  In the second placement problem (\xvalparts), the goals 
+%(informally) are twofold: given a constant number of PMUs, observe the maximum number of nodes and deploy PMUs ``near'' each other to enable PMUs to validate each other's measurements.  Finally,
+%we formulate a third placement problem simlar to \xvalparts, called \xvals. In \xvals, the goal is to find the minimum number of PMUs such that all PMUs are placed near each other 
+%-- to allow for PMU measurements to be validated -- and all system buses are observed.
+
+%\maxinc is closely related to another PMU placement problem -- find the minimum number of PMUs that can result in the observation of all system buses -- 
+%which is well studied \cite{Baldwin93,Brueni05,Haynes02, Mili90, Xu04}.  However, the \maxinc problem formulation is unique.
+%We build on this related wor
+%The \xvalpart formulation is motivated by PMU errors, in particular PMU phase angle errors, recorded in PMUs used by real utilities \cite{Vanfretti10}.  
+%These errors must be identified and corrected, especially as PMUs become critical infrastructure in the power grid. 
+
+
+
+
+We make the following contributions in this paper:
+\begin{itemize}
+	
+	\item  We formally define graph-theoretic rules for cross-validating PMU placements. %, in which nearby PMUs can verify each other's measurements.  
+	PMUs are cross-validated when PMU data from two buses can be used to each, independently, compute the voltage phasor of a non-PMU bus (Section \ref{subsec:xval}).
+	%Informally, a PMU is cross-validated when PMU data from two buses can compute the voltage phasor of a non-PMU bus (Section \ref{subsec:xval}).
+	%a PMU is cross-validated when the voltage phasor of a non-PMU bus is measured by two PMUs
+	
+	\item  We define three related PMU placement problems. The first problem seeks to observe the maximum number of nodes given a fixed number of PMUs.  
+	The second two problems consider placing the minimum number of PMUs such that all PMUs are cross-validated and the maximum number of nodes is observed (Section \ref{sec:prelim}).
+	%The second two placement problems consider placing the minimum number of PMUs such that the voltage phasor of a non-PMU bus is measured by two PMUs -- this ensures PMU data is cross-validated --
+	%and the maximum number of nodes are observed (Section \ref{sec:prelim}).
+	
+	\item We prove that all three PMU placement problems are NP-Complete. This represents our most important contribution (Section \ref{sec:prelim}). 
+
+	\item We present greedy approximation algorithms for each PMU placement problem (Section \ref{sec:approx}) and through simulations, we evaluate these algorithms over real
+	IEEE bus systems and synthetic graphs (Section \ref{sec:simulations}).
+	
+\end{itemize}

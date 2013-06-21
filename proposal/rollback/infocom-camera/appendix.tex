@@ -1,0 +1,162 @@
+%%%%%%%%%% Appendix %%%%%%%%%%%%%%%%%%
+\section{Appendix}
+\label{sec:appendix}
+
+%%%%%%%%%%%%%%% 2nd Best ALG PART 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\seconds}
+\label{alg:second}
+%\textsc{centralized-dv}($G$)
+
+\begin{algorithmic}[1]
+%\STATE{$t_i \leftarrow t_0$}
+
+\STATE{$flag \leftarrow$ \textsc{false}}
+\STATE{set distance to \bad to $\infty$ in \minvi and \dmatrixi}
+\FOR{{\bf each} destination $d$ }
+	\IF{route via \bad to reach $d$}
+		\STATE{select new shortest distance to $d$ which does not route via \bads. Update \minvi and \dmatrixi with this value.}
+		\STATE{$flag \leftarrow$ \textsc{true}} 
+	\ENDIF
+\ENDFOR
+	\IF{$flag$ $=$ \textsc{true}}
+		\STATE{send \minvi to each  $j \in adj(i)$ where $j \neq$ \bads }
+	\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+%%%%%%%%%%%%%%% Purge's Purge Phase ALG PART 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\purges's purge phase}
+\label{alg:purge}
+%\textsc{centralized-dv}($G$)
+
+\begin{algorithmic}[1]
+\STATE{set distance to \bad to $\infty$}
+\FOR{{\bf each} destination $d$}
+	\IF{route via \bad to reach $d$}
+		\STATE{$S \leftarrow S \cup \{d\}$} 
+	\ENDIF
+\ENDFOR
+	
+\IF{$S$ is not empty}
+	\STATE{send $S$ to each $j \in adj(i)$ where $j \neq$ \bads }
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+
+%%%%%%%%%%%%%%% Purge's Purge Phase ALG PART 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\purges's purge phase}
+\label{alg:purge2}
+%\textsc{centralized-dv}($G$)
+
+\begin{algorithmic}[1]
+
+\FOR{{\bf each} $d \in msg.dests$}
+	\IF{route via message source to $d$}
+		\STATE{$S \leftarrow S \cup \{d\}$} 
+	\ENDIF
+\ENDFOR
+\IF{$S$ is not empty}
+	\STATE{send $S$ to each $j \in adj(i)$ where $j \neq$ \bads }
+\ELSE
+	\STATE{send $ACK$ to message source}
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+%%%%%%%%%%%%%%% Purge's Discover Phase ALG PART 1%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\purges's discovery phase}
+\label{alg:discover}
+
+\begin{algorithmic}[1]
+\STATE{$flag \leftarrow$ \textsc{false}}
+\FOR{{\bf each} destination $d$}
+	\IF{\minvis$[d] = \infty$}
+		\STATE{find shortest distance in \dmatrixi and set in \minvis}
+		\STATE{$flag \leftarrow$ \textsc{true}} 
+	\ENDIF
+\ENDFOR
+\IF{$flag$ $=$ \textsc{true}}
+	\STATE{send \minvi to each  $j \in adj(i)$ where $j \neq$ \bads }
+\ENDIF
+
+
+\end{algorithmic}
+\end{algorithm}
+
+%%%%%%%%%%%%%%% Purge's Discover Phase ALG PART 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\purges's discovery phase}
+\label{alg:discover2}
+
+\begin{algorithmic}[1]
+\IF{first round of sending}
+	\FOR{{\bf each} destination $d$}
+		\STATE{update \minvi with minumum distance in \dmatrixi to $d$}
+	\ENDFOR
+\ENDIF
+\STATE{run distance vector} 
+
+\end{algorithmic}
+\end{algorithm}
+
+
+%%%%%%%%%%%%%%% CPR ALG PART 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\cpr steps after rollback}
+\label{alg:cpr}
+
+\begin{algorithmic}[1]
+
+\STATE{$flag \leftarrow$ \textsc{false}}
+\FOR{{\bf each} destination $d$}
+	\IF{\minvis$[d] = \infty$}
+		\STATE{find shortest distance in \dmatrixi and set in \minvis}
+		\STATE{$flag \leftarrow$ \textsc{true}} 
+	\ENDIF
+\ENDFOR
+\IF{$flag$ $=$ \textsc{true} or adjacent link weight changed during $[t',t]$}
+	\STATE{send \minvi to each  $j \in adj(i)$ where $j \neq$ \bads }
+\ENDIF
+
+
+
+\end{algorithmic}
+\end{algorithm}
+
+
+%%%%%%%%%%%%%%% CPR ALG PART 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+\begin{algorithm}
+\caption{\cpr steps after rollback}
+\label{alg:cpr}
+
+\begin{algorithmic}[1]
+	\IF{first round of sending}
+		\STATE{update \minvi with most recent link weights of adjacent link}
+	\ENDIF
+	\STATE{run distance vector} 
+\ENDIF
+
+
+\end{algorithmic}
+\end{algorithm}
+
+\end{comment}
+
+
+
+
+

@@ -1,0 +1,14 @@
+\section{Weaknesses}
+\label{sec:weak}
+
+Our evaluation fails to consider a lower bound -- both in terms of message and time overhead -- on recovery.   Our theoretical and simulation study both consider the relative 
+performance of our recovery algorithms and the DUAL algorithm.  A lower bound would yield insights into the overall performance of all three of our recovery algorithms: without a lower
+bound it is possible that all three of our recovery algorithms are inefficient.  However, we believe this is unlikely.
+%A lower bound would give insight into the effectiveness of all three of our recovery algorithms and the DUAL algorithm, rather than just demonstrating their relative performance. 
+
+Our model for compromised node behavior is simplistic (e.g., nodes falsely claim a cost of $1$ to all other nodes).  Clearly, this makes the detection of a compromised node easy.  Because
+our focus is on false state recovery, rather than false state detection, we believe our simplistic model is still a meaningful context to evaluate our recovery algorithms. 
+Furthermore, since we are unaware of any existing approach that explicity considers this problem, we feel it is appropriate to start with the simplest problem formulation that succeeds in revealing 
+the fundamental challenges of the false-state recovery problem.  We believe we have succeeded in this aim. 
+
+%{\bf look up infocom and IFIP weaknesses}

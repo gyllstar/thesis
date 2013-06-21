@@ -1,0 +1,62 @@
+\BOOKMARK [0][-]{chapter*.1}{Abstract}{}
+\BOOKMARK [0][-]{chapter*.3}{List of Tables}{}
+\BOOKMARK [0][-]{chapter*.4}{List of Figures}{}
+\BOOKMARK [0][-]{chapter*.5}{Introduction}{}
+\BOOKMARK [1][-]{section.0.1}{Thesis Overview}{chapter*.5}
+\BOOKMARK [2][-]{subsection.0.1.1}{Component Failure in Communication Networks}{section.0.1}
+\BOOKMARK [2][-]{subsection.0.1.2}{Approaches to Making Networks More Robust to Failures}{section.0.1}
+\BOOKMARK [1][-]{section.0.2}{Thesis Contributions}{chapter*.5}
+\BOOKMARK [1][-]{section.0.3}{Thesis Outline}{chapter*.5}
+\BOOKMARK [0][-]{chapter.1}{Recovery from False Routing State in Distributed Routing Algorithms}{}
+\BOOKMARK [1][-]{section.1.1}{Introduction}{chapter.1}
+\BOOKMARK [1][-]{section.1.2}{Problem Formulation}{chapter.1}
+\BOOKMARK [1][-]{section.1.3}{Recovery Algorithms}{chapter.1}
+\BOOKMARK [2][-]{subsection.1.3.1}{Preprocessing Algorithm}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.2}{The 2nd best Algorithm}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.3}{The purge Algorithm}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.4}{The cpr Algorithm}{section.1.3}
+\BOOKMARK [1][-]{section.1.4}{Analysis of Algorithms}{chapter.1}
+\BOOKMARK [1][-]{section.1.5}{Simulation Study}{chapter.1}
+\BOOKMARK [2][-]{subsection.1.5.1}{Simulations using Graphs with Fixed Link Weight}{section.1.5}
+\BOOKMARK [2][-]{subsection.1.5.2}{Simulations using Graphs with Changing Link Weights}{section.1.5}
+\BOOKMARK [2][-]{subsection.1.5.3}{Summary of Simulation Results}{section.1.5}
+\BOOKMARK [1][-]{section.1.6}{Related Work}{chapter.1}
+\BOOKMARK [1][-]{section.1.7}{Conclusions}{chapter.1}
+\BOOKMARK [0][-]{chapter.2}{PMU Sensor Placement for Measurement Error Detection in the Smart Grid}{}
+\BOOKMARK [1][-]{section.2.1}{Introduction}{chapter.2}
+\BOOKMARK [1][-]{section.2.2}{Preliminaries}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.2.1}{Assumptions, Notation, and Terminology}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.2}{Observability Rules}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.3}{Cross-Validation Rules}{section.2.2}
+\BOOKMARK [1][-]{section.2.3}{Four NP-Complete PMU Placement Problems}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.3.1}{Overview of NPC Proof Strategy}{section.2.3}
+\BOOKMARK [2][-]{subsection.2.3.2}{Problem Statements and NPC Proof Sketches}{section.2.3}
+\BOOKMARK [1][-]{section.2.4}{Approximation Algorithms}{chapter.2}
+\BOOKMARK [1][-]{section.2.5}{Simulation Study}{chapter.2}
+\BOOKMARK [1][-]{section.2.6}{Related Work}{chapter.2}
+\BOOKMARK [1][-]{section.2.7}{Conclusions}{chapter.2}
+\BOOKMARK [0][-]{chapter.3}{Recovery from Link Failures in a Smart Grid Communication Network}{}
+\BOOKMARK [1][-]{section.3.1}{Introduction}{chapter.3}
+\BOOKMARK [1][-]{section.3.2}{Background and Related Work}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.2.1}{PMU Applications and Their QoS Requirements}{section.3.2}
+\BOOKMARK [2][-]{subsection.3.2.2}{OpenFlow}{section.3.2}
+\BOOKMARK [2][-]{subsection.3.2.3}{Related Work}{section.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.3.1}{Smart Grid Communication}{subsection.3.2.3}
+\BOOKMARK [3][-]{subsubsection.3.2.3.2}{Detecting Packet Loss}{subsection.3.2.3}
+\BOOKMARK [3][-]{subsubsection.3.2.3.3}{Multicast Tree Recovery}{subsection.3.2.3}
+\BOOKMARK [1][-]{section.3.3}{Proposed Research}{chapter.3}
+\BOOKMARK [2][-]{subsection.3.3.1}{Preliminaries}{section.3.3}
+\BOOKMARK [3][-]{subsubsection.3.3.1.1}{Example Scenario}{subsection.3.3.1}
+\BOOKMARK [3][-]{subsubsection.3.3.1.2}{General Problem Scenario and Basic Notation}{subsection.3.3.1}
+\BOOKMARK [2][-]{subsection.3.3.2}{Overview of Our Recovery Solutions and Section Outline}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.3}{Link Failure Detection using OpenFlow}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.4}{Uninstalling Failed Trees and Installing Backup Trees}{section.3.3}
+\BOOKMARK [2][-]{subsection.3.3.5}{Computing Backup Multicast Trees}{section.3.3}
+\BOOKMARK [3][-]{subsubsection.3.3.5.1}{Min-Flows Algorithm}{subsection.3.3.5}
+\BOOKMARK [3][-]{subsubsection.3.3.5.2}{Min-Sinks Algorithm}{subsection.3.3.5}
+\BOOKMARK [3][-]{subsubsection.3.3.5.3}{Min-Control Algorithm}{subsection.3.3.5}
+\BOOKMARK [1][-]{section.3.4}{Chapter Conclusion and Future Work}{chapter.3}
+\BOOKMARK [0][-]{chapter.4}{Thesis Timeline and Future Work}{}
+\BOOKMARK [1][-]{section.4.1}{Planned Future Work and Timeline}{chapter.4}
+\BOOKMARK [1][-]{section.4.2}{Future Work Outside the Scope of this Thesis}{chapter.4}
+\BOOKMARK [0][-]{chapter*.6}{Bibliography}{}

@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.4)
+The top-level auxiliary file: infocom.aux
+The style file: plain.bst
+Database file #1: infocom.bib
+Warning--to sort, need author or key in Google
+Warning--to sort, need author or key in Rocketfuel
+Warning--to sort, need author or key in GT-ITM
+Warning--there's a number but no volume in Dijkstra80
+Warning--empty institution in Tech
+Warning--empty year in Tech
+You've used 18 entries,
+            2118 wiz_defined-function locations,
+            619 strings with 6763 characters,
+and the built_in function-call counts, 5669 in all, are:
+= -- 564
+> -- 241
+< -- 5
++ -- 96
+- -- 78
+* -- 381
+:= -- 908
+add.period$ -- 54
+call.type$ -- 18
+change.case$ -- 92
+chr.to.int$ -- 0
+cite$ -- 24
+duplicate$ -- 228
+empty$ -- 471
+format.name$ -- 78
+if$ -- 1214
+int.to.chr$ -- 0
+int.to.str$ -- 18
+missing$ -- 15
+newline$ -- 90
+num.names$ -- 30
+pop$ -- 121
+preamble$ -- 1
+purify$ -- 75
+quote$ -- 0
+skip$ -- 158
+stack$ -- 0
+substring$ -- 316
+swap$ -- 49
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 70
+warning$ -- 6
+while$ -- 51
+width$ -- 20
+write$ -- 192
+(There were 6 warnings)

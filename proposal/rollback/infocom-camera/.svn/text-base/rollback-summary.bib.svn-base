@@ -1,0 +1,86 @@
+
+
+
+
+
+@book{KuroseRoss04,
+ author = {James F. Kurose and Keith W. Ross},
+ title = {Computer Networking: A Top-Down Approach Featuring the Internet},
+ year = {2004},
+ isbn = {0321227352},
+ publisher = {Pearson Benjamin Cummings}
+ }
+
+@inproceedings{Feam,
+author =       "Nick Feamster and Hari Balakrishnan",
+title =        "{Detecting BGP Configuration Faults with Static Analysis}",
+booktitle =    {2nd Symp. on Networked Systems Design and Implementation (NSDI)},
+year =         {2005},
+month =        {May},
+address =      {Boston, MA}
+}
+
+@article{Jeff,
+  author = {David R. Jefferson},
+  title = {Virtual time},
+  journal = {ACM Trans. Program. Lang. Syst.},
+  volume = {7},
+  number = {3},
+  year = {1985},
+  issn = {0164-0925},
+  pages = {404--425},
+  doi = {http://doi.acm.org/10.1145/3916.3988},
+  publisher = {ACM},
+  address = {New York, NY, USA},
+}
+@article{Liu00,
+ author = "Peng Liu and Paul Ammann and Sushil Jajodia",
+ title = "Rewriting Histories: Recovering from Malicious Transactions",
+ journal = "Distributed and Parallel Databases",
+ volume = "8",
+ number = "1",
+ pages = "7-40",
+ year = "2000",
+ url = "citeseer.ist.psu.edu/liu99rewriting.html" }
+
+
+@article{Neumann97,
+  author = {R. Neumnann},
+  title={Internet Routing Black Hole},
+  journal={The Risks Digest: Forum on Risks to the Public in Computers and Related Systems},
+  volume={19},
+  number={12},
+  month={May},
+  year={1997}
+}
+
+@techreport{thomasgeneration,
+ 	author = "Megan Thomas and Ellen Witte Zegura",
+	title = "Generation and Analysis of Random Graphs to Model Internetworks",
+	number = "GIT-CC-94-46",
+	url = "citeseer.ist.psu.edu/thomas94generation.html" }
+
+
+@article{Waxman,
+ author = {Bernard M. Waxman},
+ title = {Routing of multipoint connections},
+ book = {Broadband switching: architectures, protocols, design, and analysis},
+ year = {1991},
+ isbn = {0-8186-8926-9},
+ pages = {347--352},
+ publisher = {IEEE Computer Society Press},
+ address = {Los Alamitos, CA, USA}
+}
+
+
+
+
+@techreport{winick-inet,
+ author = "Jared Winick and Sugih Jamin",
+ title = "Inet-3.0: Internet Topology Generator",
+ institution = "EECS, University of Michigan",
+ number = "UM-CSE-TR-456-02",
+ year = "2002",
+ url = "citeseer.nj.nec.com/526211.html" 
+}
+

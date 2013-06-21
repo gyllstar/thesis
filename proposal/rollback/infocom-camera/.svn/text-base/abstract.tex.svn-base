@@ -1,0 +1,17 @@
+%\section{Abstract}
+
+\begin{abstract}
+
+Malicious and misconfigured nodes can inject incorrect state into a distributed system, which can then be propagated system-wide as a result of normal network operation. 
+Such false state can degrade the performance of a distributed system or render it unusable. In the case of network routing algorithms, for example, false state corresponding
+to a node incorrectly declaring a cost of $0$ to all destinations (maliciously or due to misconfiguration) can quickly spread through the network, causing other nodes to (incorrectly) 
+route via the misconfigured node, resulting in suboptimal routing and network congestion. We propose three algorithms for efficient recovery in such scenarios and prove the correctness 
+of each of these algorithms. Through simulation, we evaluate our algorithms when applied to removing false state in distance vector routing, in terms of message and time overhead. Our analysis
+shows that over topologies where link costs remain fixed, a recovery algorithm based on system-wide checkpoints and a rollback mechanism yields superior performance. We find that a different 
+algorithm -- one that selectively purges false routing state network-wide -- yields the best performance in scenarios where link costs change.
+
+\end{abstract}
+%We propose algorithms that allow distributed routing algorithms to efficiently recover from false state injected into the network.
+%We prove the correctness of each algorithm and evaluate them when applied to distance vector routing. In this context, we evaluate the message and time complexity of each algorithm through simulation.
+
+%{\bf Keywords}: {\it distributed algorithms, fault tolerance, routing, security}

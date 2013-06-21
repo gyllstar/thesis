@@ -1,0 +1,46 @@
+\begin{abstract}
+
+Communication network components -- routers, links connecting routers, and sensors -- inevitably fail, causing service outages and a potentially unusable network. 
+Recovering quickly from these failures is vital to both reducing short-term disruption and increasing long-term network survivability. 
+In this thesis, we consider instances of component failure in the Internet and in networked cyber-physical systems, such as the communication network used by the modern electric power grid 
+(termed the \emph{smart grid}). 
+We design algorithms that make these networks more robust to component failure.
+This thesis divides into three parts: (a) recovery from malicious or misconfigured nodes injecting false information into a distributed system (e.g., the Internet), (b) placing smart grid sensors to provide measurement error detection, and 
+(c) fast recovery from link failures in a smart grid communication network. 
+
+
+
+First, we consider the problem of malicious or misconfigured nodes that inject and spread incorrect state throughout a distributed system.
+Such false state can degrade the performance of a distributed system or render it unusable. For example, in the case of network routing algorithms, false state corresponding
+to a node incorrectly declaring a cost of $0$ to all destinations (maliciously or due to misconfiguration) can quickly spread through the network. This causes other nodes to (incorrectly) 
+route via the misconfigured node, resulting in suboptimal routing and network congestion. We propose three algorithms for efficient recovery in such scenarios and evaluate their efficacy.
+
+
+The last two parts of this thesis consider robustness in the context of the electric power grid. 
+We study a type of sensor, a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
+PMUs provide voltage and current measurements at a sampling rate orders of magnitude higher than the status quo.  As a result, PMUs can 
+both drastically improve existing power grid operations and enable an entirely new set of applications, such as the reliable integration of renewable energy resources. 
+However, PMU applications require \emph{correct} (addressed in thesis part 2) and \emph{timely} (covered in thesis part 3) PMU data. 
+Without these guarantees, smart grid operators and applications may make incorrect decisions and take corresponding (incorrect) actions. 
+
+The second part of this thesis addresses PMU measurement errors, which have been observed in practice. 
+We formulate a set of PMU placement problems that aim to satisfy two constraints: place PMUs ``near'' each other to allow
+for measurement error detection and use the minimal number of PMUs to infer the state of the maximum number of system buses and transmission lines. 
+For each PMU placement problem, we prove it is NP-Complete, propose a simple greedy approximation algorithm, and evaluate our greedy solutions.
+
+
+Lastly, we design algorithms for fast recovery from link failures in a smart grid communication network. 
+This is a two-part problem: (a) link detection failure and (b) algorithms for pre-computing backup multicast trees.  
+To address (a), we design link-detection failure and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
+OpenFlow is an open source framework that cleanly separates the control and data planes for use in network management and control.
+For part (b), we propose a set of algorithms that precompute backup multicast trees to be used after a link failure. 
+Each algorithm aims to minimize end-to-end packet loss and delay but each uses different optimization criteria to achieve this goal: minimizing control overhead, 
+minimizing \xxn{the maximum number of flows impacted by the ``next'' link failure (\mfs)}, and minimizing \xxn{the maximum number of sink nodes impacted by the ``next'' link failure (\mds)}.
+%minimize the number of affected flows across all multicast trees, and minimize the number of affected sink nodes across all multicast trees.
+We implement and evaluate these algorithms in Openflow. 
+		
+
+
+\end{abstract}
+
+

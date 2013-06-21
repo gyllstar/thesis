@@ -1,0 +1,12 @@
+\section{Conclusions}
+\label{sec:pmu-conclude}
+
+In this chapter, we formulated four PMU placement problems and proved that each one is NPC. 
+Consequently, future work should focus on developing approximation algorithms for these problems.  As a first step, we presented two simple greedy algorithms:
+{\tt xvgreedy} which considers cross-validation and {\tt greedy} which does not.  Both algorithms iteratively add PMUs to the node which observes the maximum of number of nodes. 
+
+Using simulations, we found that our greedy algorithms consistently reached close-to-optimal performance.  
+We also found that cross-validation had a limited effect on observability: for a fixed number of PMUs, {\tt xvgreedy} and {\tt xvoptimal} observed only $5\%$ fewer nodes than
+{\tt greedy} and {\tt optimal}, respectively. As a result, we believe imposing the cross-validation requirement on PMU placements is advised, as the benefits they provide come at a low marginal cost.
+
+

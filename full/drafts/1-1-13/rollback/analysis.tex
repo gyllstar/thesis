@@ -1,0 +1,87 @@
+
+\section{Analysis of Algorithms}
+\label{sec:analysis}
+
+Here we summarize the results from our analysis.  The detailed proofs can be found in our corresponding technical report \cite{TechRollback10}. 
+Using a synchronous communication model, we derive communication complexity bounds for each algorithm.  Our analysis assumes: a graph with unit link weights of $1$, only a single node is compromised,
+and the compromised node
+falsely claims a cost of $1$ to every node in the graph. %Since we assume unit link weights, a link cost increase corresponds to 
+%We derive communication complexity bounds for each algorithm over a synchronous communication model and fixed unit link weights. 
+For graphs with fixed link costs, we find that the communication complexity of all three algorithms is bounded above by $O(mnd)$  where $d$ is the diameter, $n$ is the number of nodes, and $m$ the maximum out-degree of any node.
+
+In the second part of our analysis, we consider graphs where link costs can change. Again, we assume a graph with unit link weights of $1$ and a single compromised node that declares a cost of $1$ to every node.
+Additionally, we let link costs increase between the time the malicious node is compromised and ``now''.  We assume that across all network links, the total increase in link weights is $w$ units.
+%Additionally, we assume that across all network links, the total increase in link weights is $w$ units between the time the malicious node is compromised and ``now''. 
+We find that \cpr incurs additional overhead (not experienced by \second and \purges) because \cpr must update stale state after rolling back. 
+\second and \purge avoid the issue of stale state because neither algorithm rolls back in time.  As a result, the message complexity for \second and \purge is still bounded by
+$O(mnd)$ when link costs can change, while \cpr is not. \cprs's upper bound becomes $O(mnd) + O(wn^2)$. 
+%In scenarios where link costs can change, \cpr incurs additional overhead (not experienced by \second and \purges) because \cpr must update stale
+%state after rolling back.  \second and \purge avoid the issue of stale state because neither algorithm rolls back in time.  As a result, the message complexity for \second and \purge is still bounded by
+%$O(mnd)$ when link costs can change, while \cpr is not. \cprs's upper bound becomes $O(mnd) + O(un^2)$ where $u$ is the total increase in link weights, across all network links,  that occurs between the time the malicious node is compromised and ``now''. 
+
+
+
+
+%\begin{framed}
+%\xxxn{{\bf SELF-NOTE: Summary of How I want to present the results: }}
+%\begin{enumerate}
+%	\item \xxxn{\purge is almost as good as \cpr for fixed link costs even though: (a) the conditions are ideal for \cpr and (b) \cpr assumes perfectly syncrhonized clocks.}
+%	\item \xxxn{\purge is close or better that \cpr when there are link cost changes, plus \cpr requires synchronized clocks and the frequency of when snapshots are taken needs to be set.}
+%	\item \xxxn{\second suffers from routing loops and therefore the \infinity problem.}
+%\end{enumerate}
+%\end{framed}
+
+
+%------------------------ 12/6/12 Start of theorem text copied from tech report
+
+%\begin{theorem}
+%\label{thm:fixed-costs-upper-bound} 
+%\seconds, \purges, and \cpr have $O(mnd)$ communication complexity for graphs with fixed unit link weights.
+%\end{theorem}
+
+
+
+%In this section, we analyze each of our algorithms in the case where $w$ link cost changes occur.  Because we assume unit link costs of $1$, a link cost decrease corresponds to the 
+%addition of a new link and a link cost increase corresponds to the removal of a link.  In our analysis, we assume that all $w$ link cost changes finish propagating before \bad is detected 
+%(e.g., before $t_b$).
+%The \cpr analysis from Section \ref{subsubsec:cpr-analysis} changes because after rolling back, all $w$ link cost changes need to be replayed. 
+
+%Let $\delta_{f}'(i,a)$ be node $i$'s final least cost to $a$ if no link cost changes occur during $[t',t_b]$.  Define 
+%$C'(i,j) = \delta_{f}'(i,a) - \delta_{\hat{t}}(i,j)$.
+
+%Define $C'(i,j) = \delta_{f}'(i,a) - \delta_{\hat{t}}(i,j)$.
+
+
+%\cpr communication complexity with link cost changes is bounded above by:
+%\begin{eqnarray}
+%\label{thm:cpr-link-change}
+%\sum_{i \in V'} \max_{j \in V', i \neq j} \left( C'(i,j) \right) adj(i) + O(un^2) + O\left((w-u)E\right)
+%\end{eqnarray}
+
+%------------------------ 12/6/12 End of theorem text copied from tech report
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 12/6/12 probably delete the text below.  not likely to use  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%% This writing is from the Discussion subsection of the analysis
+%The communication complexity for \seconds, \cprs, and \purge are all $O(mnd)$ over graphs with fixed unit link costs.  
+%It is not surprising that the communication complexity is the same because all three algorithms use DV as their final step and
+%DV asymptotically dominates the communication complexity of each recovery algorithm.  In this context, the differing performance of our three algorithms that we found in our simulations is determined by the hidden constants. % in the communication complexity results. 
+
+%We also bounded the communication overhead incurred by \cpr under conditions of link cost changes.  This overhead is not incurred by \second and \purge because do not 
+%roll back in time, and thus all link cost changes are accounted for when recovery begins. % at $t_b$. 
+

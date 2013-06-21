@@ -1,0 +1,815 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% START OF INTRODUCT SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:intro}
+
+An electric power grid consists of a set of buses  -- electric substations, power generation centers, or aggregation points of electrical loads -- and transmission lines connecting those buses.
+The operation of the power grid can be greatly improved by high-frequency voltage and current measurements. Phasor Measurement Units (PMUs) are  
+sensors which provide such measurements. PMUs are currently being deployed in electric power grids worldwide, providing the potential to both 
+(a) drastically improve existing power grid operations and applications and (b) enable an entirely new set of applications,
+such as real-time visualization of electric power grid dynamics and the reliable integration of renewable energy resources. 
+
+PMU applications have stringent and in many cases ultra-low \emph{per-packet} delay and loss requirements.  
+If these per-packet delay requirements are not met, PMU applications can miss a critical power grid event (e.g., lightning strike, power link failure), potentially leading to a 
+cascade of incorrect decisions and corresponding actions. For example, closed-loop control applications require delays of $8-16$ ms per-packet \cite{Bakken11}. 
+If \emph{any} packet is not received within this time window, the closed-loop control application may take a wrong control action.
+In the worst case, this can lead to a cascade of power grid failures (e.g., the August 2003 blackout in the USA 
+\footnote{\url{http://en.wikipedia.org/wiki/Northeast\_blackout\_of\_2003}} and the recent power grid failures in India \cite{IndiaBlackout}). 
+
+
+As a result of this sensitivity, the communication network that disseminates PMU data must provide hard end-to-end data delivery guarantees \cite{Bakken11}. 
+For this reason, the Internet's best-effort service model alone is unable to meet the stringent packet delay and loss requirements of PMU applications \cite{Birman05}. 
+Instead, either a new network architecture or enhancements to Internet architecture and protocols are needed \cite{Bakken11,Birman05,Naspi10,Hopkinson09} to provide efficient, in-network forwarding and fast recovery from link and switch failures. 
+Additionally, multicast should figure prominently in data  delivery, since PMUs disseminate  data  to applications across many locations \cite{Bakken11}.
+
+In this last piece of our research, we design algorithms for fast recovery from link failures in a Smart Grid communication network. 
+Informally, we consider a link that does not meet its packet delivery requirement (either due to excessive delay or actual packet loss) as failed.  Our proposed research divides broadly into two parts:
+\begin{itemize}
+	
+	\item {\bf Link detection failure.} 
+		Here, we design link-failure detection and reporting mechanisms that use OpenFlow \cite{OpenFlow08} -- an open source framework that centralizes network management and control -- 
+		to detect link failures when and where they occur, \emph{inside} the network.  In-network detection is used to reduce the time between when the loss occurs and when it is detected. 
+		In contrast, most previous work \cite{Almes99,Caceres99,Friedl09} focuses on measuring end-to-end packet loss, resulting in slower detection times. 
+
+	\item {\bf Algorithms for pre-computing backup multicast trees.} 
+		Inspired by MPLS fast-reroute algorithms that are used in practice to quickly reroute time-critical unicast IP flows over pre-computed backup paths \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97}, 
+		we propose a set of algorithms, each of which computes backup multicast trees that are installed after a link failure. We also implement these algorithms in OpenFlow and demonstrate their performance.
+		
+		Each algorithm computes backup multicast trees that aim to minimize end-to-end packet loss and delay, but each algorithm uses different optimization criteria in achieving this goal: minimizing control overhead (\mcs), minimizing 
+		the number of affected flows across all multicast trees (\mfs),
+   		and minimizing the number of affected sink nodes across all multicast trees (\mds).  These optimization criteria differ from those proposed in the literature.
+		For example, most previous work \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97} uses optimization criteria specified over a \emph{single} multicast tree, while we must consider 
+		criteria specified across \emph{multiple} multicast trees. Finally, because the smart grid network is many orders of magnitudes smaller than the Internet
+		\footnote{For example, it is estimated that fewer than $10^4$ routers/switches are needed for a smart grid network spanning the \emph{entire} USA, whereas there are about $10^8$ routers in the Internet \cite{Bakken11}.} 
+		and multicast group membership is mostly static in the Smart Grid, we can for the most part avoid the scalability issues of Internet-based solutions \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97}.
+
+\end{itemize}
+
+
+The remainder of this chapter is structured as follows.  In the following section \ref{sec:related-work}, we briefly survey relevant literature.  
+We outline proposed research in Section \ref{sec:proposed}:
+section \ref{subsec:detection} details our research thus far on link-failure detection in OpenFlow, and in section \ref{subsec:repair}, we outline our algorithms for computing backup multicast trees.
+Our treatment here is necessarily brief, but we indicate work completed thus far as well as proposed future work.  Section \ref{sec:conclude} concludes this chapter with a summary of our proposed research and 
+timeline for future work.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END OF INTRODUCT SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% START OF BACKGROUND/RELATED WORK SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Background and Related Work}
+\label{sec:related-work}
+
+\subsection{PMU Applications and Their QoS Requirements} 
+\label{subsec:pmu-requirements}
+
+The QoS requirements of several PMU applications planned to be deployed on power grids worldwide are presented in Table \ref{tab:app-requirements}, based on \cite{Bakken11,Kth09}.
+We refer the reader to the actual documents for a description of each PMU application.  The end-to-end (E2E) delay requirement is at the \emph{per-packet} level, as advocated by
+Bakken et al. \cite{Bakken11}.
+
+NASPI defines five service classes (A-E) for Smart Grid traffic, each designating qualitative requirements for latency, availability, accuracy, time alignment, message rate, 
+and path redundancy \cite{Bakken11}. At one end of the spectrum, service class A applications have the most stringent requirements, while service Class E designates applications
+with the least demanding requirements.
+
+In this work, we focus on PMU applications with the most stringent E2E delay requirements, such as closed-loop control and system protection. 
+In particular, we create a binary classification of data plane traffic: traffic belonging to critical PMU applications and all other traffic. 
+
+
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{|l|l|l|c|} 
+\hline
+   	{\bf PMU Application} & {\bf E2E Delay} & {\bf Rate (Hz)} & {\bf NASPI Class} \\ 
+		  \hline \hline
+		
+	%		$\diamondsuit$ Arming Remedial Action  & \textasciitilde $100$ ms & $30$  & N/A \\ 
+	%		$\diamondsuit$ Out of Step Protection  & \textasciitilde $100$ ms & $30$  & N/A \\ 
+	%		$\diamondsuit$ Short-term Stability Control  & \textasciitilde $100$ ms & $30$  & N/A \\ 
+	%		\hline
+			$\heartsuit$ Oscillation Detection & $0.25 - 3$ secs & $10-50$  & N/A \\
+			$\heartsuit$  Frequency Instability & $0.25-0.5$ secs & $1-50$ & N/A  \\
+			$\heartsuit$  Voltage Instability & $1-2$ secs &  $1-50$  & N/A  \\
+			$\heartsuit$  Line Temp. Monitoring & $5$ minutes & $1$ & N/A  \\
+			\hline
+			$\triangle$ Closed-Loop Control & $8-16$ ms & $120-720+$ & A \\ 
+			$\triangle$  Direct State Measurement & $5-1000+$ ms & $1-720+$  & B \\
+			$\triangle$ Operator Displays & $1000+$ ms & $1-120$ & D \\
+			$\triangle$ Distributed Wide Area Control & $1-240$ ms & $1-240$  & B  \\
+			$\triangle$ System Protection & $5-50$ ms & $120-720+$  & A  \\
+			$\triangle$  Anti-Islanding & $5-50$ ms & $30-720+$  & A  \\
+			$\triangle$  Post Event Analysis & $1000+$ ms & $< 1$ & E \\
+			\hline
+			\end{tabular}
+			\end{center}
+\caption{PMU applications and their QoS requirements.  The $\heartsuit$ refers to reference \cite{Kth09} and $\triangle$ to \cite{Bakken11}. }
+\label{tab:app-requirements}
+\end{table}
+
+
+\subsection{OpenFlow}
+\label{subsec:openflow}
+
+OpenFlow is an open source framework that cleanly separates the control and data planes, and provides a programmable (and possibly centralized) control framework \cite{OpenFlow08}.
+All OpenFlow algorithms and protocols are managed by a (logically) centralized controller, 
+while network switches/routers (as their only task) forward packets according to the flow tables installed by the controller. 
+By allowing a more centralized network control and management framework, the OpenFlow architecture avoids the high storage, computation, and management overhead that plague many distributed network approaches.
+Our multicast tree repair algorithms benefit from these OpenFlow features (Section \ref{subsec:repair}).
+
+OpenFlow exposes the flow tables of its switches, allowing the controller to add, remove, and delete flow entries, which determine how switches 
+forward, copy, or drop packets associated with a controller-managed flow. 
+Phrased differently, OpenFlow switches follow a ``match and action'' paradigm \cite{OpenFlow08}, in which each switch \emph{matches} an incoming packet 
+to a flow table table entry and then takes some \emph{action} (e.g., forwards, drops, or copies the packet).
+Each switch also maintains per-flow statistics (e.g., packet counter, number of bytes received, time the flow was installed) that can 
+can be queried by the controller.  In summary, OpenFlow provides a flexible framework for \emph{in-network} packet loss detection as 
+demonstrated by our detection algorithms (Section \ref{subsec:detection}).
+%For our detection algorithms, the packet counter statistics are key to our packet loss computations (Section \ref{subsec:detection}). 
+%\yyn{Our detection algorithms are also aided by OpenFlow's ability to:  install packet counters at any time and arbitrarily group flows together 
+%(this enables network operators to reduce measurement overhead by first installing general matching rules and then drilling down into more detail by installing finer-grained matching rules). }
+%Note that because these statistics are maintained \emph{inside} the network (at each switch) and the controller can query any switch for its per-flow statistics, 
+%OpenFlow provides the framework for \emph{in-network} packet loss detection.
+
+
+\subsection{Related Work}
+\label{subsec:related}
+
+\subsubsection{Smart Grid Communication}
+
+
+The Gridstat project \footnote{\url{http://gridstat.net/}}, started in 1999, was one of the first research projects to consider smart grid communication.  
+Our work has benefited from their %requirements elicitation and 
+detailed requirements specification \cite{Bakken11}.
+
+Gridstat proposes a publish-subscribe architecture for PMU data dissemination. By design, subscription criteria are simple to enable fast forwarding of PMU data
+(and as a measure towards meeting the low latency requirements of PMU applications).  
+Gridstat separates their system into a data plane and a management plane. The management plane keeps track of subscriptions,
+monitors the quality of service provided by the data plane, and computes paths from subscribers to publishers.  To increase reliability, each Gridstat publisher sends data over multiple paths
+to each subscriber. Each of these paths is a part of a different (edge-disjoint) multicast tree.  Meanwhile, the data plane simply forwards data according to the paths and subscription 
+criteria maintained by the management plane.  
+
+Although Gridstat has similarities with our work, their project lacks details.  For example, no protocol is provided defining communication between the management and data plane. 
+Additionally, there is no explicit indication if the multicast trees are source-based.
+
+In North America, all PMU deployments are overseen by the North American SynchroPhasor Initiative (NASPI) \cite{Naspi10}.  NASPI has proposed and started (as of December 2012) to build the
+communication network used to deliver PMU data, called NASPInet. The interested reader can consult \cite{Naspi10} for more details.
+%\xxx{Mention: (a) hub-and-spoke architecture, (b) PMU data aggregated by Phasor Data Concentrator, (c) not sure if use multicast? }
+
+
+Hopkinson et al \cite{Hopkinson09} propose a Smart Grid communication architecture that handles heterogeneous traffic: traffic with strict timing requirements (e.g., protection systems), 
+periodic traffic with greater tolerance for delay, and aperiodic traffic. They advocate a multi-tier data dissemination architecture: use a technology such as MPLS to make hard
+bandwidth reservations for critical applications, use Gridstat to handle predictable traffic with less strict delivery requirements, and finally use Astrolab (which uses a gossip protocol) 
+to manage aperiodic traffic sent over the remaining available bandwidth. They advocate hard bandwidth reservations -- modeled as a multi-commodity flow problem -- for critical Smart
+Grid applications.
+
+
+
+
+\subsubsection{Detecting Packet Loss} 
+
+Most previous work \cite{Almes99,Caceres99,Friedl09} focuses on measuring and detecting packet loss on an end-to-end packet basis.
+Because PMU applications have small per-packet delay requirements (Section \ref{subsec:pmu-requirements}), the time delay between when the loss occurs and when it is detected needs to be small.  
+For this reason, we will investigate detecting lossy links \emph{inside} the network. 
+Additionally, most previous work takes an \emph{active measurement} approach towards detecting lossy links in which probe messages are injected to estimate packet loss.  Injecting packets can
+potentially skew measurements -- especially since accurate packet loss estimates require a high sampling probing rate -- leading to inaccurate results \cite{Barford04}. 
+
+
+Friedl et al. \cite{Friedl09} propose a \emph{passive} measurement algorithm that directly measures actual network traffic to determine application-level packet loss rates. 
+Unfortunately, their approach can only measure packet loss after a flow is expired.  This makes their algorithm unsuitable for our purposes because
+PMU application flows are long lasting (running continuously for days, weeks, and even years). 
+For this reason we propose a new algorithm, \fls, that provides in-network packet loss detection for long running active flows (Section \ref{subsec:detection}).
+
+We note that exiting Internet routing algorithms (e.g., OSPF, ISIS, BGP) perform in-network detection of link failure, but not of individual packet loss. They do so by
+having routers exchange ``keep-alive'' or ``hello'' messages and detect a link failure when these messages or their acknowledgments are lost.
+
+
+
+%\xxxx{{\bf (A1)}: mention Rexford paper using OpenFlow.  We leverage their solutions. }
+
+\subsubsection{Multicast Tree Recovery}
+
+Approaches to multicast fault recovery can be broadly divided into two groups: on-demand and preplanned. 
+In keeping with their best-effort philosophy, most Internet-based algorithms compute recovery paths on-demand \cite{Cui04}. 
+Because the Smart Grid is a critical system and its applications have strict delivery requirements, we focus on preplanned recovery path computations.
+ 
+To date, nearly all preplanned approaches \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97} are implemented (or suggest an implementation) using 
+virtual circuit packet switching, namely, MPLS. For convenience, in the remainder of this section
+we assume MPLS is the virtual circuit packet switching technology used, realizing that other such technologies could be used in its place.
+
+Cui et \cite{Cui04} define four categories for preplanned multicast path recovery: (a) link protection, (b) path protection, (c) dual-tree protection, and (d) redundant tree protection.
+With link protection, a backup path is precomputed for each link, connecting the link's end-nodes \cite{Pointurier02,Wu97}. 
+For each destination, a path protection algorithm computes a vertex-disjoint path with the original multicast tree path between the source and destination \cite{Wu97}. 
+The dual-tree approach precomputes a backup tree for each multicast tree. The backup (dual) tree is not required to be node- or link-disjoint with the primary tree but this is desirable \cite{Fei01}.
+Finally, a redundant tree is node (link) disjoint from the primary tree, thereby ensuring that any destination remains reachable, either by the primary or redundant tree, if any vertex 
+(edge) is eliminated \cite{Medard99}. 
+
+Distributed multicast recovery schemes, like the ones discussed above, must navigate an inherent trade-off between high overhead and fast recovery (i.e., the time between when the failure is detected and when the
+multicast tree is repaired is small) \cite{Cui04}. 
+Here, overhead refers to (i) per-router state that needs to be stored and managed and (ii) message complexity. % and management overhead (where more per-router state implies higher management overhead).
+Because preplanned MPLS-based approaches are tailored to support Internet-based applications -- typically having a large number of multicast groups and dynamic group membership -- scalability is key.
+Some of the preplanned approaches (dual-tree and redundant trees) focus more on scalability \cite{Cui04,Fei01,Medard99}, while others 
+(link and path protection schemes) optimize for fast recovery \cite{Pointurier02,Wu97}.  
+
+%  ------------- How are we different ---------
+
+For two reasons, our algorithms avoid these scalability issues: we use a centralized control architecture (OpenFlow) rather than a distributed one
+and the Smart Grid operating environment is very different from the Internet-based applications discussed in the literature.
+Using OpenFlow's centralized architecture, we store all precomputed backup/recovery paths at the controller.  
+Thus, we avoid the storage and maintenance issues that distributed approaches must address  \cite{Cui04,Fei01,Pointurier02,Wu97}.
+In other words, OpenFlow allows our algorithms to bypass the inherent trade-off of high overhead and fast recovery, allowing (for the first time) both fast \emph{and} scalable recovery algorithms.
+%To activate a precomputed recovery path, the controller simply sends a control message only to the necessary switches, 
+%informing the switch to modify its flow table to use the recovery path.  This yields a loose bound of $O(|V|)$ on message complexity.  
+
+In the case where the controller is unable to manage router and backup path state, we can simply provision more servers to store precomputed paths.  
+Such a situation is unlikely, considering: the encouraging scalability results reported using a centralized Ethane controller \cite{Ethane07} 
+(Ethane is a precursor to OpenFlow that also separates the control and data planes), the Smart Grid is many orders of
+magnitude smaller that the Internet, and multicast group membership is mostly static in the Smart Grid \cite{Bakken11}.
+
+Finally, our recovery algorithms use different optimization criteria from previous work considered in this document \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97}. 
+Each of these earlier approaches uses optimization criteria specified over a \emph{single} multicast tree, while we must consider 
+criteria specified across \emph{multiple} multicast trees.  In addition, none of these approaches explicitly optimize for the criteria we consider: control overhead, number 
+of effected flows, number of affected downstream nodes, and the expected disruption caused by future link failures.
+Instead, previous work computes backup paths or trees that optimize one of the following criteria: maximize node (link) disjointedness with the primary 
+path \cite{Cui04,Fei01, Medard99}, minimize bandwidth usage \cite{Wu97}, or minimize the number of group members which become disconnected (using either the primary
+or backup path) after a link failure \cite{Pointurier02}.
+
+%few algorithms actually consider multiple link failures.
+
+
+
+%Cui et \cite{Cui04} define four categories for preplanned multicast path recovery: %(1) link protection, (2) path protection, (3) dual-tree, and (4) redundant trees.
+%\begin{itemize}
+%	
+%	\item \un{Link Protection Algorithms}:
+%	 Link protection schemes are susceptible 
+%	to scalability issues. In the worst case, a backup path needs to be computed for each link ($|V|$) across every multicast group $(|T|)$, yielding $O(|V||T|)$ backup paths to manage.
+%	However, link protection schemes make no connectivity assumptions about the underlying topology. Citations \cite{Pointurier02,Wu97} both propose link protection algorithms. 
+%	\xxxxe{{\bf (C)}: look into difference. }
+%
+%
+%	\item \un{Path Protection Algorithms}: 
+%	Like link protection schemes, path protection schemes have no strong connectivity requirements but do suffer from scalability issues. 	
+%	Wu et al. \cite{Wu97} is an example of a path protection based scheme. 
+%	
+%	\item \un{Dual Tree Protection Algorithms}: 
+%	Fei et al. \cite{Fei01} further classify dual-trees as either link disjoint or node disjoint (depending on which property establishes the disjointedness). 
+%	Dual-tree protection requires the graph to be biconnected (i.e., at least two vertex-disjoint or edge-disjoint paths exist between any two nodes), but scale 
+%	better than their link and path protection counterparts.   
+%
+%	\item \un{Redundant Tree Protection Algorithms}:  
+%	 This scheme requires a vertex/edge-redundant graph and scales similar to dual-tree protection approaches.
+%\end{itemize}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%             END RELATED WORK SECTION          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  START OF PROPOSED RESEARCH SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proposed Research}
+\label{sec:proposed}
+
+In this section, we present an example problem scenario (Section \ref{subsec:scenario}), which we reference to explain: our link failure detection algorithm (Section \ref{subsec:detection}),
+steps to uninstall trees that become disconnected after a link failure (Section \ref{subsec:uninstall-install}), steps to install backup multicast trees (Section \ref{subsec:uninstall-install}),
+and our algorithms for computing backup multicast trees (Section \ref{subsec:repair}).
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  START OF PROBLEM SCENARIO SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\subsection{Problem Scenario, Assumptions, and an Example}
+\subsection{Example, Problem Scenario, and Basic Notation}
+\label{subsec:scenario}
+
+%{\bf Example Scenario}
+\subsubsection{Example Scenario}
+
+%Here we present an example problem scenario used Section \ref{subsec:detection} and \ref{subsec:repair} to describe our algorithms.
+Figure \ref{fig:intuition-example} depicts a scenario where a single link, $(b,c)$, in a multicast tree fails.  %Figure \ref and the resulting repaired tree.
+Figure \ref{fig:intuition-example-t1} shows a multicast tree rooted at $a$ with leaf nodes (i.e., data sinks) $\{e,f,g\}$.  $a$ sends PMU data at a fixed rate and each data sink specifies a per-packet delay requirement. 
+The multicast tree in Figure \ref{fig:intuition-example-t1} uses link $(b,c)$, which  we assume fails between the time the snapshots in Figure \ref{fig:intuition-example-t1} and Figure \ref{fig:intuition-example-t2} are taken.
+When $(b,c)$ fails, it prevents $e$ and $f$ from receiving any packets until the multicast tree is repaired, leaving $e$ and $f$'s per-packet delay requirements unsatisfied. 
+Figure \ref{fig:intuition-example-t2} shows a backup multicast tree installed after $(b,c)$ fails.  Notice that the backup tree does not contain any paths using the failed link, $(b,c)$, and has a path between the root ($a$) and each data sink ($\{e,f,g\}$).  
+In the coming sections we present algorithms that allow multicast trees, like the one shown in Figure \ref{fig:intuition-example-t1}, to recover from link failures by installing backup multicast trees, similar to the one in Figure \ref{fig:intuition-example-t1}.
+%In the coming sections we present algorithms that allow the network to recover from scenarios like this one. 
+
+\begin{figure}[t]
+  \begin{center}
+    \subfigure[Before link $(b,c)$ fails.]{\label{fig:intuition-example-t1}\includegraphics[scale=0.49]{figs/intuition-example-t1.pdf}} 
+    \subfigure[After link $(b,c)$ fails.]{\label{fig:intuition-example-t2}\includegraphics[scale=0.49]{figs/intuition-example-t2.pdf}} 
+  \end{center}
+\caption{Example used in Section \ref{sec:details}.  The shaded nodes are members of the source-based multicast tree rooted at $a$.  The lightly shaded nodes are not a part of the multicast tree.}
+\label{fig:intuition-example}
+\end{figure}
+
+
+\subsubsection{General Problem Scenario and Basic Notation}
+
+Before presenting our algorithms, we first provide a more general problem scenario than the one in Figure \ref{fig:intuition-example} and introduce some basic notation.
+We consider a network of nodes modeled as an undirected graph $G=(V,E)$.  There are three types of nodes:
+nodes that send PMU data (PMU nodes), nodes that receive PMU data (data sinks), and switches connecting PMU nodes and data sinks (typically via other switches).
+We assume $G$ has $m>1$ source-based multicast trees to disseminate PMU data.  Let $T = \{T_1,T_2, \dots T_m\}$, such that each $T_i = (V_i,E_i) \in T$ is a source-based multicast tree (MT). 
+We assume $G$ only contains MTs in $T$. 
+
+Each PMU node is the source of its own MT and each data sink has a per-packet delay requirement, specified as the maximum tolerable per-packet delay. 
+\emph{Packet delay} between a sender, $s$, and receiver, $r$, is the time it takes $s$ to send a packet to $r$.  
+We consider any packet received beyond the maximum delay threshold as lost. Note that a data sink's per-packet delay requirement is an end-to-end requirement.
+Before any link fails, we assume that all PMU data is correctly delivered such that each data sink's per-packet delay requirement is satisfied. 
+
+Data sent from a single sender and single data sink is called a \emph{unicast flow}.
+A unicast flow is uniquely defined by a four-tuple of source address, source port, destination address, and destination port.  
+We assume that data from a single PMU maps to a single port at the source and, likewise, a unique port at the destination. 
+
+Because we use multicast, \emph{multicast flows} (as opposed to unicast flows) are used inside the network.  
+Informally, a multicast flow contains multiple unicast flows and only sends a single packet across a link. 
+We use notation $s,\{d_1,d_2, ... d_k\}$ to refer to a multicast flow containing $k$ unicast flows with source, $s$, and data sinks $d_1, d_2, ... d_k$.  The unicast flows are between $s$ and each $d_1, d_2, ... d_k$.
+%We use notation $s,\{d_1,d_2, ... d_k\}$ to refer to a multicast flow containing $k$ unicast flows (each denoted $s,d_1$, $s,d_2$, $\dots$, $s,d_k$) with source, $s$, and data sinks $d_1, d_2, ... d_k$.
+Each multicast flow, $f = s,\{d_1,d_2, ... d_k\}$, has $k$ end-to-end per-packet delay requirements, one for each of $f$'s data sinks. %each specified by the data sink of each of $f$'s unicast flows.
+Let $F$ be the set of all multicast flows in $G$. 
+%\yy{Additionally, a multicast flow, $f_m$, sends packets at the maximum rate of the downstream sink nodes among the unicast flows $f_m$ represents. }
+
+
+We define multicast flows inductively using $T_i \in T$.  Starting at the source/root, $s$, $T_i$ has a multicast flow for each of $s$'s outgoing links $(s,x) \in T_i$. 
+For link $(s,x)$ between $s$ and its one-hop neighbor $x$, the multicast flow contains all $T_i$ unicast flows that traverse $(s,x)$. % and have a downstream sink node in $T_i$.
+For example, the Figure \ref{fig:intuition-example-t1} multicast tree has a single multicast flow ($a,\{e,f,g\}$) at $a$.   Only a single multicast flow is needed
+because $a$ has only one outgoing link in its multicast tree.   
+%In the Figure \ref{fig:intuition-example-t1} example, the root node, $a$, only creates a single multicast flow $a,\{e,f,g\}$, because $a$ has only one outgoing link in its multicast tree.   
+
+At internal $T_i$ nodes, additional multicast flows are instantiated when $T_i$ branches.  %In the same way a multicast flow is split at $r$,
+Internal node $v \in T_i$, instantiates a new multicast flow for each of $v$'s outgoing links (except for the link connecting $v$ with its parent node in $T_i$).  For outgoing link $(v,u) \in T_i$, 
+$v$'s newly instantiated multicast flow represents $T_i$'s unicast flows that traverse $(v,u)$.  In Figure \ref{fig:intuition-example-t1}, the $a,\{e,f,g\}$ flow 
+splits when the tree branches at $b$ into multicast flows $a,\{e,f\}$ and $a,\{g\}$.  Likewise, multicast flow $a,\{e,f\}$ splits into multicast flows $a,\{e\}$ and $a,\{g\}$ at $c$.
+
+%OpenFlow does not explicitly provide a multicast implementation, rather, in keeping with its role as a general framework providing necessary services for programmable networks,
+In keeping with its role as a general framework providing necessary services for programmable networks, OpenFlow does not explicitly provide an implementation for multicast and multicast flows.
+%multicast implementation that provides all necessary features required by multicast flows. 
+Instead, OpenFlow switches support a \emph{group table} abstraction that is principally used to implement multicast \cite{OpenFlowSpec1.1}. 
+Akin to flow table entries for unicast flows, group tables consist of group entries. Each group entry matches incoming packets based on a packet's group ID field
+-- packets are expected to have a unique group ID value in its header -- and when appropriate (i.e., when the multicast tree branches at the switch being considered) 
+clones the packet to be sent out along each of the switch's outgoing links in the multicast tree. 
+\footnote{In addition to the group ID, a group entry can optionally match packets using patterns defined over other packet header fields (in the same way we saw with flow entries) such as the source address.} 
+This how the concept of ``splitting''  a flow (introduced in the previous paragraph) is implemented.
+%A group entry is a four-tuple: group identifier, group type, counters, and action buckets.  
+
+One way to implement multicast in OpenFlow is to leverage existing IP multicast protocols as detailed by Kotani et al. \cite{Kotani12}.  
+In this approach, the controller assigns a unique group ID to each multicast tree and creates a group table entry, that uses the group ID, at each switch along the multicast tree.  
+Meanwhile, the sender and its first-hop switch use IGMP to set up and manage the controller-generated group IDs. Finally, the sender embeds the group ID in each multicast packet's destination 
+field, allowing for each switch in the multicast tree to identify and forward multicast packets appropriately. 
+
+%The OpenFlow controller implements multicast flows by creating the appropriate flow entries at each switch along a multicast tree.  
+%For a switch $s \in T_i$ with multiple outgoing links in $T_i$, the controller creates a flow entry, $e$, with the following action instructions.
+%For each incoming packet satisfying $e$'s match rule, create a copy of the incoming packet for each downstream branch. 
+%Then, $e$'s action instruction sends a copy of the packet along each outgoing link (except for the link the original packet arrived on).  This is how a multicast flow is ``split'' (as discussed above).
+%In contrast, for $T_i$ switches with only one outgoing link connected to a downstream node, the controller installs a standard flow entry (i.e., one that does not create packet copies),
+%as specified in Section \ref{subsec:openflow}. For more details about OpenFlow's multicast implementation, we refer the interested reader to the ``group table'' description in Section 4.2 of OpenFlow Switch Specification Version 1.1.0 \cite{OpenFlowSpec1.1}.
+
+We consider the case where multiple links fail over the lifetime of the network but assume that only a \emph{single link fails at-a-time}.
+We call the current lossy or faulty link, $\ell$.  When $\ell$ fails, all sink nodes corresponding to any multicast flow that traverses $\ell$ no longer receive packets from the source. 
+As a result, the per-packet delay requirements of each these data sinks is not met. 
+We refer to these data sinks, multicast flows, and the MT associated with each such flow %and the corresponding data sinks 
+as \emph{directly affected}.  In Figure \ref{fig:intuition-example}, $a,\{e,f\}$ is directly affected by $(b,c)$ failing, along with data sinks $e$ and $f$.
+
+%With one exception, the remaining sections give a myopic presentation of the problem scenario and algorithms; we only detail the effects related to \emph{single} link failure.
+%At the end of the section, we briefly comment on how our multicast tree repair algorithms 
+%might tailor their reconfiguration to account for \emph{future} link failures. 
+
+
+%\subsubsection{Overview of Our Recovery Solutions and Section Outline}
+\subsection{Overview of Our Recovery Solutions and Section Outline}
+\label{subsec:mdr}
+
+%Our approach to making multicast trees robust to link failures divides into three parts: 
+We propose an algorithm, \mdrs, that is run at the OpenFlow controller to make multicast trees robust to link failures by monitoring and detecting failed links, precomputing backup multicast trees, and installing backup multicast trees after a link failure.
+\footnote{The name \mdr is inspired by Johnny Appleseed, the famous American pioneer and conservationist known for planting apple nurseries and caring for its trees. }
+As input, \mdr is given an undirected graph containing OpenFlow switches; the set of all multicast trees ($T$); the set of all active multicast flows ($F$); the length of each sampling window, 
+$w$, used to monitor links and specified in units of time; and, for each multicast flow, a packet loss condition for each link the flow traverses. For now, we restrict packet loss conditions 
+to be threshold-based that indicate the maximum number of packets that can be lost over $w$ time units. 
+The output of \mdr is a new set of precomputed backup multicast trees installed in the network and a set of uninstalled multicast trees.   All $T_i \in T$ that use the failed link are uninstalled and we call each such $T_i$ a \emph{failed multicast tree}.
+%The set of installed MTs includes each $T_i \in T$ that does not use the failed link and a backup tree for any $T_i$ that does. %does use a failed link.
+
+We define a \emph{backup multicast tree} for link $\ell$ and $T_i \in T$ as a multicast tree that has 
+a path between the source, $s \in T_i$, and each data sink $d \in T_i$ that: (a) connects $s$ and $d$ but does not traverse $\ell$ and 
+(b) satisfies $d$'s per-packet delay requirements.  We refer to any multicast tree that satisfies these conditions for $\ell$ a \emph{backup multicast tree for $\ell$} or backup MT for short.
+In Figure \ref{fig:intuition-example-t2}, notice that the installed backup tree has paths $a \rightarrow b \rightarrow d \rightarrow g \rightarrow h \rightarrow \{e,f\}$ connecting $a$ with $\{e,f,g\}$ after $(b,c)$ fails.
+
+
+
+
+\mdr divides into three parts: 
+\begin{enumerate}
+	\item Monitor to detect link failure (e.g., $(b,c)$ in Figure \ref{fig:intuition-example}).
+	\item Uninstall all trees using the failed link (i.e., failed trees) and install a precomputed backup multicast tree for each uninstalled tree. For each data sink that was disconnected from the root because of the link failure, the
+	 backup tree should use a path that routes around the failed link. 
+	 Note that the newly installed tree will likely require changes to all switches upstream from $\ell$, in addition to those at the upstream and downstream ends of link $\ell$.
+	 %Note that the newly installed tree will likely require changes at switches in addition to those at the upstream and downstream ends of link $\ell$.
+	 Recall in the Figure \ref{fig:intuition-example} example, data sinks $\{e,f\}$ are reconnected with $a$ in the installed backup tree.
+
+	 %backup tree installed and shown in Figure \ref{fig:intuition-example-t2}).
+	
+	\item Part (2) triggers the computation of a new backup tree for each (backup) tree installed in (2).  % In Section \ref{subsec:repair}, we present three algorithms for computing backup trees: \mcs, \mfs, and \mds.
+\end{enumerate}
+\mdr uses an OpenFlow-based subroutine (\fls) for part (1) and is presented in Section \ref{subsec:detection}.  For part (2), we briefly describe \mdrs's steps to uninstall and install multicast trees in Section \ref{subsec:uninstall-install}. 
+In Section \ref{subsec:repair}, we address part (3)  by proposing a set of algorithms that compute backup multicast trees. 
+%We present an OpenFlow-based approach for (1) and (2) in Section \ref{subsec:detection}. In Section \ref{subsec:repair}, we propose a set of algorithms addressing (3).
+
+
+%Before moving on to present our algorithms, we remind the reader that we divide the problem of making multicast trees robust to link failures into three parts:
+%\begin{enumerate}
+%	\item Monitor to detect link failure (\fls, presented in Section \ref{subsec:detection}).
+%	\item Deactivate all trees using the failed link and install a precomputed backup multicast tree for each deactivated tree (\fls, presented in Section \ref{subsec:detection}).
+%	\item Compute a new backup trees for each (backup) tree installed in Step (2).  In Section \ref{subsec:repair}, we present three algorithms for computing backup trees: \mcs, \mfs, and \mds.
+%\end{enumerate}
+
+%Our solutions (detailed in the following two sections) compute the repaired multicast tree like the one in Figure \ref{fig:intuition-example-t2} using a three step process: 
+%\begin{enumerate}
+%	\item Detect the faulty link (e.g., $(b,c)$).
+%	\item Deactivate the old multicast tree and install a precomputed backup multicast tree.  The backup tree has a new path, that routes around the failed link,
+%	from the source to each data sink that was disconnected from the root because of the link failure (e.g., $\{e,f\}$).
+%	\item Compute a new backup tree after the backup tree from (2) is installed.
+	%\item For each data sink that becomes disconnected from the root because of the link failure (e.g., $\{e,f\}$), activate precomputed recovery paths connecting these nodes with the root   
+	%(e.g, $a \rightarrow b \rightarrow d \rightarrow g \rightarrow h \rightarrow \{e,f\}$). Each recovery path (defined in Section \ref{subsubsec:notation}) must route around the failed link.
+%\end{enumerate}
+%We present an OpenFlow-based approach for Step (1) in Section \ref{subsec:detection}. In Section \ref{subsec:repair}, we propose a set of algorithms addressing Step (2) and (3).
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF PROBLEM SCENARIO SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  START OF DETECTION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Link Failure Detection using OpenFlow}
+\label{subsec:detection}
+
+%missing: (a) openflow match and action, (b) flow-level measurement or packet loss at links
+
+In this section, we propose a simple algorithm (\fls), used by \mdrs, that monitors links \emph{inside} the network to detect any packet loss.  To help explain \fls,
+we use the example scenario from Section \ref{subsec:scenario} and refer to a generic multicast tree with an upstream node, $u$, and downstream node, $d$.
+%Our presentation of \fl is necessarily brief but we provide additional details in Appendix \ref{subsec:pcnt}.  
+
+\fl is run at the OpenFlow controller and provides accurate packet loss measurements that are the basis for identifying lossy links.
+Informally, a lossy link is one that fails to meet the packet loss conditions specified by the controller.  We refer to such a link as \emph{failed}.
+Although \mdr is ultimately concerned with meeting the per-packet \emph{delay} requirements of PMU applications, 
+we use  packet loss (as opposed to delay) as an indicator for a failed link because OpenFlow provides no native support for timers.
+
+\fl has the same input as \mdrs, specified in Section \ref{subsec:mdr}.
+The output of \fl is any link that has lost packets not meeting the packet loss condition of any multicast flow traversing the link. 
+In the remainder of this document, we assume all flows are multicast and just use \emph{flow} to refer to a multicast flow, unless otherwise specified.
+
+Recall from Section \ref{subsec:openflow} that each OpenFlow switch maintains a flow table, where each entry contains a match rule 
+(i.e., an expression defined over the packet header fields used to match incoming packets) and action 
+(e.g., ``send packet out port $787$''). For each packet that arrives at an OpenFlow switch, it is first matched to a flow entry, $e$, based on the packet's header fields; 
+then $e$'s packet counter is incremented; and, lastly, $e$'s action is executed on the packet. 
+\footnote{Not all switches necessarily use OpenFlow. In fact, we anticipate that in practice many switches will not support OpenFlow. For ease of presentation, this section assumes all switches are OpenFlow-enabled. }
+Note that for our purposes all flow entries are for multicast flows. 
+\fl uses these packet counter values to compute per-flow packet loss between two switches over $w$ time units. 
+
+\fl uses the subroutine, \pcnts, to measure the packet loss between an upstream node ($u$) and downstream node ($d$).  \pcnt does so at the per-flow granularity over a specified sampling window, $w$, 
+where $w$ is the length of time packets are counted at $u$ and $d$. For each window of length $w$, \pcnt computes packet loss for a flow $f$, that traverses $u$ and $d$, using the following steps:
+\begin{enumerate}
+	\item 
+	\textbf{At $u$, tags and counts all $f$ packets}.  
+	We assume, before any changes are made, $u$ uses flow entry $e$ to match and forward $f$ packets.
+	\pcnt creates a new flow entry, $e'$, that is an exact copy of $e$, except that $e'$ embeds a version number (i.e., the tag) in the packet's VLAN field.  
+	\footnote{Note that the VLAN id is one of many fields from packets that can be used to match against flow entries. }
+	$e'$ is installed with a higher priority than $e$.  In OpenFlow, each flow entry has a corresponding priority specified upon its installation.
+	%OpenFlow switches order flow entries based on their specified priority.  
+	Incoming packets are matched against flow entries in priority order, with the first matching entry being used. 
+	In this way, setting a higher priority for $e'$ than $e$, ensures that $u$ tags all $f$ packets when $e'$ is installed.
+
+	\item
+	\textbf{Counts all tagged $f$ packets received at $d$.} \pcnt does so by installing a new flow entry at $d$ that matches packets based on the VLAN tag applied at $u$.  
+
+	\item 
+	\textbf{After $w$ time units, turns tagging off at $u$.} To do so, \pcnt simply switches the priority of $e'$ and $e$ at $u$.
+
+	\item
+	\textbf{Queries $u$ and $d$ for packet counts.} 
+	Specifically, the controller uses the OpenFlow protocol retrieve $u$ and $d$'s packet count values for packets tagged by $e'$.
+	To ensure that all in-transit packets are considered, \pcnt waits ``long enough'' (e.g., time proportional to the average per-packet delay between $u$ and $d$) for in-transit packets to reach $d$, before reading $d$'s packet counter. 
+
+	\item 
+	\textbf{Computes packet loss.}
+	The controller computes packet loss by simply subtracting $d$'s packet count from $u$'s. 
+
+\end{enumerate}
+In practice, \pcnt executes step (2) before step (1) to ensure that $u$ and $d$ consider the same set of packets.
+%execute the actions specified by the first flow entry matching the packet's header
+
+
+
+
+In the Figure \ref{fig:intuition-example} example, the controller uses \fl to measure the packet loss for the $a,\{e,f\}$ flow.  
+We assume for link $(b,c)$ and the $a,\{e,f\}$ flow, \fl is given a maximum packet loss threshold of $10$ packets over $w$ time units.
+For each sampling window of $w$ time units, \pcnt instructs $b$ to tag and count all packets corresponding to $a,\{e,f\}$. 
+At the same time, $c$ is instructed by \pcnt to count the $a,\{e,f\}$ packets tagged by $b$. Then, the controller uses the OpenFlow protocol to query the packet counter values for $a,\{e,f\}$
+at $b$ and $c$.  When $(b,c)$ fails, the packet counter at $c$ for $a,\{e,f\}$ no longer increments, causing a violation of $a,\{e,f\}$'s packet loss threshold for $(b,c)$.
+
+As specified, \fl measures packet loss for each \emph{multicast flow} at each link.  These flow-level measurements may obfuscate aggregate link-level packet loss. For this
+reason, we plan to extend \fl to group flows together to enable \emph{aggregate} packet loss measurements. 
+Because OpenFlow provides native support for grouping flows and maintains packet counters for each 
+group, \fl can be easily extended to group and count packets for any subset of multicast flows traversing the same switch.
+
+%\pcnt is a flexible algorithm, which can be easily adapted to measure the packet loss between $u$ and all of $u$'s downstream switches. 
+%To do so, we simply need to apply all the same steps described for $d$ in our above example at every downstream node.  In the Figure \ref{fig:intuition-example} example, 
+%if \pcnt installs matching rules at $d$, $e$, $f$, and $g$ that count packets tagged at $b$, packet loss can be measured at each $\{d,e,f,g\}$.
+
+\pcnts's approach for ensuring consistent reads of packet counters bears strong resemblance to the idea of \emph{per-packet consistency} introduced by Reitblatt et al.~\cite{Reitblatt11}.
+Per-packet consistency ensures that when a network of switches change from an old policy to a new one, that
+each packet is guaranteed to be handled exclusively by one policy, rather than some combination of the two policies.  In our case, we use per-packet consistency to ensure that when \pcnt reads
+$u$ and $d$'s packet counters, exactly the same set of packets are considered, excluding, of course, packets that are dropped at $u$ or dropped along the path from $u$ to $d$. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF DETECTION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  START OF UNINSTALL/INSTALL SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Uninstalling Failed Trees and Installing Backup Trees}
+\label{subsec:uninstall-install}
+
+After \fl detects $\ell$'s failure, \mdr uninstalls all MTs that contain $\ell$ (i.e., failed trees) and installs a precomputed backup multicast tree for each of these uninstalled tree. Installing 
+backup trees for $\ell$, denoted $T_{\ell}$, triggers the computation of new backup trees.  A backup MT is needed for each $T_j \in T_{\ell}$ and for each of $T_j$'s links.
+Here we only explain how MTs are uninstalled and installed and describe some of side effects of doing so. We postpone explaining how backup trees are computed until Section \ref{subsec:repair}.
+
+% (1) uninstall and install: what is done 
+% (2) backup tree contains recvoery paths.
+% (3) directly and indirectly effected flow.
+Uninstalling or installing a multicast tree, $T_i$, is simple with OpenFlow.  The controller sends an instruction to each switch in $T_i$ to remove (add) the flow entry corresponding to $T_i$.
+Increased traffic caused by newly installed backup trees may introduce packet loss to multicast flows that do not traverse $\ell$ but do use a path shared by at
+least one switch in a backup MT.  
+%\footnote{As future work, we plan to quantify this overhead by taking OpenFlow measurements. }
+We refer to these flows as \emph{indirectly affected}. Additionally, we refer to any packet or data sink corresponding to an indirectly affected flow as indirectly affected.
+In our Figure \ref{fig:intuition-example} example, $a,\{g\}$ is indirectly affected when the backup MT is installed because the backup MT uses paths 
+$a \rightarrow b \rightarrow d \rightarrow g \rightarrow h \rightarrow \{e,f\}$. 
+
+%In contrast, we say a multicast flow is \emph{directly affected} by $\ell$'s failure if the flow uses a path that traverses $\ell$. 
+%The data sink and packets corresponding to the directly affected flow are also referred to as \emph{directly affected}. In the Section \ref{subsec:scenario} example, 
+%$a,\{e,f\}$ is directly affected by $\ell$ failing, along with data sinks $e$ and $f$.
+
+
+
+
+
+
+
+
+%More formally, we define directly affected flows, data sinks, and packets as follows.Define set $F_{\ell}$ to be the set of flows using a route that traverses $\ell$.   
+%Let $f_{\ell}^i$ be the $i$th flow in $F_{\ell}$, where $p_{\ell}^i$ is the path used by $f_{\ell}^i$. We call the set of all $p_{\ell}^i$, $P_{\ell}$. 
+%We say that each $f_{\ell}^i \in F_{\ell}$ is \emph{directly affected} by $\ell$'s failure because each $f_{\ell}^i$ may experience increased packet delay and loss.
+%Finally, we refer to any packet in $f_{\ell}^i$ and data sink corresponding to $f_{\ell}^i$ as being \emph{directly affected} by $\ell$ failing. 
+
+
+%The controller activates a recovery path by modifying the flow table of each switch along this path.
+%A consequence of doing so, is that any flow using a path sharing a switch, $s$, with a recovery path may experience transient delay and packet loss when $s$ modifies its flow table to activate the recovery path.  
+%Likewise, deactivating a stale path that traverses $\ell$ can introduce delay and packet loss to flows that do not use $\ell$.  
+%We call any flow using a path that shares at least one switch used by a recovery path or deactivated path, as \emph{indirectly affected}. 
+%\footnote{As future work, we plan to quantify this overhead by taking OpenFlow measurements. }
+%Additionally, we refer to any packet or data sink corresponding to an indirectly affected flow as indirectly affected.
+%In our Figure \ref{fig:intuition-example} example, the flow from $a$ to $g$ is indirectly affected when the recovery paths 
+%($a \rightarrow b \rightarrow d \rightarrow g \rightarrow h \rightarrow \{e,f\}$) are activated. % reconnecting $a$ with $e$ and $f$. 
+
+% to activate the recovery path and/or deactivate the original failed path. }
+%\yyn{Ultimately, the transient delay and packet loss when $s$ modifies its flow table to activate the recovery path and/or deactivate the original failed path. }
+
+
+%A consequence of modifying the flow table for each switch along the recovery path is that flows can be \emph{indirectly affected} if the flow 
+%A consequence of modifying the flow table for each switch along the recovery path is that flows can be \emph{indirectly affected} if the flow 
+%uses a path containing at least one $s \in S_{\ell}$.  We denote the set of indirectly affected flows as $F_{\ell}'$.  
+%Each $f \in F_{\ell}'$ may experience transient delay and packet loss when $s$ modifies its flow table to activate the recovery path and/or deactivate the original failed path. 
+%This follows from our assumption that control overhead to activate (deactivate) a path is determined by the time it takes each switch in the path to modify its flow table.
+%This follows from our assumption that control overhead to activate a recovery path is determined by the time it takes each switch in the recovery path to modify its flow table.
+%Additionally, we refer to any packet or data sink corresponding to a flow in $F_{\ell}'$ as \emph{indirectly affected}.
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF UNINSTALL/INSTALL SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  START OF REPAIR/RECOVERY SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Computing Backup Multicast Trees}
+\label{subsec:repair}
+
+
+Here we present a set of algorithms that compute backup MTs.  \mdr uses these algorithms in two scenarios. First, as a part of system initialization 
+where a set of backup MTs are computed for each network link, $l$; \mdr computes a single backup MT for each MT that would be directly affected by $l$'s failure. 
+% as part of a preplanned approach to recovery from a link failure
+
+Second, \mdr triggers the execution of backup tree computations after backup trees, $T_{\ell}$, are installed in response to the most recent link failure, $\ell$. 
+\mdr reruns the entire computation (as opposed to only computing backup MTs for the newly installed $T_{\ell}$ trees): 
+for each network link, $l$, \mdr computes a backup MT for each would-be directly affected MT if $l$ failed.  
+\mdr recomputes \emph{all} backup MTs because installing $T_{\ell}$ likely changes the network state in terms of the link- or node-disjointedness (or lack thereof) across all system MTs.  
+Therefore, ``currently'' precomputed backup MTs risk becoming stale since the algorithms used to compute them considered an ``old'' network state in their optimization.
+\emph{We hypothesize that recomputing \emph{all} backup MTs each time a single link fails yields a more survivable data dissemination network than only recomputing
+backup MTs for newly installed backup MTs installed in response to the most recent link failure. }%newly installed trees.}
+%All backup MTs are recomputed because installing $T_{\ell}$ may modify the network state  (e.g., distribution of flows, disjointedness of MTs, etc) and therefore the currently computed backup MTs risk
+%becoming stale as the algorithms used to compute them consider network state in their optimization's. 
+
+\mdr uses one of the following backup tree computation algorithms: \mfs, \mds, or \mcs. Next, we present initial sketches of each of these algorithms. 
+
+
+
+
+\subsubsection{\mf Algorithm}
+\label{subsubsec:mf-alg}
+
+First, we outline the \mf algorithm.  
+
+\mf \textsc{Algorithm}
+\begin{itemize}
+
+	\item  \underline{Input}: $(G,T,F,l)$, such that $l$ is a link in $G$ and each $f \in F$ specifies the maximum per-packet delay it can tolerate.
+
+	\item \underline{Output}: A backup multicast tree for each MT that would be directly affected if $l$ were to fail. This set of backup MTs ensure that across \emph{all network links},
+	the same number of flows traverse each link. %\emph{all} network links handle the same number of flows. %	The backup MTs should be computed such that 
+\end{itemize}
+%We conjecture that a uniform distribution of flows across all network links, ensures that if any link fails, on average, the same number of flows experience packet loss.  
+The motivation for targeting a uniform distribution of flows across all network links is to reduce the impact (i.e., number of directly affected flows) of any future link failure.
+
+However, since \mf does not directly consider control overhead, \mf may have high control overhead.  This may increase the overall time required to 
+install all backup MTs after a link failure. Investigating this hypothesis is future work.
+
+
+
+
+\subsubsection{\md Algorithm}
+\label{subsubsec:md-alg}
+
+Next, we present the \md algorithm. \md is closely related to but different from \mfs.  Both algorithms seek to minimize the disruption of future link failures
+but \md considers the expected number of affected sink nodes (as opposed to the expected number of affected flows with \mfs).  
+
+\md \textsc{Algorithm}
+\begin{itemize}
+	
+	\item  \underline{Input}: $(G,T,F,l)$, such that $l$ is a link in $G$ and each $f \in F$ specifies the maximum per-packet delay it can tolerate.
+
+	\item \underline{Output}:  
+	A backup multicast tree for each MT that would be directly affected if $l$ were to fail.  
+	These backup MTs ensure that when considering the end-to-end paths used by all network flows, the \emph{set of all end-to-end paths} are distributed such that each network switch
+	has the same number of downstream data sinks.
+	%These backup MTs ensure that across \emph{all} network flows, these flows use an end-to-end path such that each network switch has the same number of downstream data sinks.
+
+\end{itemize}
+%We hypothesize that \md better reduces the effects of link failure and associated recovery than \mf because \md uses a more direct approach of reducing end-to-end packet loss.
+
+\subsubsection{\mc Algorithm}
+\label{subsubsec:mc-alg}
+
+Lastly, we outline the \mc algorithm. In effort to provide fast recovery, \mc minimizes the control overhead required to install backup MTs.
+We assume the control overhead is a function of the number of switches that need to change state (i.e., modify flow tables to uninstall
+failed MTs or install a backup MT) because the controller must send control signals to each of these switches. % which takes time.
+
+\mc \textsc{Algorithm}
+\begin{itemize}
+
+	\item  \underline{Input}: $(G,T,F,l)$, such that $l$ is a link in $G$ and each $f \in F$ specifies the maximum per-packet delay it can tolerate.
+
+	\item \underline{Output}: A backup multicast tree for each MT that would be directly affected if $l$ were to fail. This set of backup MTs minimize 
+	 the \emph{total} control overhead required by their installation. %required to install these MTs. % \emph{all} such backup MTs. %in this set. % this entire set of backup MTs.
+
+\end{itemize}
+Note that \mc does not explicitly consider the control overhead of uninstalling failed MTs because this cost is bounded by the number of failed MTs, which is fixed for each link failure.
+Intuitively, minimizing control overhead ensures that backup trees are quickly installed. % (because, for example, fewer switches need to be signaled).
+This leads to a fast recovery and ultimately reduces packet loss for all directly affected flows.  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF REPAIR/RECOVERY SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  START CONCLUSION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Chapter Conclusion and Future Work}
+\label{sec:conclude}
+
+%summary
+In this final technical chapter, we considered the problem of recovery from link failures in a smart grid communication network.  We presented the outline for an 
+algorithm that uses OpenFlow to detect packet loss inside the network of switches and a set of algorithms to precompute backup multicast trees to be installed after
+a link fails.  Our algorithms for computing backup multicast trees differ from those in the literature because each algorithm optimizes for the long-term survivability of the 
+communication network. 
+
+
+%future work: (a) indirectly affected, (b) implement algorithms,
+For each algorithm proposed in the chapter (\mdrs, \fls, \pcnts, \mfs, \mds, \mcs), we plan to supplement our basic algorithm description with a detailed specification of the algorithm steps,
+implement the algorithm in OpenFlow, and evaluate its implementation.
+
+Time permitting, we plan to propose algorithms for computing backup multicast trees that consider indirectly affected flows.  
+Recall from Section \ref{subsec:uninstall-install} that indirectly affected flows are ones using a path that shares at least one link contained in a backup tree.
+As a result, indirectly affected flows may experience packet loss due to increased traffic from redirected flows.  We conjecture that 
+an algorithm that minimizes the number of indirectly affected flows reduces the system-wide affects (spatially) of installing backup multicast trees.
+A similar algorithm is possible that minimizes the number of indirectly affected data sinks.
+
+
+%For each algorithm proposed in the chapter (\mdrs, \fls, \pcnts, \mfs, \mds, \mcs) we plan to build on our algorithm sketches.  We will specify the detailed steps of each algorithm,
+%implement each algorithm in OpenFlow, and evaluate their implementation.
+
+
+
+%\section{Unfinished Work and Timeline for Completion} 
+%\label{sec:future}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END CONCLUSION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

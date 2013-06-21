@@ -1,0 +1,550 @@
+\section{Evaluation}
+\label{sec:eval}
+In this section, we evaluate our recovery algorithms using simulations. We evaluate recovery in a scenario in which a single bad node has spread 
+false routing state throughout a network. We measure the efficiency of our algorithms by counting
+the number of messages required for nodes to find valid routing paths (e.g, ones that do not use \badvectors).
+
+We built a custom simulator to evaluate our recovery algorithms. We implemented a basic distance vector algorithm (e.g. without
+poisoned reverse or split-horizon), \seconds, \purges, and \cpr using our space efficient snapshot algorithm.  
+Our distance vector implementation simulates messages being sent in fixed epochs. 
+%The epoch size is an input parameter, denoted $t_e$.
+When a message is sent, the propagation delay from one node to the next is selected uniformly at random $(0,t]$ such that $t \in \mathbb{N},$. We set $t=10$.
+If a node receives multiple messages during an epoch, it sends a message (if needed)
+for each modification to \minv. \footnote{\small{This is contrary to standard DV implementations which sends at most one message per epoch, representing
+the least values selected from all incoming messages received in the previous epoch and the node's current \minv. 
+  We plan to implement DV in this way after the completion of the synthesis.}}
+This behavior applies to the modified implementation of distance vector used in \seconds, \purges, and \cprs. 
+
+Although our implementation has no notion of epochs we simulate this behavior by counting the number of hops a message travels from its
+original source (where the \lcd event occurred). We introduce a variable $k$ to control the number of hops \badvector \emph{can} travel from
+\bad. We use ``can'' to emphasize that \badvector only travels on a path $p$ of $k$ hops if all $k-1$ nodes on $p$ use \badvector in their \minvs. 
+
+
+
+	 %and $t_e$ is the length of the epoch.
+
+\subsection{Topology Characteristics}
+\label{sub:topo}
+We use the GT-ITM topology generator \cite{thomasgeneration} to generate graphs. GT-ITM uses the Waxman \cite{Waxman} model for graph generation, where
+the probability of an edge between vertex $u$ and $v$ is:
+
+\begin{eqnarray}
+ P(u,v) &=& \alpha e^{-d/\beta L} 
+ \end{eqnarray}
+
+In this equation, $0 < \alpha \leq 1$, $0 < \beta$, $d$ is the Euclidean distance between $u$ and $v$, and $L = \sqrt{2} \times scale$. $\alpha$ controls
+the number of edges in the graph, $L$ is the maximum distance between any two nodes, and $\beta$ controls the ratio of long edges to short ones. 
+The $\alpha$ and $\beta$ values are GT-ITM's defaults, and the edge weight values are between $1$ and $100$.
+
+We generate $10$ different GT-ITM graphs using the parameters in Table \ref{tab:params}.  The discussion in this document focuses on one representative
+Waxman topology, although we have results for all $10$  Waxman topologies.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|} 
+\hline
+   	{\bf Parameter} & {\bf Value} \\
+		  \hline \hline
+		  \# nodes & $100$ \\
+			\hline
+			$\alpha$ & $0.5$ \\
+			\hline
+			$\beta$ & $0.5$ \\
+			\hline
+			\end{tabular}
+			\end{center}
+			\caption{Topology generation parameters.}
+\label{tab:params}
+\end{table}
+
+Table \ref{tab:illigit-init} shows the average number of \illigits for each $k$ value.  
+%Table \ref{tab:reset-size} shows the percentage
+%of nodes that have seen \badvector. Note that when $k>4$ all nodes have seen \badvector, more paths userepresents how many nodes the bad vector has reached.
+
+\begin{table}[htdp]
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|} 
+\hline
+ & $k=1$&  $k=2$& $k=3$& $k=4$& $k=5$& $k=6$& $k=7$& $k=8$ \\
+\hline
+ \illigits  & $606$ & $1388$&  $2602$& $3627$& $4181$& $4410$& $4489$& $4515$ \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Number of illegitimate paths before recovery begins}
+\label{tab:illigit-init}
+\end{table}
+
+
+\subsection{Simulation Scenario}
+\label{sub:scenario}
+Both experiments simulate the following events (in the order specified below):
+
+\begin{enumerate}
+	\item At time time $t'- \Delta$ where $\Delta$ is a small timestep, $\forall v \in V$ \minv and \dmatrix are correctly computed. This also applies to
+	\bad because it has yet to go bad.
+
+	\item At $t'$, \bad goes bad. \badvector contains the minimum cost to \emph{every} node in the network.
+
+	\item \badvector spreads for a specified number of hops (this varies by experiment).
+
+	\item Recovery begins at time $t$.
+
+\end{enumerate}
+
+\subsection{Methodology}
+\label{subsec:method}
+In each experiment, the recovery algorithm runs until is has correctly computed \minv for all $v \in V'$, i.e., when  
+no messages need to be sent.  This is the case because each of our proposed algorithms uses distance vector to complete the recovery, 
+
+We measure the performance of the recovery algorithm by the number of messages required for recovery.  This means counting the number of 
+messages after step (4) in our simulation scenario. With \purge we count the number of purge and DV messages. Note that by only considering the number of
+messages to measure algorithmic efficiency, we are implicitly assuming perfect timers for \purge and \cpr.  In this way, our experiments are
+biased towards \second.
+
+Across both experiments, each data point is generated as follows. We let each node in $V$ be \bad and for each bad node we iterate through all
+predefined discrete values for all experiment variables, simulating the events described in Section \ref{sub:scenario} for each 
+set of variable values. We do so until the $90 \%$ confidence interval is within $10 \%$ of the mean value. We are purposely vague here about the set of variables because
+they vary for each experiment. The variables and their discrete value range are specified in each experiment.
+
+In order to establish rough upper bounds, we introduce two new algorithms: \resetall and \resetk. Both algorithms consist of two steps to ensure
+recovery:
+
+\begin{enumerate}
+
+	\item Remove \bad.
+
+	\item Rerun distance vector for a fixed set of nodes, $S$.  To do so, each $v \in S$ sets its distance to all $v \in V$  to $\infty$ except for directly
+	adjacent nodes that have cost equal to the value of the link connecting the two nodes.  All $v \in S$ send a message with their \minv value. 
+	{\bf ???????? k-nodes should only ``rediscover'' the links to other k-nodes, e.g., should not rediscover link costs that cross the k-ball boundary.  I
+	don't this really matters but to be fully consistent, we should follow this rule.  the code has been changed to do so ??????}
+
+\end{enumerate}
+
+The only difference between \resetall and \resetk are the nodes in $S$. With \resetall $S=V$ but for \resetk, $S$ is equal to all nodes that use \badvector.
+
+
+\subsection{Experiment 1 - Fixed link costs}
+In this experiment we evaluate the performance of \second, \purge, \cpr, \resetk, and \resetall under the assumption that link costs remain fixed. 
+Table \ref{tab:expt1-vars} shows the random variables and range of possible values used in this experiment.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|} 
+\hline
+   	{\bf Variable} & {\bf Range of Values} \\
+		  \hline \hline
+		  $k$ & [0,8] \\
+			\hline
+		  seed & [0,10]\\
+			\hline
+		  \bad & each node in graph \\
+			\hline
+			\end{tabular}
+			\end{center}
+\caption{Experiment 1 random variables and their possible range of values.}
+\label{tab:expt1-vars}
+\end{table}
+
+Figure \ref{fig:baseline6} shows the results for the results for this experiment. We discuss the performance of each algorithm in the following 
+subsection.
+
+\subsubsection{\purge Performance}
+\label{sub:perf}
+
+As seen in Figure \ref{fig:baseline6},  with \purge the number of messages for recovery increases with $k$.  This relationship can be best
+understood by considering the number of \illigits that exist in the network when the recovery begins.  Recall that an \illigit 
+is one that routes through the bad node.  Table \ref{tab:illigit-init} shows that the number of \illigits increase with $k$.  Because the purge phase of the
+algorithm sets the cost to all destinations that used \bad to $\infty$, the performance of \purge equates to running distance vector to find 
+least costs for each of the paths with cost $\infty$.  Since large $k$ values imply more paths to repair, it results in more messages to send for \purges. %In other words, after the purge phase, \purge performs like standard Distance Vector without the \infinity problem.  i
+
+Note that the purge phase sets all paths costs to $\infty$ for nodes within $k$ hops of \bad use \badvector to $\infty$ and nodes greater 
+than $k$ hops from the bad node that use \oldvectors.  
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.0]{figs/bw-base6.pdf}
+\caption{Average number of messages sent for recovery for different $k$ values for \seconds, \purges, \cprs,\resetks, and \resetalls.}
+  \label{fig:baseline6}
+\end{figure}
+
+
+\begin{table}[htdp]
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|} 
+\hline
+ & $k=1$&  $k=2$& $k=3$& $k=4$& $k=5$& $k=6$& $k=7$& $k=8$ \\
+	  \hline
+  avg \# path removed  & $10$ & $12$&  $18$& $29$& $39$& $43$& $44$& $45$  \\
+  per purge message & & & & & & & & \\
+		 \hline
+\end{tabular}
+\end{center}
+\caption{Average number of paths removed for purge message}
+\label{tab:purge-msg}
+\end{table}
+
+Figure \ref{fig:purge} shows the number of purge messages for each $k$.  Although the purge messages vary across $k$ values, purge messages
+account of a small percentage of the total number of messages sent (on average about $10 \%$ of the total).
+The least number of purge messages are sent for the largest $k$ values. 
+This is the case because, on average more, \illigits are removed per purge message when  $k$ is large. Table~\ref{tab:purge-msg} confirms this. 
+When $k$ is large there is less path diversity. Nodes that are within $k$-hops from the bad node frequently use a 
+  $k$-hop path to the bad node and then the bad node's 
+``$1$-hop'' path of cost ``1'' to several destinations.
+In these cases a single purge message can remove many \illigits.
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=1.0]{figs/purge6.pdf}
+\caption{Average number of purge messages sent by \purge}
+  \label{fig:purge}
+\end{figure}
+
+The low number of \illigits when $k=1$ accounts for its low number of purge messages.
+Interestingly, $k=2$ and $k=3$ require the most purge messages.  Although the average number of \illigits removed per purge message is lower than that 
+for $k=1$, there are more \illigits for $k=2$ and $k=3$.  
+
+\purge is insensitive to how much the path costs increase as a result removing the bad node from the network.  Because \illigits costs are set to $\infty$,
+the \infinity problem is eliminated and nodes can safely count down their path costs to their final converged value.
+
+\subsubsection{\second Performance}
+Figure \ref{fig:baseline6} shows the results for \second.  The number of messages for recovery is lowest at $k=1$, peaks at $k=3$, and 
+decreases slightly at $k=4$ after which it remains constant. The results for each $k$ value are explained below.
+
+%With \second the \infinity problem can manifest itself when the neighbors of the bad node choose their second best paths 
+%to destinations that were previously routed throught the bad node.  These second best path costs must have a higher cost than the paths that used the 
+%bad node because otherwise the bad node would not be used but the second best path would. 
+At $k=1$, a second best path (from the neighbor of the bad node) cannot possibly include costs using \badvector.  If this were not true, there must
+be a neighbor of the bad node, $n$, such that either 
+(1) $n$'s second best path uses its direct link to the bad node or (2) $n$ previously learned of an illegitimate path using \badvector from a neighbor
+other than the bad node. Case one cannot occur because \second specifies that $n$ sets its cost to the bad node to $\infty$ which can never be a least
+cost path. Case two cannot occur because \badvector would have to travel at least $2$ hops from the bad node which cannot occur
+when  $k=1$. It is however possible that a second best path can include costs that rely on \oldvector.  
+
+It follows that the behavior of \second  when $k=1$ is equivalent 
+to that of distance vector if the bad node were simply removed from the network. In both cases the neighbors 
+of the bad node select their second best path to any destination rendered temporarily unreachable by the bad node ``going bad''(in \second case) or the bad being 
+removed (distance vector case).
+These second best paths include either a path using \oldvector or a valid path.
+
+The performance at $k=1$ therefore depends on the attractiveness of \oldvectors.  Its performance  can at worst be as bad as the performance for larger $k$ values.  
+Because we have chosen the best possible costs for \badvectors, all \oldvector path costs are much than those for \badvectors.
+As evidence, consider Table \ref{tab:illigit-share}. On average $5000$ illegitimate paths are shared when $k=1$ which is significantly less than
+for larger values of $k$. If \oldvector$\approx$ \badvector then a similar number of  illegitimate paths would be shared when $k=1$ as with other values of $k$. 
+
+To summarize, $k=1$ requires fewer messages for recovery because the second best paths cannot include \badvector values and at worst use \oldvector values
+which are larger than \badvector in our experimental setup.
+%As evidence, an average of $2000$ illigimate paths are include in recovery messages when $k=1$.  If \oldvector$=$\badvector then no illigitmate paths would be shared 
+%$k=1$ recovery requires much fewer messages than for the other $k$ values.
+
+\begin{table}[htdp]
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|} 
+\hline
+ & $k=1$&  $k=2$& $k=3$& $k=4$& $k=5$& $k=6$& $k=7$& $k=8$ \\
+\hline
+ illegit paths $(\times 1000)$  & $5$ & $60$&  $166$& $170$& $167$& $167$& $167$& $166$ \\
+\hline
+\end{tabular}
+
+\end{center}
+\caption{Number of illegitimate paths shared}
+\label{tab:illigit-share}
+\end{table}
+
+When $k>1$, the new best path that a neighbor of the bad node ($v_b$) selects is either an \illigit or not.  When a neighbor of $v_b$ ($v_d$) learns of this path one of 
+following can take place:
+\begin{enumerate}
+	\item $v_d$ uses the path as its least cost.  If the path is an illegitimate path, $v_b$ shares an illegitimate path.  Otherwise it shares a legitimate path.
+
+	\item $v_d$ previously used a path through $v_b$ but the resulting update causes $v_d$ to select a new least cost path.  This new least 
+	cost path can be illegitimate. 
+
+	\item $v_d$ does nothing because it has a different least cost path using a different neighbor from $v_b$.
+
+\end{enumerate}
+
+In cases (1) and (2) it is possible that $n_d$ shares an \illigit.
+
+Surprisingly the most messages are sent when $k=3$.  
+%This occurs because much effort is wasted sharing and processing \illigit with nodes that have paths greater than $s$ hops from the bad node. had 
+%previously not been aware due to the small $k$. 
+To explain this result, we first examine nodes that have yet to 
+learn of any paths using \badvector. Because \badvector is claiming costs of $1$ to every node in the network, these illegitimate paths are likely to 
+lead to new least cost paths for these nodes.  As seen in Table \ref{tab:reset}, when $k=3$ on average $21\%$ of the nodes have yet to learn of \badvector. 
+
+%As explained above, \illigit can spread for a number of reasons.
+%shows the percentage of nodes that have learned of paths using \badvector.   
+%
+
+%As a rough estimate, When $k=3$ the second best paths can (and often do) contain 
+%a path that uses \badvector.  Table \ref{tab:bad-msg} shows that when $k=3$ a significant number of the second best paths are illegitimate.  The number
+%of illegitimate paths increase as $k$ increases.  However these illegitimate paths have different effects on performance for differnet values of $k$. 
+%We discuss its effects for $k=3$ here and revist the topic later for larger values of $k$.
+
+%\begin{table}[htdp]
+%\begin{center}
+%\begin{tabular}{|l|l|l|l|l|l|l|l|l|} 
+%\hline
+% & $k=1$&  $k=2$& $k=3$& $k=4$& $k=5$& $k=6$& $k=7$& $k=8$ \\
+%\hline
+% inititial illigit paths & $?$ & $?$&  $?$& $?$& $?$& $?$& $?$& $?$ \\
+%\hline
+%\end{tabular}
+%\label{tab:bad-msg}
+%\end{center}
+%\caption{Number of illegitimate paths shared by the neigbors of the bad node in their first recovery messages {\bf TODO: }{\it update this, may want the 
+%  metric to compute percentage of illigit paths}}
+%\end{table}
+
+\begin{table}[htdp]
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|} 
+\hline
+ & $k=1$&  $k=2$& $k=3$& $k=4$& $k=5$& $k=6$& $k=7$& $k=8$ \\
+\hline
+ \% nodes  & $6$ & $33$&  $79$& $96$& $99$& $100$& $100$& $100$ \\
+\hline
+\end{tabular}
+
+\end{center}
+\caption{Percentage of nodes that have learned of a path using \bad} %$bad$-$vector$ }
+\label{tab:reset}
+\end{table}
+
+Note that the percentages in Table \ref{tab:reset} do not consider paths among nodes in the k-ring with length greater than $k$ that would use \badvector if 
+it had traveled more than $k$ hops.  Nonetheless this metric conveys the point that there are parts of the network that have not been infected by \badvector. 
+%These \illigits can spread to nodes that are more than $3$ hops away from the bad node. especially since these nodes have yet to learn of paths using \badvector.  
+As \illigits reach nodes outside the k-ring, it causes their path costs to decrease. In turn, this causes updates to ripple through the network resulting
+in further path cost decreases (for nodes inside and outside of the k-ring).  Figure \ref{fig:ts-decr}(a) shows the number of times path costs decrease for 
+each $k$ value.  The total number of path cost decreases is highest when $k=3$.  
+
+Figure \ref{fig:ts-decr}(b) shows the cumulative number of path cost 
+decreases at fixed time-steps of the simulation. More precisely, the cumulative number of decreases is plotted after every $100$ messages are sent. We see that 
+when $k=2$ and $k=3$  path costs decrease throughout the recovery. This confirms our claim that \illigits reaching nodes outside the k-ring causes updates
+to ripple through the network. This behavior is contrary to the desirable trend of nodes counting up 
+from their least cost path values to their converged values. Instead messages are sent that move path costs away from their final value. 
+To a smaller extent, similar behavior occurs at $k=4$.  Figure \ref{fig:ts-decr}(b) shows that when $k>4$ path cost decrease early in the recovery 
+after which there are none. 
+
+For larger values of $k$, \badvector has already saturated the network when recovery has
+started and thus there is no room for path costs to decrease.  Rather, the path costs count up to their final value. When $k=3$ new lower cost paths
+are learned throughout the recovery, as illegitimate paths spread among nodes outside the k-ring. 
+
+\begin{figure*}
+\centering
+\subfigure[{Total decreases for each $k$}]{\includegraphics[width=0.49\textwidth]{figs/decrease6.pdf}}
+\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/tsdecrease6.pdf}}
+\caption{Path cost decreases: total decreases and cumulative decreases during simulation}
+\label{fig:ts-decr}
+\end{figure*}
+
+The correlation coefficient between the number of decreases and total messages for recovery when $k=2$ and $k=3$ are grouped together is $0.87$, indicating
+a strong correlation.  The same correlation coefficient is low for $k>4$ because other performance factors determine performance.  This is explained
+later in more detail.
+
+$k=2$ performance is close to that of $k=3$.  There are some subtle differences when comparing $k=2$ and $k=3$. One, there are more paths that have not 
+learned of \badvector when $k=2$ versus $k=3$. Two, when $k=3$ there is a higher likelihood that \illigits are shared at the start of recovery  because more 
+\illigits exist in the network than when $k=2$. In other words,
+  each setting of $k=2$ or $k=3$ is vulnerable to expensive recoveries using \second. Theoretically, the worst possible scenario at the start of recovery 
+  is for many paths to not
+  have learned of \badvector and for the selection of second best paths to result in sharing many \illigits.  In practice, increasing of one factor causes
+  the other to decrease. Because we aggregate over all possible bad node settings, the effects of each of the aforementioned factors varies for each simulation
+  run.
+
+As seen in Figure \ref{fig:histo6}(a), most cases for $k=2$ yield a low number of messages.  These cases correspond to a low number of \illigits resulting from
+the second best paths chosen %({\it May want to use correlation coefficient}) 
+ and a bad node with a low degree. There are however cases that result in 
+many recovery messages.  
+In these scenarios many \illigits are shared as result of second best path selection.  By contrast, Figure \ref{fig:histo6}(b) shows that recovery messages 
+for $k=3$ follows more of a uniform distribution with few cases of very low and very high  number of messages. Ultimately, when we compute the mean number 
+of messages for $k=2$ and $k=3$, the scenarios that fall into the first bin for  $k=2$ cause its mean to be lower than $k=3$.
+
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale=1.0]{figs/histogram6-k2.pdf}
+%\caption{\second and $k=2$ histogram}
+%  \label{fig:histo6}
+%\end{figure}
+
+\begin{figure*}
+\centering
+\subfigure[{\second and $k=2$ histogram}]{\includegraphics[width=0.49\textwidth]{figs/histogram6-k2.pdf}}
+\subfigure[{\second and $k=3$ histogram}]{\includegraphics[width=0.49\textwidth]{figs/histogram6-k3.pdf}}
+\caption{\second message histograms for $k=2$ and $k=3$ }
+\label{fig:histo6}
+\end{figure*}
+
+%
+
+%{\bf Comment: } {\it Discuss $k=2$ here}.
+
+%First we comment on the state of the network when recovery begins for $k=2$.  All nodes within $2$ hops of 
+%the bad node have seen \badvector if at least one of their neighbors $1$ hop away from the bad node use the bad node.  However, any paths more than $2$ hops from
+%the bad node do not use \badvector (because \badvector has only traveled $2$ hops).  These paths may however use \oldvector. 
+
+The performance of \second when $2 \leq k \leq 5$ suffers because \badvector spreads to nodes outside of the k-ring. Its performance might improve
+if the recovery were localized; that is, modify \second to only send recovery messages to nodes within $k$ hops of the bad node before sending recovery messages
+to nodes outside the k-ring.  Another shortcoming is that many illegitimate paths are shared 
+among nodes, as a result of the \infinity problem.  We note in the context of recovery, not all \illigits are created equal.  Some \illigits
+cause a decrease in cost to a given destination.  For example, for the $k=3$ recovery case \badvector is shared with nodes outside the k-ring which 
+results in path decreases since these nodes had yet to learn about any paths using \badvector.  These \illigits are detrimental to recovery because
+path costs are decreasing rather than increasing towards their final converged values. In contrast, some \illigits cause path 
+costs to increase. For example, if two nodes, $v_i$ and $v_j$ are routing through each other to get a destination $v_d$ because $v_i$ and $v_j$ mutually 
+believe that the other has a path using the bad node, the cost to $v_d$ counts up until both $v_i$ and $v_j$ use a legitimate path.
+In such cases, the \illigits are moving the recovery towards the final
+vector values for all nodes.  Relatively speaking, the latter \illigits are more desirable.  
+%However, of course it would be more desirable for $n_i$ and $n_j$ to exchange legimitmate paths. 
+
+For $k \geq 4$ \badvector has spread up to or close to its maximum number of hops from the bad node. Thus when recovery begins for $k \geq 4$  
+nodes have small least cost values.  It follows that the paths learned from \second have a higher cost than these initial values (Claim 1 in 
+Section \ref{sec:trend}).  The
+trend therefore is for path costs to increase up to their final converged values.  Figure \ref{fig:ts-decr}(b) supports this argument;
+a few path costs decrease in value at the start of recovery followed by no path cost decreases.  When no path cost decreases occur, messages
+are only sent 
+because of path cost increases. Because path costs rarely decrease, messages are not wasted 
+advertising such illegitimate paths.  This accounts for the slightly lower number of messages when compared to $k=3$.  
+
+
+%{\bf Comment: } {\it The paragraph below probably belongs in an earlier section}.\\
+In general, when the bad node is removed path costs for some (or maybe even all) nodes increases.  \second is sensitive to how much path costs increase.  This is 
+the case because \second counts up path costs from their original invalid values to their final converged values.   
+If the final paths have high cost, it means that \illigit paths need to count up to a higher value.  This results in more messages. For these
+experiments the link cost ranged from $[1,100]$, thus resulting in a modest increase in final path costs.  The number of messages for recovery
+would increase if we allow edge weights to be sampled from a large range of values.
+
+
+
+\subsubsection{\cpr}
+\label{sub:cpr-expt1}
+\cpr outperforms all other algorithms. Under fixed link costs, the state that \cpr rolls back to is almost the same as the final recovered state, while
+the other algorithms must deal with removing \badvector state. Specifically, if we let $S'$ represent the state \cpr rolls back to and $S$ be the final recovered state,
+the only difference between the two states, is that $S'$ contains \bad and \oldvector while $S$ does not.
+
+Notice that \cpr performs exactly the same as \second when $k=1$. This is the case because both algorithms
+only have to remove \bad and \oldvector. 
+
+
+\subsection{Experiment 2 - Recovery With Link cost changes}
+In this experiment, we evaluate recovery performance when link costs change during $t'-t$.  We simulate the same set of events
+described in Section \ref{sub:scenario}, except we introduce \lcd events during $t'-t$. Each \lcd event is simulated as follows. First, we
+schedule the event to occur at $t'+ \Delta$, where $\Delta$ is selected uniformly at random from the same range as message arrival times. 
+Then the link to modify is selected uniformly at random over all links except $(v,\bar{v})$, $\forall v \in V': v \in adj(\bar{v})$. Finally, 
+the new link cost is also selected uniformly at random from $[1,100]$.
+
+We do not consider \purge in this experiment because we are interested in comparing the performance of a non-rollback based algorithm 
+and a rollback based algorithm. Since \purge and \second demonstrated similar performance in Experiment 1, for simplicity we only consider \second.
+We use \cpr as the rollback based algorithm. 
+
+We evaluate \second for three different $k$ values: small $k$ ($k=2$), medium $k$ ($k=8$) and large $k$ ($k=20$). Our reasons for doing so are twofold:
+as shown in Experiment 1 \second performance changes with $k$ and the difference between $t$ and $t'$ is a function of $k$. 
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|} 
+\hline
+   	{\bf Variable} & {\bf Range of Values} \\
+		  \hline \hline
+		  $k$ & $\{2,8,20\}$ \\
+			\hline
+		  \# \lcd & $\{5,10,15,20,25,50\}$ \\
+			\hline
+		  seed & $[0,10]$\\
+			\hline
+		  \bad & each node in graph \\
+			\hline
+			\end{tabular}
+			\end{center}
+\caption{Experiment 2 random variables and their possible values.}
+\label{tab:expt2-vars}
+\end{table}
+
+
+As with Experiment 1 we limit ourselves to a single representative topology. This is the same topology used in Experiment 1. Also we follow the 
+same methodology described in Section \ref{subsec:method} but with the random variables detailed in Table \ref{tab:expt2-vars}.
+
+\subsubsection{Results}
+
+Figure \ref{fig:expt2} shows the results for Experiment 2. \second performance varies significantly across $k$. Recall that the size of interval
+$t'-t$ is a function of $k$; when $k$ is small the interval is small and vice versa. Thus when $k$ is small many of the \lcd messages carry over
+past $t$ and when $k$ is large most \lcd events complete before recovery begins. Table \ref{tab:badphase} confirms this claim. 
+It shows that the number messages sent during during the \badvector propagation phase is up to an order magnitude larger between $k=2$ and large
+$k=20$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=1.0]{figs/lcd6.pdf}
+\caption{Experiment 2 results.}
+  \label{fig:expt2}
+\end{figure}
+
+
+
+
+\begin{table}[htdp]
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|c|} 
+\hline
+ & \lcd $=5$ & \lcd $=10$ & \lcd $=15$& \lcd $=20$ &\lcd $=25$ & \lcd $=50$     \\
+\hline	  \hline
+  $k=2$ & 0.3K & 0.5K & 0.75K & 1K & 1.2K & 2.6K \\
+	  \hline
+  $k=8$ & 9K & 13K & 21K & 32K & 42K & 68K \\
+	  \hline
+  $k=20$ & 35K & 44K & 75K & 116K & 155K & 236K \\
+	  \hline
+\end{tabular}
+\end{center}
+\caption{Number of messages sent during the \badvector propagation phase for \second at different $k$ values.}
+\label{tab:badphase}
+\end{table}
+
+Equivalently, the \second results can be interpreted as the total number of messages are the same across $k=2,8,$ and $10$ but when $k$ is small more of these 
+messages are sent after $t$ and therefore are counted as recovery messages and when $k$ is large most messages are sent between $t'-t$ are thus 
+are not counted.
+
+\cpr performs somewhere in between \second $k=8$ and \second $k=2$. \cpr is forced to replay most \lcd events when rolling back leading to poor
+performance when there are many \lcd events.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%% BEGIN COMMENT %%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+We carry out three sets of experiments where each experiment corresponds to a different $k$ value.  Across all three experiments we vary 
+the number of \lcds (during $t-t$), the bad node, and message arrival order.  Recall that $k$ controls the number of hops \badvector travels from 
+the bad node before the oracle discovers the bad node. In other words, $k$ controls the difference between $t'$ and $t$; large $k$ implies 
+that $t-t'$ is large and small $k$ means $t-t'$ is small. The first experiment is for small $k$ ($k=2$), the second experiment is for 
+medium $k$ ($k=8$), and the final experiment is for large $k$ ($k=20$).
+
+The following events are simulated:
+
+\begin{enumerate}
+	\item No \lcds occur before $t'$, this is in Experiment 2 (Section \ref{subsec:expt2}).
+
+	\item \lcds occur between $t'-t$.
+
+	\item The bad node shares \badvector at $t'$.
+
+	\item Neighbors of the bad node are notified of \badvector at $t$.  At this point, all neighbors apply either \second,\cprq, or \cprnq for recovery
+	(of course they all apply the same algorithm).
+
+\end{enumerate}
+
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% END COMMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+

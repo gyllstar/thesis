@@ -1,0 +1,20 @@
+\section{Conclusions and Future Work}
+\label{sec:future}
+
+In this paper, we developed methods for recovery in scenarios where malicious nodes inject false state into a distributed system.  
+We studied an instance of this problem in distance vector routing. 
+We presented and evaluated -- through a theoretical analysis and simulation -- three new algorithms for recovery in such scenarios. %from false state in distance vector routing 
+%Our results showed that all of our algorithms 
+In the case of topologies with changing link costs, we found that poison reverse yields dramatic reductions in message complexity for all three algorithms. 
+Among our three algorithms, our results showed that \cpr -- a checkpoint-rollback based algorithm -- using poison reverse yields the lowest message and time overhead in all scenarios. 
+However, \cpr has storage overhead and requires loosely synchronized clocks. %The \infinity problem results in high message overhead for \second but poison reverse alleviates	
+\purge does not have these restrictions and we showed that \purge using poison reverse is only slightly worse than \cpr with poison reverse.
+Unlike \cprs, \purge has no stale state to update because \purge does not use checkpoints and rollbacks. 
+%The \infinity problem results in high message overhead for \seconds, while \purge eliminates the \infinity problem by globally purging false state before finding new least cost paths.
+
+As future work, we are interested in finding the worst possible false state a compromised node can inject (e.g., state that maximizes the effect of the \infinity problem).
+%Some options include the minimum distance to all nodes, state that maximizes the effect of the \infinity problem, and false state that contaminates a bottleneck link.
+%We have also started a theoretical analysis of our algorithms.
+
+
+

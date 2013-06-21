@@ -1,0 +1,252 @@
+
+
+@ARTICLE{Dijkstra80,
+	author = {E. Dijkstra and C. Scholten},
+	title = {Termination detection for diffusing computation},
+	journal = {Information Processing Letters},
+	year = {1980},
+	number = {11}
+}
+@inproceedings{Arini,
+ author = {K. El-Arini and K. Killourhy},
+ title = {Bayesian detection of router configuration anomalies},
+ booktitle = {MineNet '05: Proceedings of the 2005 ACM SIGCOMM workshop on Mining network data},
+ year = {2005},
+ isbn = {1-59593-026-4},
+ pages = {221--222},
+ location = {Philadelphia, Pennsylvania, USA},
+ doi = {http://doi.acm.org/10.1145/1080173.1080190},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+@ARTICLE{Feldmann,
+    author = {A. Feldmann and J. Rexford},
+    title = {IP Network Configuration for Intradomain Traffic Engineering},
+    journal = {IEEE Network Magazine},
+    year = {2001},
+    volume = {15},
+    pages = {46--57}
+}
+
+@book{Gall87,
+ author = {D. Bertsekas and R. Gallager},
+ title = {Data networks},
+ year = {1987},
+ isbn = {0-13-196825-4},
+ publisher = {Prentice-Hall, Inc.},
+ address = {Upper Saddle River, NJ, USA},
+ }
+
+@article{Elno,
+author = {E. N. Elnozahy and L. Alvisi and Y. Wang and D. Johnson},
+title = {A survey of rollback-recovery protocols in message-passing systems},
+journal = {ACM Comput. Surv.},
+volume = {34},
+number = {3},
+year = {2002},
+issn = {0360-0300},
+pages = {375--408},
+doi = {http://doi.acm.org/10.1145/568522.568525},
+publisher = {ACM},
+address = {New York, NY, USA},
+}
+ 
+
+@ARTICLE{FranK97,
+    author = {M. Franklin},
+    title = {Concurrency control and recovery},
+    journal = {In A. B. TUCKER Ed., The Computer Science and Engineering Handbook},
+    year = {1997},
+    pages = {1058--1077}
+}
+
+@article{Jeff,
+  author = {D. Jefferson},
+  title = {Virtual time},
+  journal = {ACM Trans. Program. Lang. Syst.},
+  volume = {7},
+  number = {3},
+  year = {1985},
+  issn = {0164-0925},
+  pages = {404--425},
+  doi = {http://doi.acm.org/10.1145/3916.3988},
+  publisher = {ACM},
+  address = {New York, NY, USA},
+}
+
+@ARTICLE{Newman03,
+  author = {M. Newman},
+  title = {The structure and function of complex networks},
+  journal = {SIAM Review},
+  volume = {45},
+  pages = {167},
+  url = {http://www.citebase.org/abstract?id=oai:arXiv.org:cond-mat/0303516},
+  year = {2003}
+}
+
+@article{Jensen91,
+ author = {C. Jensen and L. Mark and N. Roussopoulos},
+ title = {Incremental Implementation Model for Relational Databases with Transaction Time},
+ journal = {IEEE Trans. on Knowl. and Data Eng.},
+ volume = {3},
+ number = {4},
+ year = {1991},
+ issn = {1041-4347},
+ pages = {461--473},
+ doi = {http://dx.doi.org/10.1109/69.109107},
+ publisher = {IEEE Educational Activities Department},
+ address = {Piscataway, NJ, USA},
+ }
+
+
+@inproceedings{Lomet06,
+ author = {D. Lomet amd R. Barga and M. Mokbel and G. Shegalov},
+ title = {Transaction Time Support Inside a Database Engine},
+ booktitle = {ICDE '06: Proceedings of the 22nd International Conference on Data Engineering},
+ year = {2006},
+ isbn = {0-7695-2570-9},
+ pages = {35},
+ doi = {http://dx.doi.org/10.1109/ICDE.2006.162},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+ }
+
+@INPROCEEDINGS{Paul02,
+    author = {K. School and D. Westhoff},
+    title = {Context Aware Detection of Selfish Nodes in DSR based Ad-hoc Networks},
+    booktitle = {Proceedings of IEEE GLOBECOM},
+    year = {2002},
+    pages = {178--182}
+}
+
+
+
+@book{RamaGeh,
+ author = {R. Ramakrishnan and J. Gehrke},
+ title = {Database Management Systems},
+ year = {2002},
+ isbn = {0072465638},
+ publisher = {McGraw-Hill Science/Engineering/Math},
+ }
+
+@article{Mohan92,
+ author = {C. Mohan and D. Haderle and B. Lindsay and H. Pirahesh and P. Schwarz},
+ title = {ARIES: a transaction recovery method supporting fine-granularity locking and partial rollbacks using write-ahead logging},
+ journal = {ACM Trans. Database Syst.},
+ volume = {17},
+ number = {1},
+ year = {1992},
+ issn = {0362-5915},
+ pages = {94--162},
+ doi = {http://doi.acm.org/10.1145/128765.128770},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@inproceedings{Feam,
+author =       "N. Feamster and H. Balakrishnan",
+title =        "{Detecting BGP Configuration Faults with Static Analysis}",
+booktitle =    {2nd Symp. on Networked Systems Design and Implementation (NSDI)},
+year =         {2005},
+month =        {May},
+address =      {Boston, MA}
+}
+
+@article{Liu00,
+ author = "P. Liu and P. Ammann and S. Jajodia",
+ title = "Rewriting Histories: Recovering from Malicious Transactions",
+ journal = "Distributed and Parallel Databases",
+ volume = "8",
+ number = "1",
+ pages = "7-40",
+ year = "2000",
+ url = "citeseer.ist.psu.edu/liu99rewriting.html" }
+
+@article{Liu98,
+ author = {P. Ammann and S. Jajodia and Peng Liu},
+ title = {Recovery from Malicious Transactions},
+ journal = {IEEE Trans. on Knowl. and Data Eng.},
+ volume = {14},
+ number = {5},
+ year = {2002},
+ issn = {1041-4347},
+ pages = {1167--1185},
+ doi = {http://dx.doi.org/10.1109/TKDE.2002.1033782},
+ publisher = {IEEE Educational Activities Department},
+ address = {Piscataway, NJ, USA},
+ }
+
+@ARTICLE{Lin97asurvey,
+    author = {J. Lin and M. Dunham},
+    title = {A survey of distributed database checkpointing},
+    journal = {Distributed and Parallel Databases},
+    year = {1997},
+    volume = {5},
+    pages = {31--9}
+}
+
+@inproceedings{Heckmann,
+ author = {O. Heckmann and M. Piringer and J. Schmitt and R. Steinmetz},
+ title = {On realistic network topologies for simulation},
+ booktitle = {MoMeTools '03: Proceedings of the ACM SIGCOMM workshop on Models, methods and tools for reproducible network research},
+ year = {2003},
+ isbn = {1-58113-748-8},
+ pages = {28--32},
+ location = {Karlsruhe, Germany},
+ doi = {http://doi.acm.org/10.1145/944773.944779},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+@MISC{Rocketfuel,
+      TITLE = "{G}{T}-{I}{T}{M}",
+      NOTE = "http://www.cc.gatech.edu/projects/gtitm/"
+}
+
+@MISC{GT-ITM,
+      TITLE = "Rocketfuel",
+      NOTE = "http://www.cs.washington.edu/research/networking/rocketfuel/ maps/weights/weights-dist.tar.gz"
+}
+
+@MISC{Google,
+      TITLE = "Google Embarrassed and Apologetic After Crash",
+      NOTE = "http://www.computerweekly.com/Articles/2009/05/15/236060/google-embarrassed-and-apologetic-after-crash.htm"
+}
+ 
+
+
+
+@article{Neumann97,
+  author = {R. Neumnann},
+  title={Internet Routing Black Hole},
+  journal={The Risks Digest: Forum on Risks to the Public in Computers and Related Systems},
+  volume={19},
+  number={12},
+  month={May},
+  year={1997}
+}
+
+@techreport{thomasgeneration,
+ 	author = "M. Thomas and E. Zegura",
+	title = "Generation and Analysis of Random Graphs to Model Internetworks",
+	number = "GIT-CC-94-46",
+	url = "citeseer.ist.psu.edu/thomas94generation.html" }
+
+@techreport{Tech,
+ 	author = "D. Gyllstrom and S. Vasudevan and J. Kurose and G. Miklau",
+	title = "Efficient Recovery from False State in Distributed Routing Algorithms",
+	number = "UM-CS-2009-036"}
+
+@TECHREPORT{RIPv1,
+  AUTHOR = {C. Hendrick},
+  TITLE = {Routing Information Protocol},
+  INSTITUTION = {{IETF}},
+  TYPE = {{RFC}},
+  NUMBER = {1058},
+  YEAR = 1988,
+  MONTH = {June},
+  PS = {RIPv1.txt}
+}
+
+

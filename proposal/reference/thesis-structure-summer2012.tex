@@ -1,0 +1,230 @@
+\documentclass{umthesis}          % for Ph.D. dissertation or proposal
+
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{cancel}
+\usepackage{fancyhdr}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{epstopdf}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{subfigure}
+
+
+\newtheorem{theorem}{Theorem}
+\setcounter{theorem}{0}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{meta-proposition}[theorem]{Meta-Proposition}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{proviso}[theorem]{Proviso}         
+\newtheorem{question}[theorem]{Question}         
+\newtheorem{remark}[theorem]{Remark}         
+\newtheorem{define}{Definition}     
+
+
+
+
+\newcommand{\minv}{$\overrightarrow{min}$ }
+\newcommand{\minvi}{$\overrightarrow{min}_i$ }
+\newcommand{\minvis}{$\overrightarrow{min}_i$}
+\newcommand{\minvj}{$\overrightarrow{min}_j$ }
+\newcommand{\minvjs}{$\overrightarrow{min}_j$}
+\newcommand{\minvv}{$\overrightarrow{min}_v$ }
+\newcommand{\minvvs}{$\overrightarrow{min}_v$}
+\newcommand{\dmatrix}{$dmatrix$ }
+\newcommand{\dmatrixs}{$dmatrix$}
+\newcommand{\dmatrixi}{$dmatrix_i$ }
+\newcommand{\dmatrixis}{$dmatrix_i$} 
+\newcommand{\dmatrixj}{$dmatrix_j$ }
+\newcommand{\dmatrixjs}{$dmatrix_j$} 
+\newcommand{\dmatrixv}{$dmatrix_v$ }
+\newcommand{\dmatrixvs}{$dmatrix_v$} 
+%\newcommand{\dmatrixvs}{{\tt dmatrix$_v$}}
+\newcommand{\dv}{{DV$^+$ }}
+%\newcommand{\bad}{{$\hat{v}$ }}
+\newcommand{\Bad}{{$\overline{V}$ }}
+\newcommand{\Bads}{{$\overline{V}$}}
+\newcommand{\bad}{{$\overline{v}$ }}
+\newcommand{\bads}{{$\overline{v}$}}
+\newcommand{\alg}{{DV$^+$ }}
+\newcommand{\second}{{{\tt 2}$^{{\tt nd}}$ {\tt best} }}
+\newcommand{\seconds}{{{\tt 2}$^{{\tt nd}}$ {\tt best}}}
+\newcommand{\infinity}{{count-to-$\infty$ }}
+\newcommand{\purge}{{{\tt purge} }}
+\newcommand{\purges}{{{\tt purge}}}
+%\newcommand{\badvector}{{$v_{bad-lie}$ }}
+%\newcommand{\oldvector}{{$v_{bad-old}$ }}
+\newcommand{\badvector}{$\overrightarrow{bad}$ }
+\newcommand{\badvectors}{$\overrightarrow{bad}$}
+\newcommand{\oldvector}{$\overrightarrow{old}$ }
+\newcommand{\oldvectors}{$\overrightarrow{old}$}
+\newcommand{\finalvector}{{$v_{final}$ }}
+\newcommand{\illigit}{{illegitimate path} }
+\newcommand{\illigits}{{illegitimate paths} }
+\newcommand{\lcd}{$\Delta_{lc}$ }
+\newcommand{\lcds}{$\Delta_{lc}$s }
+\newcommand{\cpr}{{\tt cpr} }
+\newcommand{\cprs}{{\tt cpr}}
+\newcommand{\er}{Erd\"{o}s-R\'enyi }
+\newcommand{\ers}{Erd\"{o}s-R\'enyi} 
+
+\newcommand{\sat}{{\textsc{P3SAT} }}
+\newcommand{\sats}{{\textsc{P3SAT}}}
+\newcommand{\maxinc}{{\textsc{MaxObserve} }}
+\newcommand{\maxincs}{{\textsc{MaxObserve}}}
+\newcommand{\xval}{{\textsc{SafePlace} }}
+\newcommand{\xvals}{{\textsc{SafePlace}}}
+\newcommand{\xvalpart}{{\textsc{MaxSafePlace} }}
+\newcommand{\xvalparts}{{\textsc{MaxSafePlace}}}
+
+
+\begin{document}
+
+\title{Something with Robustness}
+\author{Daniel P. Gyllstrom}
+\date{February 2011} % The date you'll actually graduate -- must be
+                     % February, May, or September
+\copyrightyear{2011}
+\bachelors{B.Sc.}{Trinity College}
+\masters{M.Sc.}{University of Massachusetts Amherst} 
+\committeechair{Jim Kurose}
+%\cochairs{B. B. Bahh}{I. M. A. Wolf}
+\firstreader{Jim Kurose}
+\secondreader{2nd reader}
+\thirdreader{3rd reader}
+\fourthreader{4thI reader}   % Optional
+%\fifthreader{}            % Optional
+%\sixthreader{}            % Optional
+\departmentchair{Andy Barto}
+\departmentname{Computer Science}
+
+\degree{Doctor of Philosophy}{Ph.D.}
+
+%%
+%% These lines produce the title, copyright, and signature pages.
+%% They are Mandatory; except that you could leave out the copyright page
+%% if you were preparing an M.S. thesis instead of a PhD dissertation.
+\frontmatter
+\maketitle
+\copyrightpage     %% not required for an M.S. thesis
+\signaturepage
+
+%%
+%% Dedication is optional -- but this is how you create it
+\begin{dedication}              % Dedication page
+  \begin{center}
+    \emph{For myself.}
+  \end{center}
+\end{dedication}
+
+
+\chapter{Acknowledgments}             % Acknowledgements page
+  Thanks to me. 
+
+%% Abstract is MANDATORY. -- Except for MS theses
+\begin{abstract}                % Abstract
+abstract text
+
+\end{abstract}
+
+
+%%
+%% Table of contents is mandatory, lists of tables and figures are 
+%% mandatory if you have any tables or figures; must be in this order.
+\tableofcontents                % Table of contents
+\listoftables                   % List of Tables
+\listoffigures                  % List of Figures
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Time for the body of the dissertation
+\mainmatter   %% <-- This line is mandatory
+
+%%
+%% If you want an introduction, which is not a numbered chapter, insert
+%% the following two lines.  This is OPTIONAL:
+\unnumberedchapter{Introduction}
+
+introduction text goes here.
+
+
+%%
+%% Some sample text
+\chapter{Recovery From False State in Distance Vector Routing} 
+
+\input{rollback/intro.tex}
+
+\input{rollback/idea.tex}
+
+
+\input{rollback/problem-stmt}
+%\input{algorithms}
+
+
+\input{rollback/correct}
+
+\input{rollback/analysis-short}
+
+\input{rollback/experiments}
+
+\input{rollback/related}
+
+\input{rollback/weakness}
+
+\input{rollback/future}
+
+
+\chapter{Max Observability PMU Placement with Cross-Validation} 
+
+\input{pmu/intro}
+
+\input{pmu/prelim}
+
+\input{pmu/problem-stmt-tech}
+
+
+\input{pmu/approx} 
+
+
+\input{pmu/simulations-tech}
+
+\input{pmu/related}
+
+\input{pmu/conclude}
+
+
+
+%% End of body
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\chapter{THE FIRST APPENDIX TITLE}
+...
+
+%%
+%% Beginning of back matter
+\backmatter  %% <--- mandatory
+
+%%
+%% We don't support endnotes
+
+%%
+%% A bibliography is required.
+\bibliographystyle{umthesis}
+\bibliography{thesis}
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

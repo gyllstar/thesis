@@ -1,0 +1,132 @@
+%%%%%%%%%%%%%%%% TRENDS IN RECOVERY SECTION %%%%%%%%%%
+\section{Correctness of Recovery Algorithms}
+\label{sec:correct}
+
+Our correctness proofs consider the general case where multiple nodes are compromised. We use the following notation in our proofs:
+\begin{itemize}
+	\item We refer to the set of compromised nodes as $\overline{V}$. 
+	\item $t$ marks the time at outside algorithm detects that all $\overline{V}$ are compromised. 
+	\item $t'$ refers to the time the first $\overline{v} \in \overline{V}$ is compromised. 
+	\item $t^*$ marks the time when the recovery algorithm (e.g., \seconds, \purges, or \cprs), which started executing at time $t$, completes.
+	\item We use the definition of $G$ described in Section \ref{sec:algs}.
+	\item We redefine $G'$ as follows. $G'=(V',E')$, where $V' = V - \overline{V}$, $E'=E - \{(\overline{v},v_i)$ $|$ $\overline{v} \in \overline{V} \wedge v_i \in adj(\overline{v}) \}$.
+\end{itemize}
+
+%We first state our assumptions and then define correctness. Finally, we prove the correctness of each algorithm. 
+We make the following assumptions in our proofs. All the initial \dmatrix values are nonnegative. Furthermore, all \minv values periodically
+exchanged between neighboring nodes are nonnegative. 
+All $v \in V$ know their adjacent link costs. All link weights in $G$ (and therefore $G'$ as well) are nonnegative and do not change.
+$G$ is finite and connected. Finally, we assume reliable communication. 
+
+\begin{define} 
+An algorithm is correct if the following two conditions are satisfied. One, $\forall v \in V'$, $v$ has the least cost to all destinations $v' \in V'$.
+Two, the least cost is computed in finite time.
+\end{define}
+
+
+\begin{theorem}
+\label{thm:dv-correct}
+Distance vector is correct.
+\end{theorem}
+\begin{proof}
+Bertsekas and Gallager \cite{Gall87} prove correctness for distributed Bellman-Ford for arbitrary nonnegative \dmatrix values. 
+Their distributed Bellman-Ford algorithm is the same as the distance vector algorithm used in this paper. 
+\end{proof}
+%$Proof$. Bertsekas and Gallager \cite{Gall87} prove correctness for distributed Bellman-Ford for arbitrary nonnegative \dmatrix values. 
+%Their distributed Bellman-Ford algorithm is the same as the distance vector algorithm used in this paper. \qed
+
+\begin{corollary}
+\label{cor:second-correct-single}
+\second is correct when a single node is compromised.
+\end{corollary}
+\begin{proof}
+As per the preprocessing step, each $v \in adj(\overline{v})$ initiates a diffusing computation to remove \bad as a destination. For each diffusing computation,
+all nodes are guaranteed to receive a diffusing computation (by our reliable communication and finite graph assumptions). Further, each diffusing computation
+terminates in finite time.  Thus, we conclude that each $v \in V'$ removes $\overline{v}$ as a destination in finite time.
+
+After the diffusing computations to remove \bad as a destination complete, each 
+$v \in adj($\bads$)$ uses distance vector to determine new least cost paths to all nodes in their connected component.
+Because all \dmatrixv are nonnegative for all $v \in V'$, by Theorem \ref{thm:dv-correct} we conclude \second is correct if no additional node(s) are compromised
+during $[t',t^*]$. % the execution of \seconds. %trigger by the compromised of $\overline{V}$
+\end{proof}
+
+\begin{corollary}
+\label{cor:second-correct-mult}
+\second is correct when multiple nodes are compromised.
+\end{corollary}
+\begin{proof}
+If multiple nodes, $\overline{V}$, are simultaneously compromised the proof is the same as that for Corollary \ref{cor:second-correct-single}, substituting $\overline{V}$ for $\overline{v}$.
+
+Next, we prove \second is correct in the case where a set of nodes, $\overline{V}_2$, are compromised concurrent with a running execution of \second (e.g., during  $[t',t^*]$), triggered by the compromise of $\overline{V}$.
+First we show that any least cost computation (e.g., one triggered by  $\overline{V}$'s compromise) to any $v \in \overline{V}_2$ is eventually terminated.  We have already proved that the diffusing computations to remove each $v \in \overline{V}_2$ as 
+a destination complete in finite time.  Let $t_d$ mark the time these diffusing computations complete. For all $t \geq t_d$, any running least cost computation to a destination $v \in \overline{V}_2$ 
+is terminated by the actions specified in Section \ref{subsec:mult}.  Therefore, the only remaining least cost computations are to all $v \in V'$, where 
+$V' = V - \left(\overline{V} \cup \overline{V}_2 \right)$.  Because all \dmatrixi values are nonnegative for all $i \in V'$, by Theorem \ref{thm:dv-correct} we conclude \second is correct.
+%when additional nodes are compromised concurrent with any \second execution. 
+%We have already proved (in Corollary \ref{cor:second-correct-single}) that the diffusing computations to remove $\overline{V}_2$ as a destination complete in finite time.  
+
+Since we have proved \second is correct when multiple nodes are simultaneously compromised and when nodes are compromised concurrent with any \second execution,
+we conclude that \second is correct when multiple nodes are compromised.
+\end{proof}
+
+
+\begin{corollary}
+\label{cor:purge-correct-single}
+\purge is correct when a single node is compromised.
+\end{corollary}
+\begin{proof}
+Each $v \in adj($\bads$)$ finds every destination, $d$, to which $v$'s least cost path 
+uses \bad as the first-hop node. $v$ sets its least cost to each such $d$ to $\infty$, thereby invalidating its path to $d$.  
+$v$ then initiates a diffusing computation. When an arbitrary node, $i$, receives a diffusing computation message from $j$, $i$ iterates 
+through each $d$ specified in the message. If
+$i$ routes via $j$ to reach $d$, $i$ sets its least cost to $d$ to $\infty$, therefore invalidating any path to $d$ with $j$ and  
+\bad an intermediate nodes.  
+
+%By our assumptions, each node receives a diffusing computation message and the diffusing computation terminates in finite time. Thus, we conclude that all paths using \bad as an intermediary
+By our assumptions, each node receives a diffusing computation message for each path using $\overline{v}$ as an intermediate node.  Additionally, our assumptions imply that all diffusing computation terminate in finite time. 
+Thus, we conclude that all paths using $\overline{v}$ as an intermediary node are invalidated in finite time. 
+
+Following the preprocessing, all $v \in adj($\bads$)$ use
+distance vector to determine new least cost paths. Because all \dmatrixi are nonnegative for all $i \in V'$, by Theorem \ref{thm:dv-correct} we conclude that \purge is correct. 
+\end{proof}
+
+\begin{corollary}
+\label{cor:purge-correct-mult}
+\purge is correct when multiple nodes are compromised.
+\end{corollary}
+\begin{proof}
+The same proof used for Corollary \ref{cor:second-correct-mult} applies for \purges.
+\end{proof}
+
+\begin{corollary}
+\label{cor:cpr-correct-single}
+\cpr is correct when a single node is compromised.
+\end{corollary}
+\begin{proof}
+\cpr sets $t'$ to the time $\overline{v}$ was compromised. Then, \cpr rolls back using diffusing computations: each diffusing computation is initiated at each $v \in adj(\overline{v})$.
+Each node that receives a diffusing computation message, rolls back to a snapshot with timestep less than $t'$.
+By our assumptions, all nodes receive a message and the diffusing computation terminates in finite time.  Thus, we conclude
+that each node $v \in V'$ rolls back to a snapshot with timestamp less than $t'$ in finite time.
+
+\cpr then runs the preprocessing algorithm described in Section \ref{subsec:preprocess}, which removes each \bad as a destination in finite time (as shown
+in Corollary \ref{cor:second-correct-single}). Because each node rolls back to a snapshot in which all least costs are nonnegative and 
+\cpr then uses distance vector to compute new least costs, by Theorem $1$ we conclude that \cpr is correct if no additional nodes are compromised during  $[t',t^*]$.
+\end{proof}
+
+\begin{corollary}
+\label{cor:cpr-correct-mult}
+\cpr is correct when multiple nodes are compromised.
+\end{corollary}
+\begin{proof}
+If multiple nodes, $\overline{V}$ are simultaneously compromised, \cpr sets $t'$ to the time the first $\overline{v} \in \overline{V}$ is compromised.  Any nodes, $\overline{V}_2$, compromised
+concurrent with $\overline{V}$ (e.g., during  $[t',t^*]$), trigger an additional \cpr execution.  The steps described in Section \ref{subsec:mult} ensure 
+that all least cost computations (after rolling back) are to
+destination nodes $d \in V'$.  By Theorem \ref{thm:dv-correct} we conclude \cpr is correct because all \dmatrixi are nonnegative for all $i \in V'$.
+\end{proof}
+
+
+
+
+
+
+

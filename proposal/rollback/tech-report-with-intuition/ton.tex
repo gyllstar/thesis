@@ -1,0 +1,263 @@
+%\documentclass{sig-alternate-sigmod08}
+\documentclass[10pt,conference]{IEEEtran} 
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{cancel}
+\usepackage{fancyhdr}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{epstopdf}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{subfigure}
+
+
+%%%%%%%%%%  NEEDS to be commente out to have the nice headers %%%%%
+%\pagestyle{fancy}
+\DeclareGraphicsRule{.tic}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+%\textwidth = 6.5 in
+%\textheight = 9 in
+%\oddsidemargin = 0.0 in
+%\evensidemargin = 0.0 in
+%\topmargin = 0.0 in
+%\headheight = 0.0 in
+%\headsep = 0.0 in
+%\parskip = 0.2in
+%\parindent = 0.0in
+%\abovedisplayskip
+%\belowdisplayskip
+ 
+%Rnd{\classname}{FOO 699}
+\newcommand{\doc}{Technical Report}
+\newcommand{\doctitle}{Efficient Recovery from False State in Distributed Routing Algorithms}
+\newcommand{\myname}{Daniel Gyllstrom}
+%\newcommand{\qed}{\hfill $\Box$ \hfill \\}
+
+
+\newtheorem{theorem}{Theorem}
+\setcounter{theorem}{0}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{meta-proposition}[theorem]{Meta-Proposition}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{proviso}[theorem]{Proviso}         
+\newtheorem{question}[theorem]{Question}         
+\newtheorem{remark}[theorem]{Remark}         
+\newtheorem{define}{Definition}     
+
+%\newtheorem{simulation}{Simulation}
+\newcounter{simulationCnt}
+
+\newcommand{\simulation}[1]{%
+    \stepcounter{simulationCnt}
+    \subsubsection{Simulation \arabic{simulationCnt} - }%
+ }
+
+%\newcounter{simulation}{0}
+
+
+\newcommand{\minv}{$\overrightarrow{min}$ }
+\newcommand{\minvi}{$\overrightarrow{min}_i$ }
+\newcommand{\minvis}{$\overrightarrow{min}_i$}
+\newcommand{\minvj}{$\overrightarrow{min}_j$ }
+\newcommand{\minvjs}{$\overrightarrow{min}_j$}
+\newcommand{\minvv}{$\overrightarrow{min}_v$ }
+\newcommand{\minvvs}{$\overrightarrow{min}_v$}
+\newcommand{\dmatrix}{$dmatrix$ }
+\newcommand{\dmatrixs}{$dmatrix$}
+\newcommand{\dmatrixi}{$dmatrix_i$ }
+\newcommand{\dmatrixis}{$dmatrix_i$} 
+\newcommand{\dmatrixj}{$dmatrix_j$ }
+\newcommand{\dmatrixjs}{$dmatrix_j$} 
+\newcommand{\dmatrixv}{$dmatrix_v$ }
+\newcommand{\dmatrixvs}{$dmatrix_v$} 
+%\newcommand{\dmatrixvs}{{\tt dmatrix$_v$}}
+\newcommand{\dv}{{DV$^+$ }}
+%\newcommand{\bad}{{$\hat{v}$ }}
+\newcommand{\Bad}{{$\overline{V}$ }}
+\newcommand{\Bads}{{$\overline{V}$}}
+\newcommand{\bad}{{$\overline{v}$ }}
+\newcommand{\bads}{{$\overline{v}$}}
+\newcommand{\alg}{{DV$^+$ }}
+\newcommand{\block}{{\tt todo-rename }}
+\newcommand{\second}{{{\tt 2}$^{{\tt nd}}$ {\tt best} }}
+\newcommand{\seconds}{{{\tt 2}$^{{\tt nd}}$ {\tt best}}}
+\newcommand{\infinity}{{count-to-$\infty$ }}
+\newcommand{\purge}{{{\tt purge} }}
+\newcommand{\purges}{{{\tt purge}}}
+\newcommand{\resetall}{{{\tt reset-all} }}
+\newcommand{\resetalls}{{{\tt reset-all}}}
+\newcommand{\resetk}{{{\tt reset-k} }}
+\newcommand{\resetks}{{{\tt reset-k}}}
+%\newcommand{\badvector}{{$v_{bad-lie}$ }}
+%\newcommand{\oldvector}{{$v_{bad-old}$ }}
+\newcommand{\badvector}{$\overrightarrow{bad}$ }
+\newcommand{\badvectors}{$\overrightarrow{bad}$}
+\newcommand{\oldvector}{$\overrightarrow{old}$ }
+\newcommand{\oldvectors}{$\overrightarrow{old}$}
+\newcommand{\finalvector}{{$v_{final}$ }}
+\newcommand{\illigit}{{illegitimate path} }
+\newcommand{\illigits}{{illegitimate paths} }
+\newcommand{\lcd}{$\Delta_{lc}$ }
+\newcommand{\lcds}{$\Delta_{lc}$s }
+\newcommand{\cpr}{{\tt cpr} }
+\newcommand{\cprs}{{\tt cpr}}
+\newcommand{\er}{Erd\"{o}s-R\'enyi }
+\newcommand{\ers}{Erd\"{o}s-R\'enyi} 
+\newcommand{\reword}{{\it  Comment: reword}. }
+\newcommand{\more}{{\it  Comment: more details needed here}. }
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+%newcommand{\block}{{\textsc{block-wait} }}
+
+
+%%%%%%%%%%%%% This adds the header to each page - currently a bit broken so commented out
+%\lhead{\myname{}}
+%\chead{\myname{}}
+%\rhead{\doc{}}
+%\lfoot{}
+%
+
+\makeatletter
+\newcommand{\un}[1]{%
+   % \ifmmode \@@underline{#1} \else %
+             $\@@underline{\hbox{#1}}$\fi}
+\makeatother
+\raggedbottom
+
+\begin{document}
+
+
+
+
+\title{\doctitle}
+
+
+\author{
+\IEEEauthorblockN{Daniel Gyllstrom, Sudarshan Vasudevan, Jim Kurose, Gerome Miklau } 
+\IEEEauthorblockA{Department of Computer Science \\ 
+University of Massachusetts Amherst \\ 
+\{dpg, svasu, kurose, miklau\}@cs.umass.edu}} 
+%\andI 
+%\IEEEauthorblockN{Sudarshan Vasudevan} 
+%\IEEEauthorblockA{Department of Computer Science \\ 
+%University of Massachusetts Amherst \\ 
+%svasu@cs.umass.edu} 
+%\and
+%\IEEEauthorblockN{James Kurose} 
+%\IEEEauthorblockA{Department of Computer Science \\ 
+%University of Massachusetts Amherst \\ 
+%kurose@cs.umass.edu} }
+
+\maketitle
+
+\input{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+%Distributed systems are vulnerable to malicious and misconfigured nodes which inject false system state. 
+
+Malicious and misconfigured nodes can degrade the performance of a distributed system by injecting incorrect state information. Such false state can then be further propagated 
+through the system either directly in its original form or indirectly, e.g., as a result of diffusing computations initially using this false state. 
+For example, consider distance vector routing.  If a compromised node incorrectly claims a distance of $0$ to all destinations, this false state would likely
+spread throughout the network, infecting shortest paths network-wide.
+%For example, with distance vector a compromised node incorrectly claiming a distance of $0$ to all destinations would likely infect shortest paths throughout the network.
+In this paper, we consider the problem of removing such false state. % from a distributed system.
+
+In order to make the false-state-removal problem concrete, we investigate distance vector routing as an instance of this problem. Distance vector forms the basis for many routing 
+algorithms widely used in the Internet (e.g., BGP, a path-vector algorithm) and in multi-hop wireless networks (e.g., AODV, diffusion routing). However, distance vector is vulnerable 
+to compromised nodes that can potentially flood a network with false routing information, resulting in erroneous least cost paths, packet loss, and congestion. Such scenarios have occurred
+in practice. For example, in 1997 a significant portion of Internet traffic was routed through a single misconfigured router, rendering a large part of the Internet inoperable for several
+hours \cite{Neumann97}. More recently \cite{Google}, a routing error forced Google to redirect its traffic through Asia, causing congestion that left many Google services unreachable. 
+Distance vector currently has no mechanism to recover from such scenarios. Instead, human operators are left to manually reconfigure routers. It is in this context that we propose and
+evaluate automated solutions for recovery.  We make the following contributions:
+
+\begin{itemize}
+
+\item We design, develop, and evaluate three different approaches -- \seconds, \purges, and \cpr -- for correctly recovering from the injection of false routing state (Section \ref{sec:idea}). 
+\second performs localized state invalidation, followed by network-wide recovery using the traditional distance vector algorithm (Section \ref{subsubsec:second}).
+The \purge algorithm performs global false state invalidation by using diffusing computations to invalidate distance vector 
+entries (network-wide) that routed through a compromised node (Section \ref{subsubsec:purge}). Then, traditional distance vector routing is used to recompute distance vectors.
+\cpr uses local snapshots and a rollback mechanism to implement recovery (Section \ref{subsubsec:cpr}). 
+
+\item We prove the correctness of each algorithm for scenarios of single and multiple compromised nodes (Section \ref{sec:correct}). 
+A recovery algorithm is correct if the routing tables for all nodes have converged to a global state in which all nodes 
+have removed each compromised node as a destination and no node bears a least cost path to any destination that routes through a compromised node.
+
+\item We derive communication complexity bounds for each algorithm over a synchronous communication model (Section \ref{sec:analysis}).  
+%In some scenarios, we find the exact number of messages each node sends in order recover. 
+We find all three algorithms are bounded above by $O(mnd)$ -- where $d$ is the diamter, $n$ is the number of nodes, and $m$ the maximum out-degree of any node -- in scenarios where 
+link costs remain fixed.  In scenarios where link costs can change, \cpr incurs additional overhead (not experieced by \second and \purges) because \cpr must update stale
+state after rolling back.  This leads to an additional term for \cpr in its $O(mnd)$ upper bound. %\cpr has an additional term
+
+\item Using simulations, we evaluate the efficiency of each algorithm in terms of message overhead and convergence time in scenarios with single and 
+multiple compromised nodes. (Section \ref{sec:eval}).
+Our simulations show that \cpr using poison reverse outperforms \second and \purge (with and without poison reverse) -- at the cost of checkpoint memory --
+over topologies with fixed and changing link costs. This is because \cpr efficiently removes all false state by rolling back to a checkpoint
+immediately preceding the injection of false routing state. 
+
+\item We show through simulations that \purge using poison reverse yields performance close to \cpr with poison reverse in scenarios where link costs can change
+(Section \ref{subsec:change}). \purge makes use of computations subsequent to the injection of false routing state that do not depend on false routing state, while \cpr 
+must process all valid link cost changes that occurred since false routing state was injected.  Finally, our simulations show that poison reverse significantly improves 
+performance for all three algorithms, especially for topologies with changing link costs (Section \ref{subsubsec:pr-fixed} and \ref{subsubsec:pr-change}). % by removing pairwise routing loops.
+
+\end{itemize}
+
+Recovery from false routing state is closely related to the problem of
+recovering from malicious transactions \cite{Liu98,Liu00} in
+distributed databases. Our problem is also similar to that of rollback
+in optimistic parallel simulation \cite{Jeff}. However, we are unaware
+of any existing solutions to the problem of recovering from false
+routing state. A closely related problem to the one considered in this
+paper is that of discovering misconfigured nodes. In
+Section~\ref{sec:problem}, we discuss existing solutions to this
+problem. In fact, the output of these algorithms serve as input to the
+recovery algorithms proposed in this paper.
+
+
+
+
+
+
+
+
+\input{idea}
+
+\input{problem-stmt}
+%\input{algorithms}
+
+
+\input{correct}
+
+\input{analysis-short}
+
+\input{experiments-short}
+
+\input{related}
+
+\input{weakness}
+
+\input{future}
+
+\section{Acknowledgments}
+The authors greatly appreciate discussions with Dr. Brian DeCleene of BAE Systems, who initially suggested this problem area.
+
+
+
+\bibliographystyle{plain}
+\bibliography{ton}
+
+%\input{appendix}
+
+
+\end{document}

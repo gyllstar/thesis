@@ -1,0 +1,103 @@
+\begin{thebibliography}{10}
+
+\bibitem{Google}
+Google embarrassed and apologetic after crash.
+\newblock
+  http://www.computerweekly.com/Articles/2009/05/15/236060/google-embarrassed-%
+and-apologetic-after-crash.htm.
+
+\bibitem{Rocketfuel}
+{G}{T}-{I}{T}{M}.
+\newblock http://www.cc.gatech.edu/projects/gtitm/.
+
+\bibitem{GT-ITM}
+Rocketfuel.
+\newblock http://www.cs.washington.edu/research/networking/rocketfuel/
+  maps/weights/weights-dist.tar.gz.
+
+\bibitem{Lomet06}
+D.~Lomet amd R.~Barga, M.~Mokbel, and G.~Shegalov.
+\newblock Transaction time support inside a database engine.
+\newblock In {\em ICDE '06: Proceedings of the 22nd International Conference on
+  Data Engineering}, page~35, Washington, DC, USA, 2006. IEEE Computer Society.
+
+\bibitem{Liu98}
+P.~Ammann, S.~Jajodia, and Peng Liu.
+\newblock Recovery from malicious transactions.
+\newblock {\em IEEE Trans. on Knowl. and Data Eng.}, 14(5):1167--1185, 2002.
+
+\bibitem{Gall87}
+D.~Bertsekas and R.~Gallager.
+\newblock {\em Data networks}.
+\newblock Prentice-Hall, Inc., Upper Saddle River, NJ, USA, 1987.
+
+\bibitem{Dijkstra80}
+E.~Dijkstra and C.~Scholten.
+\newblock Termination detection for diffusing computation.
+\newblock {\em Information Processing Letters}, (11), 1980.
+
+\bibitem{Arini}
+K.~El-Arini and K.~Killourhy.
+\newblock Bayesian detection of router configuration anomalies.
+\newblock In {\em MineNet '05: Proceedings of the 2005 ACM SIGCOMM workshop on
+  Mining network data}, pages 221--222, New York, NY, USA, 2005. ACM.
+
+\bibitem{Feam}
+N.~Feamster and H.~Balakrishnan.
+\newblock {Detecting BGP Configuration Faults with Static Analysis}.
+\newblock In {\em 2nd Symp. on Networked Systems Design and Implementation
+  (NSDI)}, Boston, MA, May 2005.
+
+\bibitem{Feldmann}
+A.~Feldmann and J.~Rexford.
+\newblock Ip network configuration for intradomain traffic engineering.
+\newblock {\em IEEE Network Magazine}, 15:46--57, 2001.
+
+\bibitem{Tech}
+D.~Gyllstrom, S.~Vasudevan, J.~Kurose, and G.~Miklau.
+\newblock Efficient recovery from false state in distributed routing
+  algorithms.
+\newblock Technical Report UM-CS-2009-036.
+
+\bibitem{Heckmann}
+O.~Heckmann, M.~Piringer, J.~Schmitt, and R.~Steinmetz.
+\newblock On realistic network topologies for simulation.
+\newblock In {\em MoMeTools '03: Proceedings of the ACM SIGCOMM workshop on
+  Models, methods and tools for reproducible network research}, pages 28--32,
+  New York, NY, USA, 2003. ACM.
+
+\bibitem{Jeff}
+D.~Jefferson.
+\newblock Virtual time.
+\newblock {\em ACM Trans. Program. Lang. Syst.}, 7(3):404--425, 1985.
+
+\bibitem{Jensen91}
+C.~Jensen, L.~Mark, and N.~Roussopoulos.
+\newblock Incremental implementation model for relational databases with
+  transaction time.
+\newblock {\em IEEE Trans. on Knowl. and Data Eng.}, 3(4):461--473, 1991.
+
+\bibitem{Liu00}
+P.~Liu, P.~Ammann, and S.~Jajodia.
+\newblock Rewriting histories: Recovering from malicious transactions.
+\newblock {\em Distributed and Parallel Databases}, 8(1):7--40, 2000.
+
+\bibitem{Mohan92}
+C.~Mohan, D.~Haderle, B.~Lindsay, H.~Pirahesh, and P.~Schwarz.
+\newblock Aries: a transaction recovery method supporting fine-granularity
+  locking and partial rollbacks using write-ahead logging.
+\newblock {\em ACM Trans. Database Syst.}, 17(1):94--162, 1992.
+
+\bibitem{Neumann97}
+R.~Neumnann.
+\newblock Internet routing black hole.
+\newblock {\em The Risks Digest: Forum on Risks to the Public in Computers and
+  Related Systems}, 19(12), May 1997.
+
+\bibitem{Paul02}
+K.~School and D.~Westhoff.
+\newblock Context aware detection of selfish nodes in dsr based ad-hoc
+  networks.
+\newblock In {\em Proceedings of IEEE GLOBECOM}, pages 178--182, 2002.
+
+\end{thebibliography}

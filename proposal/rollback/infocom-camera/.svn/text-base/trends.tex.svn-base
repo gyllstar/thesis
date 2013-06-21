@@ -1,0 +1,162 @@
+%%%%%%%%%%%%%%%% TRENDS IN RECOVERY SECTION %%%%%%%%%%
+\section{Analysis of Algorithms}
+\label{sec:analysis}
+
+In Section \ref{subsec:correct}, we prove the correctness of our three
+recovery algorithms.  Then, we prove specific properties of these
+recovery algorithms in Section \ref{subsec:trends}, which help better
+understand our simulation results.
+
+\subsection{Correctness of Recovery Algorithms}
+\label{subsec:correct}
+
+%We first state our assumptions and then define correctness. Finally, we prove the correctness of each algorithm. 
+We make the following assumptions in our proofs. All the initial \dmatrix values are nonnegative. Furthermore, all \minv values periodically
+exchanged between neighboring nodes are nonnegative. 
+All $v \in V$ know their adjacent link costs. All link weights in $G$ (and therefore $G'$ as well) are nonnegative and do not change.
+{\footnote {\small We use the definition of $G$ and $G'$ described in Section \ref{sec:algs}.}}
+$G$ is finite and connected. 
+
+Finally, we assume reliable communication.
+
+
+{\bf Definition 1.} An algorithm is \emph{correct} if the following two conditions are satisfied. One, $\forall v \in V$, $v$ has the least cost and knows next-hop to all destinations $v' \in V$.
+Two, the least cost is computed in finite time.
+
+%{\it Definition 2.} Let $D_i(t)$ be $i$'s least cost to node $d$ at time $t$, such that $d \neq i$. A distance value is \emph{incorrect} for node $i$ if $D_i(t') \neq D_i(t'')$ where 
+%$t'$ is the current time and $t''$ marks the time the $D_i$ is first correct.
+
+%{\it Definition 3.} An algorithm is \emph{recovery correct} if it is correct over $G'$.
+
+{\bf Theorem 1}. {\it Distance vector is correct.}
+
+$Proof$. Bertsekas and Gallager \cite{Gall87} prove correctness for distributed Bellman-Ford for arbitrary nonnegative \dmatrix values. 
+Their distributed Bellman-Ford algorithm is the same as the distance vector algorithm used in this paper. \qed
+
+{\bf Corollary 1}. {\it \second is correct.}
+
+$Proof$. As per the preprocessing step, each node receiving a diffusing computation message removes \bad as a destination. 
+Each node is guaranteed to receive a diffusing computation message (by our reliable communication and finite graph assumptions). Further, the diffusing computation
+terminates in finite time.  Thus, we conclude that each $v \in V'$ removes \bad in finite time.
+
+Following the diffusing computation, each $v \in adj($\bads$)$ uses distance vector to determine new least cost paths.
+Because all \dmatrixv are nonnegative for all $v \in V'$, by Theorem $1$ we conclude \second is correct. \qed
+
+{\bf Corollary 2}. {\it \purge is correct.}
+
+$Proof$. The diffusing computation starts with each $v \in adj($\bads$)$ finding every destination, $d$, to which $v$'s least cost path 
+uses \bad as the first-hop node. $v$ sets its least cost to each such $d$ to $\infty$, thereby invalidating its path to $d$.  
+$v$ then initiates a diffusing computation. When an arbitrary node, $i$, receives a diffusing computation message from $j$, $i$ iterates 
+through each $d$ specified in the message. If
+$i$ routes via $j$ to reach $d$, $i$ sets its least cost to $d$ to $\infty$, therefore invalidating any path to $d$ with $j$ and  
+\bad an intermediate nodes.  
+
+By our assumptions, each node receives a diffusing computation message and the diffusing computation terminates in finite time. Thus, we conclude that all paths using \bad as an intermediary
+node are invalidated in finite time. Following the preprocessing, each $v \in adj($\bads$)$ uses distance vector to determine new least cost paths.
+Because all \dmatrixv are nonnegative for all $v \in V'$, by Theorem $1$ we conclude that \purge is correct. \qed
+
+{\bf Corollary 3}. {\it \cpr is correct.}
+
+$Proof$. \cpr rolls back using a diffusing computation. Each node that receives a diffusing computation message, rolls back to a snapshot with timestep less than $t'$.
+By our assumptions, all nodes receive a message and the diffusing computation terminates in finite time.  Thus, we conclude
+that each node $v \in V'$ rolls back to a snapshot with timestamp less than $t'$ in finite time.
+
+\cpr then runs the preprocessing algorithm described in Section \ref{subsec:preprocess}, which removes \bad as a destination in finite time (as shown
+in Corollary $1$). Because each node rolls back to a snapshot in which all least costs are nonnegative and 
+\cpr then uses distance vector to compute new least costs, by Theorem $1$ we conclude that \cpr is correct. \qed
+
+\subsection{Properties of Recovery Algorithms}
+\label{subsec:trends}
+
+In this section we formally characterize how \minv values change during recovery. The properties established in this section will aid
+in understanding the simulation results presented in Section \ref{sec:eval}. Our proofs assume that link costs remain fixed during recovery (i.e., during $[t',t]$).
+We prove properties about \minv in order provide a precise characterization of recovery trends.  
+In particular, our proofs establish that:
+%We do not characterize system behavior for \second
+%and \cpr in this section becuase their behavior is relatively simple.  Instead, we wait until the evaluation section (Section \ref{sec:eval}) 
+%to present their recovery trends. 
+
+\begin{itemize}
+	\item The least cost between two nodes at the start of recovery is less than or equal to the least cost when recovery has completed. (Theorem $2$)
+	%That is, once the effects of the compromised node have been removed from the network, path costs cannot decrease. 
+
+	\item Before recovery begins, if the least cost between two nodes is less than its cost when recovery is complete, the path must 
+  be using \badvector or \oldvector either directly or transitively. (Corollary $4$)
+
+	\item During \second and \cpr recovery, if the least cost between two nodes is less than its distance when recovery is complete, the path must 
+  be using \badvector or \oldvector either directly or transitively. (Corollary $5$)
+
+	%\item During recovery, if the least cost between two nodes exceeds the cost when recovery is complete then the node has yet to learn about the path used 
+  	%when recovery is complete. (Claim $2$)
+
+\end{itemize}
+
+The first two statements apply to any recovery algorithm because they make no claims about \minv values during recovery. 
+%These results are only relevant to \second and \purge recovery. \minv values during \cpr recovery do not follow these rules because it is possible
+%that when rolling back link costs have different values such that the conditions for our claims below do not hold.
+
+{\bf Notation}. We use the definition of $G$ and $G'$ described in Section \ref{sec:algs}. 
+%$G=(V,E)$, with weight function $w: E \rightarrow \mathbb{N}$ and
+%$G$ is undirected. $G'=(V',E')$, where $V' = V -$ \bad, $E'=E - \{(\bar{v},v_i)$ $|$ $v_i =adj(\bar{v}) \}$, edge weight function $w: E \rightarrow \mathbb{N}$, and $G'$ is undirected. 
+Let $n,d \in V'$. Let $p_s(n,d)$ be the least cost path from node $n$ to $d$ at the start of recovery and $\delta_s(n,d)$ the
+cost of this path; $p_i(n,d)$ is a path from $n$ to $d$ used during the recovery 
+and $\delta_i(n,d)$ the cost of this path 
+{\footnote {\small $p_i(n,d)$ and $\delta_i(n,d)$ can change over time during recovery.}}; and $p_f(n,d)$ the least cost path from $n$ to $d$ 
+when recovery is finished and has cost $\delta_f(n,d)$.  %Using this notation we derive the following relationships. 
+%Note by path we refer both to the nodes used to get from $n$ to $d$ and the cost of this path.  
+
+
+{\bf Theorem 2.} $\forall n,d\in V'$, $ \delta_s(n,d) \leq \delta_f(n,d)$.
+
+$Proof$: Assume $\exists n_i,d_i\in V'$ such that $\delta_s(n_i,d_i) > \delta_f(n_i,d_i)$.  The paths available at the start of recovery are a superset of 
+those available when recovery is complete. This means $p_f(n_i,d_i)$ is available before recovery begins. Distance vector would use this path rather
+than $p_s(n_i,d_i)$, implying that $\delta_s(n_i,d_i)=\delta_f(n_i,d_i)$, a contradiction. \qed
+
+{\bf Corollary 4.} {\it $\forall n,d\in V'$, if $\delta_s(n,d) < \delta_f(n,d)$, then $p_s(n,d)$ is using \badvector or \oldvector either directly or transitively.}
+
+$Proof$:  Assume $\exists n_i,d_i\in V$ such that a path $p_{s}(n_i,d_i)$ with cost $\delta_{s}(n_i,d_i)$ is used before recovery begins where
+$\delta_{s}(n_i,d_i) < \delta_f(n_i,d_i)$ and  $p_{s}(n_i,d_i)$ does not use \badvector or \oldvectors.  The only paths available before recovery begins, which do not 
+exist when recovery completes, are ones using \badvector or \oldvectors. Therefore, $p_{s}(n_i,d_i)$ must be available after recovery completes since we have assumed that
+$p_{s}(n_i,d_i)$ does not use \badvector or \oldvector. Distance vector would use  $p_{s}(n_i,d_i)$ instead of $p_f(n_i,d_i)$ because 
+$\delta_{s}(n_i,d_i) < \delta_f(n_i,d_i)$.  However this would 
+imply that $\delta_{s}(n_i,d_i)= \delta_f(n_i,d_i)$, a contradiction. \qed
+
+{\bf Corollary 5.} {\it For \second and \cprs. $\forall n,d\in V'$, if $\delta_i(n,d) < \delta_f(n,d)$ 
+  then $p_i(n,d)$  must be using \badvector or \oldvector either directly or transitively} 
+ {\footnote {\small Corollary 5 does not apply to \purge recovery because the  $\delta_i(n,d) < \delta_f(n,d)$ condition is not always satisfied.}} 
+
+$Proof$: We can use the same proof for Corollary 4 if we substitute $\delta_i(n,d)$ for $\delta_s(n,d)$ and $p_i(n,d)$ for $p_s(n,d)$. \qed
+
+
+%%%%%%%%%%%%%%%%%%%%% Begin COMMENT %%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+Corollary 2 does not apply to \purge recovery because the  $\delta_i(n,d) < \delta_f(n,d)$ may not necessarily be satisfied. This is the case
+because \infinity messages are not possible with \purge.
+
+%Corollary 2 does not apply to \purge and \cpr recovery because the  $\delta_i(n,d) < \delta_f(n,d)$ may not necessarily be satisfied. Count-to-infinity
+%messages are not possible with \purge so this condition is never met. With \cpr, it is possible that the state of a \minv used after rolling
+%back does not satsify this condition because the \minv may reflect old link cost values that are less than their current values.
+%These results establish that distance values before and during recovery are less than or equal to their final value. 
+These results are useful in understanding recovery using \second and \cpr in cases where link costs remain fixed. With either algorithm,
+our proofs imply that the general trend is for all \minv to increase from their value at the start of recovery up 
+to their value when recovery has completed. Specifically, as a manifestation of the \infinity problem, paths using \badvector or \oldvector 
+(with \cpr only \oldvector can be used as discussed in Section \ref{subsec:cpr}) are shared,
+causing least cost paths to count up to their final value.  
+There is one exception to this trend.  A node may learn of a new least 
+cost path that uses \badvector or \oldvector with a cost less than any of its current least cost path, causing its least cost path to decrease. 
+
+By Claim 1, \purge recovery also starts with \minv values less than or equal to their final value. However, for \purge \minv values actually 
+count down from the $\infty$ costs set after the purge phase. 
+
+%\cpr recovery trends are more difficult to characterize because link cost values can change between $t'$ and $t$.
+
+We leverage these characterizations to explain our simulation results in the following section.
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%% END COMMENT %%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
