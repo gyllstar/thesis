@@ -52,10 +52,10 @@
 \contentsline {subsection}{\numberline {3.4.2}Overview of Our Recovery Solutions and Section Outline}{55}{subsection.3.4.2}
 \contentsline {subsection}{\numberline {3.4.3}Link Failure Detection using OpenFlow}{56}{subsection.3.4.3}
 \contentsline {subsection}{\numberline {3.4.4}Uninstalling Failed Trees and Installing Backup Trees}{60}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}Computing Backup Multicast Trees}{61}{subsection.3.4.5}
+\contentsline {subsection}{\numberline {3.4.5}Computing Backup Multicast Trees}{60}{subsection.3.4.5}
 \contentsline {subsubsection}{\numberline {3.4.5.1}\textsc {Min-Flows} Algorithm}{61}{subsubsection.3.4.5.1}
 \contentsline {subsubsection}{\numberline {3.4.5.2}\textsc {Min-Sinks} Algorithm}{63}{subsubsection.3.4.5.2}
-\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{65}{subsubsection.3.4.5.3}
+\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{64}{subsubsection.3.4.5.3}
 \contentsline {subsection}{\numberline {3.4.6}System Initialization}{65}{subsection.3.4.6}
 \contentsline {subsection}{\numberline {3.4.7}How to Efficiently Install/Activate Pre-computed Backup MTs?}{67}{subsection.3.4.7}
 \contentsline {subsection}{\numberline {3.4.8}Multiple Link Failures}{69}{subsection.3.4.8}

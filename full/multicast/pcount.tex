@@ -1,0 +1,109 @@
+%\subsection{Link Failure Detection using OpenFlow}
+%\label{subsec:detection}
+
+%missing: (a) openflow match and action, (b) flow-level measurement or packet loss at links
+
+In this section, we propose a simple algorithm (\fls), used by \mdrs, that monitors links \emph{inside} the network to detect any packet loss.  To help explain \fls,
+we use the example scenario from Section \ref{subsec:scenario} and refer to a generic multicast tree with an upstream node, $u$, and downstream node, $d$.
+%Our presentation of \fl is necessarily brief but we provide additional details in Appendix \ref{subsec:pcnt}.  
+
+\fl is run at the OpenFlow controller and provides accurate packet loss measurements that are the basis for identifying lossy links.
+Informally, a lossy link is one that fails to meet the packet loss conditions specified by the controller.  We refer to such a link as \emph{failed}.
+Although \mdr is ultimately concerned with meeting the per-packet \emph{delay} requirements of PMU applications, 
+we use  packet loss (as opposed to delay) as an indicator for a failed link because OpenFlow provides no native support for timers.
+
+\fl has the same input as \mdrs, specified in Section \ref{subsec:mdr}.
+The output of \fl is any link that has lost packets not meeting the packet loss condition of any multicast flow traversing the link. 
+In the remainder of this document, we assume all flows are multicast and just use \emph{flow} to refer to a multicast flow, unless otherwise specified.
+
+Recall from Section \ref{subsec:openflow} that each OpenFlow switch maintains a flow table, where each entry contains a match rule 
+(i.e., an expression defined over the packet header fields used to match incoming packets) and action 
+(e.g., ``send packet out port $2$''). For each packet that arrives at an OpenFlow switch, it is first matched to a flow entry, $e$, based on the packet's header fields; 
+then $e$'s packet counter is incremented; and, lastly, $e$'s action is executed on the packet. 
+\footnote{Not all switches are necessarily OpenFlow-enabled. In fact, we anticipate that in practice many switches will not support OpenFlow. \fl still works such scenarios, as long as 
+the packet counts are taken at OpenFlow switches. For ease of presentation, this section assumes all switches are OpenFlow-enabled.}
+\fl uses these packet counter values to compute per-flow packet loss between switches over $w$ time units. 
+
+%pcount(upstream_switch,downstream_switchs,nw_src, nw_dst,window_size) or pcount(upstream_switch,downstream_switchs,flow,window_size) 
+\fl uses the subroutine, \pcnts, to measure the packet loss between an upstream node ($u$) and one or more downstream nodes.  For simplicity, we assume only a single downstream node, $d$. 
+\pcnt does so on a per-flow basis over a specified sampling window, $w$, 
+where $w$ is the length of time packets are counted at $u$ and $d$. For each window of length $w$, \pcnt computes packet loss for a flow $f$, that traverses $u$ and $d$, using the following steps:
+\begin{enumerate}
+	\item 
+	\textbf{At $u$, tags and counts all $f$ packets}.  
+	We assume, before any changes are made, $u$ uses flow entry $e$ to match and forward $f$ packets.
+	\pcnt creates a new flow entry, $e'$, that is an exact copy of $e$, except that $e'$ embeds a unique identifier (i.e., the tag) in the packet's VLAN Id field.  Let this identifying number
+	be $1111$.
+	$e'$ is installed with a higher priority than $e$.  In OpenFlow, each flow entry has a corresponding priority specified upon its installation.
+	%OpenFlow switches order flow entries based on their specified priority.  
+	Incoming packets are matched against flow entries in priority order, with the first matching entry being used. 
+	Thus, setting a higher priority for $e'$ than $e$, ensures that $u$ writes $1111$ in the VLAN Id field of all $f$ packets when $e'$ is installed.
+
+	\item
+	\textbf{Counts all tagged $f$ packets received at $d$.} \pcnt does so by installing a new flow entry at $d$, $e''$, that matches packets with VLAN Id equal to $1111$. 
+	%in based on the VLAN tag applied at $u$.  
+
+	\item 
+	\textbf{After $w$ time units, turns tagging off at $u$.} To do so, \pcnt simply switches the priority of $e'$ and $e$ at $u$. 
+	\footnote{\xxn{Unfortunately, OpenFlow does not allow a flow's priority to be modified.  As a workaround, we install a copy of $e$ called $e_c$.  We ensure that $e_c$ is given 
+	a higher priority than $e'$.  Finally, we delete flows $e$. }}
+
+	\item
+	\textbf{Queries $u$ and $d$ for packet counts.} 
+	Specifically, the controller uses the OpenFlow protocol to query $u$ for $e'$'s packet count value and $d$'s packet count value for $e''$.
+	To ensure that all in-transit packets are considered, \pcnt waits ``long enough'' for in-transit packets to reach $d$, before reading $d$'s packet counter 
+	(e.g., time proportional to the average per-packet delay between $u$ and $d$).
+
+	\item
+	\textbf{Garbage collection.}
+	As a cleanup step delete $e'$ at $u$ and $e''$ at $d$.
+
+	\item 
+	\textbf{Computes packet loss.}
+	The controller computes packet loss by simply subtracting $e'$'s packet count from $e''$'s. 
+
+\end{enumerate}
+In practice, \pcnt executes step (2) before step (1) to ensure that $u$ and $d$ consider the same set of packets.
+
+%execute the actions specified by the first flow entry matching the packet's header
+
+\pcnt introduced minimal overhead.  At $u$ and at each downstream counting switch, a copy of the flow entry corresponding to $f$ is required.  
+However, these copies only persist during the duration of each \pcnt interval.
+
+
+In the Figure \ref{fig:intuition-example} example, the controller uses \fl to measure the packet loss for the $a,\{e,f\}$ flow.  
+We assume for link $(b,c)$ and the $a,\{e,f\}$ flow, \fl is given a maximum packet loss threshold of $10$ packets over $w$ time units.
+For each sampling window of $w$ time units, \pcnt instructs $b$ to tag and count all packets corresponding to $a,\{e,f\}$. 
+At the same time, $c$ is instructed by \pcnt to count the $a,\{e,f\}$ packets tagged by $b$. Then, the controller uses the OpenFlow protocol to query the packet counter values for $a,\{e,f\}$
+at $b$ and $c$.  When $(b,c)$ fails, the packet counter at $c$ for $a,\{e,f\}$ no longer increments, causing a violation of $a,\{e,f\}$'s packet loss threshold for $(b,c)$.
+
+%As specified, \fl measures packet loss for each \emph{multicast flow} at each link.  These flow-level measurements may obfuscate aggregate link-level packet loss. For this
+%reason, we plan to extend \fl to group flows together to enable \emph{aggregate} packet loss measurements. 
+%Because OpenFlow provides native support for grouping flows and maintains packet counters for each 
+%group, \fl can be easily extended to group and count packets for any subset of multicast flows traversing the same switch.
+
+
+\pcnts's approach for ensuring consistent reads of packet counters bears strong resemblance to the idea of \emph{per-packet consistency} introduced by Reitblatt et al.~\cite{Reitblatt11}.
+Per-packet consistency ensures that when a network of switches change from an old policy to a new one, that
+each packet is guaranteed to be handled exclusively by one policy, rather than some combination of the two policies.  In our case, we use per-packet consistency to ensure that when \pcnt reads
+$u$ and $d$'s packet counters, exactly the same set of packets are considered, excluding, of course, packets that are dropped at $u$ or dropped along the path from $u$ to $d$. 
+
+\xxn{\fl is fast because it detects link failures inside the network, rather than on an end-to-end basis.  We plan to quantify how much faster \fl is than end-to-end link failure detection 
+techniques.  In addition, \fl allows for link failures to be localized, whereas end-to-end techniques may not provide the necessary insight to identify and isolate the faulty link.
+}
+
+%\xxn{Advantage of in-network detection is not just the speed but also it allows us to localize the problematic links.  End-to-end detection does not provide this insight, or at least
+%not as directly.}
+
+
+
+\xxx{ $e$ matches using tuple $(src,dst,VLAN)$}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF DETECTION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+

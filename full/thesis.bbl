@@ -293,6 +293,11 @@ Tam, AS-W, Xi, K., and Chao, J.~H.
 \newblock In {\em Global Telecommunications Conference, 2009. GLOBECOM 2009.
   IEEE\/} (2009), IEEE, pp.~1--7.
 
+\bibitem{Tian05}
+Tian, A.J., and Shen, N.
+\newblock Fast reroute using alternative shortest paths.
+\newblock draft-tian-frr-alt-shortest-path-01.txt, July 2004.
+
 \bibitem{Vanfretti-thesis}
 Vanfretti, L.
 \newblock {\em {P}hasor {M}easurement-{B}ased {S}tate-{E}stimation of
