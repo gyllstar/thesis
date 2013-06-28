@@ -10,6 +10,7 @@
 /full/thesis.out
 /full/thesis.tex~
 /proposal/.DS_Store
+*.bak
 *swp
 *.swp
 /.DS_Store
