@@ -158,6 +158,10 @@ demonstrated by our detection algorithms (Section \ref{subsec:detection}).
 %Note that because these statistics are maintained \emph{inside} the network (at each switch) and the controller can query any switch for its per-flow statistics, 
 %OpenFlow provides the framework for \emph{in-network} packet loss detection.
 
+\xxn{OpenFlow switches can support a limited number of flow entries because they rely on expensive TCAM memory to peform wildcard matching.  
+For example, the HP5406zl switch supports approximately $1500$ OpenFlow rules \cite{Curtis11} and the NEC PF5820 switch can handle about $750$ flow entries \cite{PF5820}.
+}
+
 \xxn{OpenFlow is similar in spirit to past work in Active Networking \cite{Psounis99}, as both aim to create programmable networks, but is implemented differently.  Active Networking puts the smarts
 \emph{inside} the network: customized smart routers are used to interpret and execute commands (that may modify network state) specified in code-carrying packets. 
 In contrast, OpenFlow moves the network intelligence (i.e., control logic) \emph{outside} of the network 

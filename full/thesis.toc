@@ -41,31 +41,32 @@
 \contentsline {section}{\numberline {3.2}Background}{42}{section.3.2}
 \contentsline {subsection}{\numberline {3.2.1}PMU Applications and Their QoS Requirements}{42}{subsection.3.2.1}
 \contentsline {subsection}{\numberline {3.2.2}OpenFlow}{43}{subsection.3.2.2}
-\contentsline {section}{\numberline {3.3}Related Work}{44}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Smart Grid Communication Architectures}{44}{subsection.3.3.1}
+\contentsline {section}{\numberline {3.3}Related Work}{45}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Smart Grid Communication Architectures}{45}{subsection.3.3.1}
 \contentsline {subsection}{\numberline {3.3.2}Detecting Packet Loss}{46}{subsection.3.3.2}
 \contentsline {subsection}{\numberline {3.3.3}Multicast Tree Recovery}{47}{subsection.3.3.3}
 \contentsline {section}{\numberline {3.4}Proposed Research}{51}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Preliminaries}{51}{subsection.3.4.1}
 \contentsline {subsubsection}{\numberline {3.4.1.1}Example Scenario}{51}{subsubsection.3.4.1.1}
-\contentsline {subsubsection}{\numberline {3.4.1.2}General Problem Scenario and Basic Notation}{51}{subsubsection.3.4.1.2}
+\contentsline {subsubsection}{\numberline {3.4.1.2}General Problem Scenario and Basic Notation}{52}{subsubsection.3.4.1.2}
 \contentsline {subsection}{\numberline {3.4.2}Overview of Our Recovery Solutions and Section Outline}{55}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Link Failure Detection using OpenFlow}{56}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}Uninstalling Failed Trees and Installing Backup Trees}{60}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}Computing Backup Multicast Trees}{60}{subsection.3.4.5}
-\contentsline {subsubsection}{\numberline {3.4.5.1}\textsc {Min-Flows} Algorithm}{61}{subsubsection.3.4.5.1}
-\contentsline {subsubsection}{\numberline {3.4.5.2}\textsc {Min-Sinks} Algorithm}{63}{subsubsection.3.4.5.2}
-\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{64}{subsubsection.3.4.5.3}
-\contentsline {subsection}{\numberline {3.4.6}System Initialization}{65}{subsection.3.4.6}
-\contentsline {subsection}{\numberline {3.4.7}How to Efficiently Install/Activate Pre-computed Backup MTs?}{67}{subsection.3.4.7}
-\contentsline {subsection}{\numberline {3.4.8}Multiple Link Failures}{69}{subsection.3.4.8}
-\contentsline {subsection}{\numberline {3.4.9}Node Failures}{69}{subsection.3.4.9}
-\contentsline {subsection}{\numberline {3.4.10}Evaluation Ideas}{69}{subsection.3.4.10}
-\contentsline {section}{\numberline {3.5}My Notes on Actual Algorithms}{70}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}\textsc {Failed-Link} details}{70}{subsection.3.5.1}
-\contentsline {subsection}{\numberline {3.5.2}\textsc {Min-Flows} Algorithm}{71}{subsection.3.5.2}
-\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{72}{section.3.6}
-\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{75}{chapter.4}
-\contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{75}{section.4.1}
-\contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{76}{section.4.2}
-\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{78}{chapter*.6}
+\contentsline {subsection}{\numberline {3.4.3}Link Failure Detection using OpenFlow}{57}{subsection.3.4.3}
+\contentsline {subsubsection}{\numberline {3.4.3.1}\textsc {Pcount} Evaluation}{60}{subsubsection.3.4.3.1}
+\contentsline {subsection}{\numberline {3.4.4}Uninstalling Failed Trees and Installing Backup Trees}{61}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.5}Computing Backup Multicast Trees}{62}{subsection.3.4.5}
+\contentsline {subsubsection}{\numberline {3.4.5.1}\textsc {Min-Flows} Algorithm}{63}{subsubsection.3.4.5.1}
+\contentsline {subsubsection}{\numberline {3.4.5.2}\textsc {Min-Sinks} Algorithm}{64}{subsubsection.3.4.5.2}
+\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{66}{subsubsection.3.4.5.3}
+\contentsline {subsection}{\numberline {3.4.6}System Initialization}{67}{subsection.3.4.6}
+\contentsline {subsection}{\numberline {3.4.7}How to Efficiently Install/Activate Pre-computed Backup MTs?}{68}{subsection.3.4.7}
+\contentsline {subsection}{\numberline {3.4.8}Multiple Link Failures}{70}{subsection.3.4.8}
+\contentsline {subsection}{\numberline {3.4.9}Node Failures}{70}{subsection.3.4.9}
+\contentsline {subsection}{\numberline {3.4.10}Evaluation Ideas}{71}{subsection.3.4.10}
+\contentsline {section}{\numberline {3.5}My Notes on Actual Algorithms}{71}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}\textsc {Failed-Link} details}{71}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}\textsc {Min-Flows} Algorithm}{72}{subsection.3.5.2}
+\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{73}{section.3.6}
+\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{76}{chapter.4}
+\contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{76}{section.4.1}
+\contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{77}{section.4.2}
+\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{79}{chapter*.6}

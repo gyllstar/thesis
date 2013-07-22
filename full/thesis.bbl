@@ -8,6 +8,10 @@
 Northeast blackout of 2003.
 \newblock \url{http://en.wikipedia.org/wiki/Northeast_blackout_of_2003}.
 
+\bibitem{PF5820}
+Programmable{F}low {P}{F}5820 switch.
+\newblock \url{http://www.necam.com/SDN/}.
+
 \bibitem{Rocketfuel}
 Rocketfuel.
 \newblock \url{http://www.cs.washington.edu/research/networking/rocketfuel/
@@ -97,6 +101,13 @@ Cui, J.H., Faloutsos, M., and Gerla, M.
 \newblock An architecture for scalable, efficient, and fast fault-tolerant
   multicast provisioning.
 \newblock {\em Network, IEEE 18}, 2 (2004), 26--34.
+
+\bibitem{Curtis11}
+Curtis, Andrew~R, Mogul, Jeffrey~C, Tourrilhes, Jean, Yalagandula, Praveen,
+  Sharma, Puneet, and Banerjee, Sujata.
+\newblock Devoflow: Scaling flow management for high-performance networks.
+\newblock In {\em ACM SIGCOMM Computer Communication Review\/} (2011), vol.~41,
+  ACM, pp.~254--265.
 
 \bibitem{LaRee10}
 De~La~Ree, J., Centeno, V., Thorp, J.S., and Phadke, A.G.

@@ -99,6 +99,22 @@ techniques.  In addition, \fl allows for link failures to be localized, whereas 
 
 \xxx{ $e$ matches using tuple $(src,dst,VLAN)$}
 
+\subsubsection{\pcnt Evaluation}
+
+\xxxx{move this section, possibly the E2E discussion to the related work section.}
+
+{\bf Detection using end-to-end measurements.}
+An alternative approach to link failure detection is to use end-to-end probes to infer packet loss rates of individual links. C\`{a}ceres et al. \cite{Caceres99} propose a maximum likelihood estimator
+for loss rates of internal links based on losses observed by multicast receivers. Their model uses the inherent correlation of packet loss across multicast receivers to improve accuracy 
+of their packet loss estimates.  Although impressive accuracy results are reported, the authors' simulations show that about $2000$ end-to-end probe messages are required for packet loss
+estimates to converge on the true underlying packet loss rate \cite{Caceres99}.  In our problem setting, packet loss needs to be detected over small windows of time and, unfortunately,
+$2000$ messages would correspond to too larger a window of time. For this reason, we deem solutions based on end-to-end measurements a poor match for our problem domain.
+
+{\bf 7/20/13 writing from grant about plans for evaluation.}
+To date, we have implemented \pcnt in the POX OpenFlow controller using the Mininet emulator and plan to further evaluate \pcnt by using our POX-based implementation to work with real
+OpenFlow switches.  To provide a point of reference, we plan to implement and measure a simple SNMP-based approach for detecting link-level packet loss.  We will quantify the error rate of \pcnt 
+and the SNMP-based approach as a function of the sampling window size.  We will also quantify the detection time for \pcnt and the SNMP-based approach as a function of window size. We believe our measurement study will show \pcnt  provides accurate and fast packet loss detection across all sampling window sizes, making it a superior approach for ultra- reliable data dissemination in smart grid networks
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF DETECTION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
