@@ -158,6 +158,10 @@ demonstrated by our detection algorithms (Section \ref{subsec:detection}).
 %Note that because these statistics are maintained \emph{inside} the network (at each switch) and the controller can query any switch for its per-flow statistics, 
 %OpenFlow provides the framework for \emph{in-network} packet loss detection.
 
+\xxn{OpenFlow switches can support a limited number of flow entries because they rely on expensive TCAM memory to peform wildcard matching.  
+For example, the HP5406zl switch supports approximately $1500$ OpenFlow rules \cite{Curtis11} and the NEC PF5820 switch can handle about $750$ flow entries \cite{PF5820}.
+}
+
 \xxn{OpenFlow is similar in spirit to past work in Active Networking \cite{Psounis99}, as both aim to create programmable networks, but is implemented differently.  Active Networking puts the smarts
 \emph{inside} the network: customized smart routers are used to interpret and execute commands (that may modify network state) specified in code-carrying packets. 
 In contrast, OpenFlow moves the network intelligence (i.e., control logic) \emph{outside} of the network 
@@ -264,7 +268,7 @@ while we consider global (network-wide) criteria (i.e., constraints specified ac
 for the criteria we consider: minimizing control overhead, \xxn{minimizing the maximum number of flows impacted by the ``next'' link failure (\mfs)}, and 
 \xxn{minimizing the maximum number of sink nodes impacted by the ``next'' link failure (\mds)}.
 Instead, previous work computes backup paths or trees that optimize one of the following criteria: maximize node (link) disjointedness with the primary 
-path \cite{Cui04,Fei01,Luebben09,Medard99}, minimize bandwidth usage \cite{Wu97}, minimize backup bandwidth reservations \cite{Kodialam02,Lau05,Li06}, or minimize the number of group members which become disconnected (using either the primary or backup path) after a link failure \cite{Pointurier02}.
+path \cite{Cui04,Fei01,Luebben09,Medard99}, minimize bandwidth usage \cite{Wu97}, minimize backup bandwidth reservations \cite{Kodialam02,Lau05,Li06}, minimize the number of group members which become disconnected (using either the primary or backup path) after a link failure \cite{Pointurier02}, or minimize path length \cite{Tian05}.
 
 
 
@@ -459,16 +463,17 @@ splits when the tree branches at $b$ into multicast flows $a,\{e,f\}$ and $a,\{g
 
 %OpenFlow does not explicitly provide a multicast implementation, rather, in keeping with its role as a general framework providing necessary services for programmable networks,
 In keeping with its role as a general framework providing necessary services for programmable networks, OpenFlow does not explicitly provide an implementation for multicast and multicast flows.
-Our initial plan was to use the group table abstraction described in the OpenFlow 1.1 specification \cite{OpenFlowSpec1.1} as a means to implement multicast but unforuntately,
+Our initial plan was to use the group table abstraction described in the OpenFlow 1.1 specification \cite{OpenFlowSpec1.1} to implement multicast but, unfortunately,
 as of the writing of this paper, this feature is not yet supported by the POX controller \footnote{\url{https://github.com/noxrepo/pox}} used to implement our algorithms and 
-the Mininet \footnote{\url{http://mininet.org/}} emulator used in our simulations.  Instead, we assign a multicast IP address to each multicast group.  Because multicast group membership is static
-in our application, we simply determine the members of each multicast group by reading this static assignment from a file.  Note that if dynanmic group membership were to be required, we could 
+the Mininet \footnote{\url{http://mininet.org/}} emulator used in our simulations.  Instead, we assign a multicast IP address to each multicast group and use this abstraction to setup 
+the flow tables at the multicast tree switches. Because multicast group membership is static in our power grid application (Section \ref{subsec:pmu-requirements}, 
+we simply determine the members of each multicast group by reading their static assignment from a text file.  Note that if dynamic group membership were to be required, we could 
 replace this static policy using a protocol like IGMP. 
 
 As with any unicast flow, each switch matches a multicast packet using the {\tt(src\_ip,dst\_ip)} tuple.  If the multicast tree branches, the switch copies the packet 
 to be sent out along each of the switch's outgoing links in the multicast tree.  This how the concept of ``splitting''  a flow (introduced in the previous paragraph) is implemented.
-If switch is the leaf node of a multicast tree, it rewrites the destination layer 2 and 3 addresses to those of its adjacent downstream hosts. 
-
+If a switch is adjacent to a downstream host in the multicast group, the switch rewrites the destination layer 2 and 3 addresses to those of its adjacent downstream hosts 
+(these fields were previously populated with the multicast addresses). 
 
 Another way to implement multicast in OpenFlow is to leverage existing IP multicast protocols as detailed by Kotani et al. \cite{Kotani12}.  
 In this approach, the controller assigns a unique group ID to each multicast tree and creates a group table entry, that uses the group ID, at each switch along the multicast tree.  
@@ -588,95 +593,7 @@ In Section \ref{subsec:repair}, we address part (3)  by proposing a set of algor
 \subsection{Link Failure Detection using OpenFlow}
 \label{subsec:detection}
 
-%missing: (a) openflow match and action, (b) flow-level measurement or packet loss at links
-
-In this section, we propose a simple algorithm (\fls), used by \mdrs, that monitors links \emph{inside} the network to detect any packet loss.  To help explain \fls,
-we use the example scenario from Section \ref{subsec:scenario} and refer to a generic multicast tree with an upstream node, $u$, and downstream node, $d$.
-%Our presentation of \fl is necessarily brief but we provide additional details in Appendix \ref{subsec:pcnt}.  
-
-\fl is run at the OpenFlow controller and provides accurate packet loss measurements that are the basis for identifying lossy links.
-Informally, a lossy link is one that fails to meet the packet loss conditions specified by the controller.  We refer to such a link as \emph{failed}.
-Although \mdr is ultimately concerned with meeting the per-packet \emph{delay} requirements of PMU applications, 
-we use  packet loss (as opposed to delay) as an indicator for a failed link because OpenFlow provides no native support for timers.
-
-\fl has the same input as \mdrs, specified in Section \ref{subsec:mdr}.
-The output of \fl is any link that has lost packets not meeting the packet loss condition of any multicast flow traversing the link. 
-In the remainder of this document, we assume all flows are multicast and just use \emph{flow} to refer to a multicast flow, unless otherwise specified.
-
-Recall from Section \ref{subsec:openflow} that each OpenFlow switch maintains a flow table, where each entry contains a match rule 
-(i.e., an expression defined over the packet header fields used to match incoming packets) and action 
-(e.g., ``send packet out port $787$''). For each packet that arrives at an OpenFlow switch, it is first matched to a flow entry, $e$, based on the packet's header fields; 
-then $e$'s packet counter is incremented; and, lastly, $e$'s action is executed on the packet. 
-\footnote{Not all switches necessarily use OpenFlow. In fact, we anticipate that in practice many switches will not support OpenFlow. For ease of presentation, this section assumes all switches are OpenFlow-enabled. }
-Note that for our purposes all flow entries are for multicast flows. 
-\fl uses these packet counter values to compute per-flow packet loss between two switches over $w$ time units. 
-
-
-\fl uses the subroutine, \pcnts, to measure the packet loss between an upstream node ($u$) and downstream node ($d$).  \pcnt does so at the per-flow granularity over a specified sampling window, $w$, 
-where $w$ is the length of time packets are counted at $u$ and $d$. For each window of length $w$, \pcnt computes packet loss for a flow $f$, that traverses $u$ and $d$, using the following steps:
-\begin{enumerate}
-	\item 
-	\textbf{At $u$, tags and counts all $f$ packets}.  
-	We assume, before any changes are made, $u$ uses flow entry $e$ to match and forward $f$ packets.
-	\pcnt creates a new flow entry, $e'$, that is an exact copy of $e$, except that $e'$ embeds a version number (i.e., the tag) in the packet's VLAN field.  
-	\footnote{Note that the VLAN id is one of many fields from packets that can be used to match against flow entries. }
-	$e'$ is installed with a higher priority than $e$.  In OpenFlow, each flow entry has a corresponding priority specified upon its installation.
-	%OpenFlow switches order flow entries based on their specified priority.  
-	Incoming packets are matched against flow entries in priority order, with the first matching entry being used. 
-	In this way, setting a higher priority for $e'$ than $e$, ensures that $u$ tags all $f$ packets when $e'$ is installed.
-
-	\item
-	\textbf{Counts all tagged $f$ packets received at $d$.} \pcnt does so by installing a new flow entry at $d$ that matches packets based on the VLAN tag applied at $u$.  
-
-	\item 
-	\textbf{After $w$ time units, turns tagging off at $u$.} To do so, \pcnt simply switches the priority of $e'$ and $e$ at $u$. 
-	\footnote{\xxn{Unforuntately, OpenFlow does not allow a flow's priority to be modified.  As a workaround, we install a copy of $e$ and $e'$, which we refer to as $e_c$ and $e'_c$, respectively.
-	We ensure that $e_c$ has a higher priority than $e'_c$.  Finally, we delete flows $e$ and $e'$. }}
-
-	\item
-	\textbf{Queries $u$ and $d$ for packet counts.} 
-	Specifically, the controller uses the OpenFlow protocol retrieve $u$ and $d$'s packet count values for packets tagged by $e'$.
-	To ensure that all in-transit packets are considered, \pcnt waits ``long enough'' (e.g., time proportional to the average per-packet delay between $u$ and $d$) for in-transit packets to reach $d$, before reading $d$'s packet counter. 
-
-	\item
-	\textbf{Cleanup at $d$}.
-	As a cleanup step we delete the flow entry counting tagged packets at $d$.
-
-	\item 
-	\textbf{Computes packet loss.}
-	The controller computes packet loss by simply subtracting $d$'s packet count from $u$'s. 
-
-\end{enumerate}
-In practice, \pcnt executes step (2) before step (1) to ensure that $u$ and $d$ consider the same set of packets.
-
-%execute the actions specified by the first flow entry matching the packet's header
-
-
-
-
-In the Figure \ref{fig:intuition-example} example, the controller uses \fl to measure the packet loss for the $a,\{e,f\}$ flow.  
-We assume for link $(b,c)$ and the $a,\{e,f\}$ flow, \fl is given a maximum packet loss threshold of $10$ packets over $w$ time units.
-For each sampling window of $w$ time units, \pcnt instructs $b$ to tag and count all packets corresponding to $a,\{e,f\}$. 
-At the same time, $c$ is instructed by \pcnt to count the $a,\{e,f\}$ packets tagged by $b$. Then, the controller uses the OpenFlow protocol to query the packet counter values for $a,\{e,f\}$
-at $b$ and $c$.  When $(b,c)$ fails, the packet counter at $c$ for $a,\{e,f\}$ no longer increments, causing a violation of $a,\{e,f\}$'s packet loss threshold for $(b,c)$.
-
-As specified, \fl measures packet loss for each \emph{multicast flow} at each link.  These flow-level measurements may obfuscate aggregate link-level packet loss. For this
-reason, we plan to extend \fl to group flows together to enable \emph{aggregate} packet loss measurements. 
-Because OpenFlow provides native support for grouping flows and maintains packet counters for each 
-group, \fl can be easily extended to group and count packets for any subset of multicast flows traversing the same switch.
-
-%\pcnt is a flexible algorithm, which can be easily adapted to measure the packet loss between $u$ and all of $u$'s downstream switches. 
-%To do so, we simply need to apply all the same steps described for $d$ in our above example at every downstream node.  In the Figure \ref{fig:intuition-example} example, 
-%if \pcnt installs matching rules at $d$, $e$, $f$, and $g$ that count packets tagged at $b$, packet loss can be measured at each $\{d,e,f,g\}$.
-
-\pcnts's approach for ensuring consistent reads of packet counters bears strong resemblance to the idea of \emph{per-packet consistency} introduced by Reitblatt et al.~\cite{Reitblatt11}.
-Per-packet consistency ensures that when a network of switches change from an old policy to a new one, that
-each packet is guaranteed to be handled exclusively by one policy, rather than some combination of the two policies.  In our case, we use per-packet consistency to ensure that when \pcnt reads
-$u$ and $d$'s packet counters, exactly the same set of packets are considered, excluding, of course, packets that are dropped at $u$ or dropped along the path from $u$ to $d$. 
-
-\xxn{Advantage of in-network detection is not just the speed but also it allows us to localize the problematic links.  End-to-end detection does not provide this insight, or at least
-not as directly.}
-
+\input{multicast/pcount.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF DETECTION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -871,6 +788,43 @@ that use $(b,d)$ (recall that we assumed the initial state of the system was suc
 
 
 \xxxxn{(4/1/13) May want to consider minimizing the variance in the number of flows traversing a single link.}
+
+\mf is similar to the multicast packing problem \cite{Chen00} that aims to compute a multicast tree for each multicast group such that the maximum loaded link is minimized,
+while keeping the size of each multicast tree close to optimum. 
+\xxxe{{\bf Longer version of the same writing --} 
+In order to bound the size of each multicast tree, which might grow prohibitevely large if only minimizing link sharing is considered, their optimization requires that each multicast 
+tree must be within some delta of the multicast group's corresponding steiner tree.  
+}
+
+No formal proof exists showing that the multicast packing problem is intractable but informal commentary suggesting that this is the case can be found in the literature. 
+%Although the authors do not formally prove that the multicast packing problem is NP-hard, 
+Chen et al. \cite{Chen00} state that the multicast packing problem is more difficult than computing the steiner tree
+for each multicast group seperately, which is known to be an NP-hard problem, because the min-max nature of the objective function. 
+The authors refer the reader to a report \cite{Bienstock95} describing a closely related mixed-integer
+multicommodity flow problem, suggesting that this problem might be used to formally establish that the multicast packing problem is intractable.
+
+Lu and Zhang \cite{Lu05} consider a problem similar to the multicast packing problem called the multicast congestion problem.  The goal of the multicast congestion problem is to compute a
+multicast tree for each multicast group such that the maximum edge congestion -- also defined as the number of multicast trees using the edge -- is minimized.  Unlike the multicast packing problem,
+no constraints are placed on the size of the multicast tree.  The authors informally state that the multicast congestion problem is NP-hard because it is a generalization of the problem of 
+finding edge-disjoint shortest paths for source destination pairs, which is known to be NP-hard. 
+
+
+Chen et al. \cite{Chen00} propose a simple, yet effective heuristic for multicast tree packing:
+\begin{enumerate}
+	\item As a preprocessing step, a steiner tree is computed for each multicast group independently.  Let $OPT^i$ denote the steiner tree for multicast group $i$.
+	\item Then the congestion of each edge, defined as the number of multicast tree using the edge, is computed. % and inserted in decreasing order
+	\item Iteratively, consider each multicast tree, $T_i$, using the most congested edge, $\ell$, with congestion equal to $Z$. Try to rebuild $T_i$ such that the new multicast
+		tree, $T_i'$, yields a congestion level less than $Z$ and the size of $T_i'$ does not exceed a threshold, $\alpha$.  Specifically, the ratio of $T_i'$ to $OPT^i$ cannot exceed
+		$\alpha \geq 1$.  The rebuild function works as follows:
+
+			\begin{enumerate}
+				\item Create an auxillary graph, $G'$, containing the links from $G$ that have congestion level less than $Z-2$. 
+				\item Consider the cut obtained from removing the most congested link, $e$, from $G'$.  If the cut contains a link $e'$, with congestion level at most $Z-2$, then replace 
+				link $e \in T_i'$ with $e'$.
+				% Less technical description --- if there is a less congested link in the cutset, use this edge instrea
+			\end{enumerate}
+	\item If the congestion levels have been updated, go to step (2). 
+\end{enumerate}
 
 
 \subsubsection{\md Algorithm}

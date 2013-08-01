@@ -54,6 +54,12 @@ Bertsekas, D., and Gallager, R.
 \newblock {\em {D}ata {N}etworks}.
 \newblock Prentice-Hall, Inc., Upper Saddle River, NJ, USA, 1987.
 
+\bibitem{Bienstock95}
+Bienstock, D., and G{\"u}nl{\"u}k, O.
+\newblock Computational experience with a difficult mixedinteger multicommodity
+  flow problem.
+\newblock {\em Mathematical Programming 68}, 1-3 (1995), 213--237.
+
 \bibitem{Birman05}
 Birman, K.P., Chen, J., Hopkinson, E.M., Thomas, R.J., Thorp, J.S.,
   Van~Renesse, R., and Vogels, W.
@@ -89,6 +95,12 @@ Chen, J., and Abur, A.
 \newblock {P}lacement of {PMU}s to {E}nable {B}ad {D}ata {D}etection in {S}tate
   {E}stimation.
 \newblock {\em Power Systems, IEEE Transactions on 21}, 4 (2006), 1608 --1615.
+
+\bibitem{Chen00}
+Chen, S., G{\"u}nl{\"u}k, O., and Yener, B.
+\newblock The multicast packing problem.
+\newblock {\em IEEE/ACM Transactions on Networking (TON) 8}, 3 (2000),
+  311--318.
 
 \bibitem{Kth09}
 Chenine, M., Zhu, K., and Nordstrom, L.
@@ -230,6 +242,13 @@ Liu, P., Ammann, P., and Jajodia, S.
 \newblock {R}ewriting {H}istories: {R}ecovering from {M}alicious
   {T}ransactions.
 \newblock {\em Distributed and Parallel Databases 8}, 1 (2000), 7--40.
+
+\bibitem{Lu05}
+Lu, Q., and Zhang, H.
+\newblock Implementation of approximation algorithms for the multicast
+  congestion problem.
+\newblock In {\em Experimental and Efficient Algorithms}. Springer, 2005,
+  pp.~152--164.
 
 \bibitem{Luebben09}
 Luebben, R., Li, G., Wang, D., Doverspike, R., and Fu, X.

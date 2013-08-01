@@ -55,18 +55,18 @@
 \contentsline {subsection}{\numberline {3.4.4}Uninstalling Failed Trees and Installing Backup Trees}{61}{subsection.3.4.4}
 \contentsline {subsection}{\numberline {3.4.5}Computing Backup Multicast Trees}{62}{subsection.3.4.5}
 \contentsline {subsubsection}{\numberline {3.4.5.1}\textsc {Min-Flows} Algorithm}{63}{subsubsection.3.4.5.1}
-\contentsline {subsubsection}{\numberline {3.4.5.2}\textsc {Min-Sinks} Algorithm}{64}{subsubsection.3.4.5.2}
-\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{66}{subsubsection.3.4.5.3}
-\contentsline {subsection}{\numberline {3.4.6}System Initialization}{67}{subsection.3.4.6}
-\contentsline {subsection}{\numberline {3.4.7}How to Efficiently Install/Activate Pre-computed Backup MTs?}{68}{subsection.3.4.7}
-\contentsline {subsection}{\numberline {3.4.8}Multiple Link Failures}{70}{subsection.3.4.8}
-\contentsline {subsection}{\numberline {3.4.9}Node Failures}{70}{subsection.3.4.9}
-\contentsline {subsection}{\numberline {3.4.10}Evaluation Ideas}{71}{subsection.3.4.10}
-\contentsline {section}{\numberline {3.5}My Notes on Actual Algorithms}{71}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}\textsc {Failed-Link} details}{71}{subsection.3.5.1}
-\contentsline {subsection}{\numberline {3.5.2}\textsc {Min-Flows} Algorithm}{72}{subsection.3.5.2}
-\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{73}{section.3.6}
-\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{76}{chapter.4}
-\contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{76}{section.4.1}
-\contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{77}{section.4.2}
-\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{79}{chapter*.6}
+\contentsline {subsubsection}{\numberline {3.4.5.2}\textsc {Min-Sinks} Algorithm}{66}{subsubsection.3.4.5.2}
+\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{68}{subsubsection.3.4.5.3}
+\contentsline {subsection}{\numberline {3.4.6}System Initialization}{69}{subsection.3.4.6}
+\contentsline {subsection}{\numberline {3.4.7}How to Efficiently Install/Activate Pre-computed Backup MTs?}{70}{subsection.3.4.7}
+\contentsline {subsection}{\numberline {3.4.8}Multiple Link Failures}{72}{subsection.3.4.8}
+\contentsline {subsection}{\numberline {3.4.9}Node Failures}{72}{subsection.3.4.9}
+\contentsline {subsection}{\numberline {3.4.10}Evaluation Ideas}{73}{subsection.3.4.10}
+\contentsline {section}{\numberline {3.5}My Notes on Actual Algorithms}{73}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}\textsc {Failed-Link} details}{73}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}\textsc {Min-Flows} Algorithm}{74}{subsection.3.5.2}
+\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{75}{section.3.6}
+\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{78}{chapter.4}
+\contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{78}{section.4.1}
+\contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{79}{section.4.2}
+\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{81}{chapter*.6}

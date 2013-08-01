@@ -158,7 +158,7 @@ demonstrated by our detection algorithms (Section \ref{subsec:detection}).
 %Note that because these statistics are maintained \emph{inside} the network (at each switch) and the controller can query any switch for its per-flow statistics, 
 %OpenFlow provides the framework for \emph{in-network} packet loss detection.
 
-\xxn{OpenFlow switches can support a limited number of flow entries because they rely on expensive TCAM memory to peform wildcard matching.  
+\xxn{OpenFlow switches can support a limited number of flow entries because they rely on expensive TCAM memory to perform wildcard matching.  
 For example, the HP5406zl switch supports approximately $1500$ OpenFlow rules \cite{Curtis11} and the NEC PF5820 switch can handle about $750$ flow entries \cite{PF5820}.
 }
 
@@ -788,6 +788,61 @@ that use $(b,d)$ (recall that we assumed the initial state of the system was suc
 
 
 \xxxxn{(4/1/13) May want to consider minimizing the variance in the number of flows traversing a single link.}
+
+\mf is similar to the multicast packing problem \cite{Chen00} that aims to compute a multicast tree for each multicast group such that the maximum link sharing is minimized,
+while keeping the size of each multicast tree close to optimum. 
+\xxxe{{\bf Longer version of the same writing --} 
+In order to bound the size of each multicast tree, which might grow prohibitively large if only minimizing link sharing is considered, their optimization requires that each multicast 
+tree must be within some delta of the multicast group's corresponding Steiner tree.  
+}
+
+No formal proof exists showing that the multicast packing problem is intractable but informal commentary suggesting that this is the case can be found in the literature. 
+%Although the authors do not formally prove that the multicast packing problem is NP-hard, 
+Chen et al. \cite{Chen00} state that the multicast packing problem is more difficult than computing the Steiner tree
+for each multicast group separately, which is known to be an NP-hard problem, because the min-max nature of the objective function. 
+The authors refer the reader to a report \cite{Bienstock95} describing a closely related mixed-integer
+multicommodity flow problem, suggesting that this problem might be used to formally establish that the multicast packing problem is intractable.
+
+Lu and Zhang \cite{Lu05} consider a problem similar to the multicast packing problem called the multicast congestion problem.  The goal of the multicast congestion problem is to compute a
+multicast tree for each multicast group such that the maximum edge congestion -- also defined as the number of multicast trees using the edge -- is minimized.  Unlike the multicast packing problem,
+no constraints are placed on the size of the multicast tree.  The authors informally state that the multicast congestion problem is NP-hard because it is a generalization of the problem of 
+finding edge-disjoint shortest paths for source destination pairs, which is known to be NP-hard. 
+
+
+Chen et al. \cite{Chen00} propose a simple, yet effective heuristic for multicast tree packing:
+\begin{enumerate}
+	\item As a preprocessing step, a Steiner tree is computed for each multicast group independently.  Let $OPT^i$ denote the Steiner tree for multicast group $i$.
+	\item Then the congestion of each edge, defined as the number of multicast tree using the edge, is computed. % and inserted in decreasing order
+	\item Iteratively, consider each multicast tree, $T_i$, using the most congested edge, $\ell$, with congestion equal to $Z$. Try to rebuild $T_i$ such that the new multicast
+		tree, $T_i'$, yields a congestion level less than $Z$ and the size of $T_i'$ does not exceed a threshold, $\alpha$.  Specifically, the ratio of $T_i'$ to $OPT^i$ cannot exceed
+		$\alpha \geq 1$.  The rebuild function works as follows:
+
+			\begin{enumerate}
+				\item Create an auxiliary graph, $G'$, containing the links from $G$ that have congestion level less than $Z-2$. 
+				\item Consider the cut obtained from removing the most congested link, $e$, from $G'$.  If the cut contains a link $e'$, with congestion level at most $Z-2$, then replace 
+				link $e \in T_i'$ with $e'$.
+				% Less technical description --- if there is a less congested link in the cutset, use this edge instrea
+			\end{enumerate}
+	\item If the congestion levels have been updated, go to step (2). 
+\end{enumerate}
+
+This heuristic algorithm can be easily used to solve \mfs, requiring only three simple changes.  First, we remove $\ell$ from the input graph.  Let $\overline{T_\ell}$ represent all multicast trees
+that do not use $\ell$. Second, for each link in $\overline{T_\ell}$ we update the congestion count to reflect the number of times the link is used a tree in $\overline{T_\ell}$.  
+Finally, the algorithm should only consider multicast groups corresponding to each $T_\ell$, leaving all other multicast trees (i.e., $\overline{T_\ell}$) untouched. 
+%Second, for each link in each multicast tree not using link $\ell$ we update the congestion count to reflect the number of times a link is used in one of these trees. 
+%Finally, the algorithm should only consider multicast groups corresponding to each $T_\ell$, leaving all other multicast trees untouched. 
+
+Chen et al. \cite{Chen00} derive lower bounds for the multicast packing problem based on dividing all network nodes into two sets and measuring the ratio of 
+multicast traffic passing along links connecting the two sets.  Tighter lower bounds are found by finding a multicut that divides the maximum number of multicast groups.  
+
+% Chen et al. simulation study: random network: N=128, |E|=2N so relatively sparse network. \Delta=2  (where \Delta is the max difference btw MT and its Steiner tree)
+	% Simulation 1: performance as a function of the number of multicast groups (ground size fixed at 22 members) and fix vary number of groups from 2 to 24
+			%  heuristic has small impact w/ small # of groups because not much congestion in these cases.   decreases congestion as # groups increase
+	% Simulation 2: performance as a function of group size (fix # of groups at 20 and vary group size from 5 to 25)
+			%  heuristic yeilds small benefits with small group size + more congestion reduction with larger group size
+	% Simulation 3: changing the \Delta value had little affect
+
+
 
 
 \subsubsection{\md Algorithm}
