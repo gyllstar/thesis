@@ -903,33 +903,48 @@ $22$ sink nodes are directly impacted using \mds, while $40$ data sinks are impa
 \subsubsection{\mc Algorithm}
 \label{subsubsec:mc-alg}
 
-Lastly, we outline the \mc algorithm. In effort to provide fast recovery, \mc minimizes the control overhead required to install backup MTs.
-We assume the control overhead is a function of the number of switches that need to change state (i.e., modify flow tables to uninstall
-failed MTs or install a backup MT) because the controller must send control signals to each of these switches. % which takes time.
+Lastly, we outline the \mc algorithm. In effort to provide fast and scalable recovery, \mc minimizes the control overhead required to install backup MTs.
+We define the control overhead as the number of new flow entries that need to be installed to activate the backup MTs. Consider a multicast 
+tree, $T_\ell$ and it's backup $T'_\ell$.  A new flow entry must be installed at each upstream node, $u$, using an adjacent link,
+$l \in T'_\ell \setminus T_\ell$. Because the direction of the link matters in a multicast tree are directed, a flow entry needs to be installed at $u$ for each adjacent link
+$l \in T'_\ell \setminus T_\ell$. For example, if switch $u \in T'_\ell$ has adjacent links $l_1,l_2 \in T'_\ell \setminus T_\ell$ we count the control overhead as number of 
+as two rather than one.  \footnote{OpenFlow requires a separate message be sent for each new flow entry to be installed.}
+%OpenFlow requires a message be sent from controller to switch.  Accordingly, we consider the control overhead
+
+Intuitively, minimizing the control overhead yields fast recovery when backup MTs are installed after a link failure is detected, since few control messages need to be
+sent from the controller to switches. 
+In the case where backup MTs are preinstalled (i.e., installed before a link failure occurs), \mc minimizes the amount of control state preinstalled.
+This is important because OpenFlow switches can only store a limited number of flow entries (see Section \ref{subsec:openflow}).
 
 \mc \textsc{Algorithm}
 \begin{itemize}
 
 	\item  \underline{Input}: $(G,T,F,l)$, such that $l$ is a link in $G$ and each $f \in F$ specifies the maximum per-packet delay it can tolerate.
 
-	\item \underline{Output}: 	A backup multicast tree for each MT using $l$. This set of backup MTs, $T_l$, are computed such that 
+	\item \underline{Output}: A backup multicast tree for each MT using $l$. This set of backup MTs, $T_l$, are computed such that 
 	
 	\begin{enumerate}
 			
 		\item The \emph{total} control overhead required to install all MTs in $T_l$ is minimized.
-	%required to install these MTs. % \emph{all} such backup MTs. %in this set. % this entire set of backup MTs.
-	\footnote{Note that \mc does not explicitly consider the control overhead of uninstalling failed MTs because this cost is bounded by the number of failed MTs, which is fixed for each link failure.}
-			%\item \xxn{Across all network links, minimize the maximum $s_l$. } %the maximum number of flows affected by the next link failure is minimized. } 
 			
-			%\item The end-to-end per-packet delay requirement of each multicast flow using any MT in $T_l$ would be satisfied if $T_l$ were installed. 
 			\item The end-to-end per-packet delay requirement of all multicast flows continues to be met if all MTs in $T_l$ were installed. 
 		\end{enumerate}
 
-
-
 \end{itemize}
-This is equivalent to minimizing the number of routers who's new configuration needs to be signaled.
-Intuitively, this ensures that backup trees are quickly installed, leading to a fast recovery (ultimately reducing packet loss for all directly affected flows).  
+
+%{\bf Old writing below}
+%
+%{\bf Defining Control Overhead.}  Installing a backup multicast tree requires that a new flow entry be installed at subset of network switches. We define this set of nodes and 
+%the number of flow entry changes as follows.  Consider a multicast 
+%tree, $T_\ell$ and it's backup $T'_\ell$.  The only switches that need to install a new flow entry is each upstream node, $u$, using an adjacent link,
+%$l \in T'_\ell \setminus T_\ell$. Note that because the direction of the link matters because links in a multicast tree are directed.  For a given switch we count each 
+%such flow entry change seperately.  For example, if switch $u \in T'_\ell$ needs to add a flow entry using adjacent links $l_1,l_2 \in T'_\ell \setminus T_\ell$ we count the number of 
+%control signals needed to implement this change as two rather than one.  \footnote{OpenFlow requires a seperate message be sent for each new flow entry to be installed.}
+
+%We aim to minimize the number of flow entry changes because, in the case where backup MTs after link failure is detected, it ensures fewer control messages are needed and therefore that 
+%backup trees are quickly installed. % leading to a fast recovery (ultimately reducing packet loss for all directly affected flows).  
+%In the case where backup MTs are installed in the network before a link failure (but are not activated until after), it minimizes extra control state needed to be stored in the network.
+%This is important because OpenFlow switches can only store a restricted number of flow entries (see Section \ref{sec:backgroud-openflow}.
 
 
 \subsection{System Initialization}
@@ -984,8 +999,8 @@ installed in the network, thereby reducing the necessary space overhead at each 
 	\item Use a technique similar to the one proposed by Kotani et al. \cite{Kotani12} in which entire backup MTs are pre-installed in the network and activated by the root node of each 
 affected MT.  This approach is fast because only the root needs to be signaled to activate the backup MTs.  On the other hand, this approach is wasteful in terms of space, as each 
 switch must store a flow entry for each backup MT is belongs to.  This can be problematic because, for each network link, $l$, we precompute a backup MT for each MT using $l$.  This amounts
-to computing a backup MT for each link of each MT.   Recall from Section \ref{subsec:notation} that we referred to the set of all MTs as $T = \{T_1,T_2, \dots T_m\}$, 
-where each $T_i = (V_i,E_i) \in T$ is a source-based MT.  Thus, we pre-compute $\displaystyle \sum_{\forall T_i \in T} {|E_i|}$ many backup MTs. 
+to computing a backup MT for each link of each MT.   Specifically, if we let $T = \{T_1,T_2, \dots T_m\}$ be the set of all MTs, 
+where each $T_i = (V_i,E_i) \in T$ is a source-based MT,  then we need to pre-compute $\displaystyle \sum_{\forall T_i \in T} {|E_i|}$ many backup MTs. 
 %if we have $m$ primary MTs with a total of 
 
 	\item Hybrid of (1) and (2).  Under this approach, we reuse the flow entries of primary MTs as much as possible and only pre-install the non-overlapping sections of the backup MTs.  

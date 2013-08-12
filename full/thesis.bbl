@@ -137,6 +137,12 @@ Dijkstra, E.~W.
 \newblock A note on two problems in connexion with graphs.
 \newblock {\em Numerische mathematik 1}, 1 (1959), 269--271.
 
+\bibitem{Dughmi09}
+Dughmi, S.
+\newblock Submodular functions: Extensions, distributions, and algorithms. a
+  survey.
+\newblock {\em CoRR abs/0912.0322\/} (2009).
+
 \bibitem{Arini}
 El-Arini, K., and Killourhy, K.
 \newblock {B}ayesian {D}etection of {R}outer {C}onfiguration {A}nomalies.

@@ -32,7 +32,7 @@
 \contentsline {subsection}{\numberline {2.3.1}Overview of NPC Proof Strategy}{27}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Problem Statements and NPC Proof Sketches}{29}{subsection.2.3.2}
 \contentsline {section}{\numberline {2.4}Approximation Algorithms}{32}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}The Observability Rules are Not Submodular Function}{32}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.1}Observability Rules as Submodular Functions?}{32}{subsection.2.4.1}
 \contentsline {section}{\numberline {2.5}Simulation Study}{34}{section.2.5}
 \contentsline {section}{\numberline {2.6}Related Work}{37}{section.2.6}
 \contentsline {section}{\numberline {2.7}Conclusions}{38}{section.2.7}
@@ -65,7 +65,7 @@
 \contentsline {section}{\numberline {3.5}My Notes on Actual Algorithms}{73}{section.3.5}
 \contentsline {subsection}{\numberline {3.5.1}\textsc {Failed-Link} details}{73}{subsection.3.5.1}
 \contentsline {subsection}{\numberline {3.5.2}\textsc {Min-Flows} Algorithm}{74}{subsection.3.5.2}
-\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{75}{section.3.6}
+\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{76}{section.3.6}
 \contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{78}{chapter.4}
 \contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{78}{section.4.1}
 \contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{79}{section.4.2}

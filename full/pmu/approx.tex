@@ -20,18 +20,29 @@ the maximum number of nodes under the condition that the PMU pair satisfy one of
 
 
 
-\subsection{The Observability Rules are Not Submodular Function}
+\subsection{Observability Rules as Submodular Functions?}
 
-Intuitively, submodular functions are set functions with diminishing marginal returns: the value that a single element makes in the function when added to the input set decreases
+Intuitively, submodular functions are set functions with diminishing marginal returns: the value that each subsequent element adds decreases
 as the size of the input set increases. More formally, let $X$ be a ground set such that $|X|=n$. We define a set function on $X$ as $f: 2^X \rightarrow \mathbb{R}$.
-We define a function as submodular using the definition from \footnote{\url{http://theory.stanford.edu/~shaddin/papers/submodular\_survey.pdf}}.
-A set function is $f: 2^X \rightarrow \mathbb{R}$ is \emph{submodular} if, for all $A,B \subseteq X$ with $A \subseteq B$, and for each $j \in X$,
+Using the definition from Dughmi \cite{Dughmi09} %\footnote{\url{http://theory.stanford.edu/~shaddin/papers/submodular\_survey.pdf}}, %a set function $f: 2^X \rightarrow \mathbb{R}$ 
+$f$ is \emph{submodular} if, for all $A,B \subseteq X$ with $A \subseteq B$, and for each $j \in X$,
 \begin{eqnarray}
 f(A \cup \{j\}) - f(A) &\geq& f(B \cup \{j\}) - f(B)
 \end{eqnarray}
 
-For the PMU placement problems, we define $f(X)$ on graph, $G=(V,E)$, as the number of nodes observed by placing a PMU at each $x \in X$.  Using the example graph from
-Figure \ref{fig:submodular-counter}}, we show $f$ is not submodular.  Let $A=\{a\}$ and $B=\{a,b\}$. Then,
+%For the PMU placement problems, we define $f(X)$ on graph, $G=(V,E)$, as the number of observed nodes derived by placing a PMU at each $x \in X$.  
+For the PMU placement problem, we define $f: 2^X \rightarrow \mathbb{R}$ on graph, $G=(V,E)$, as the number of observed nodes derived by placing a PMU at each $x \in X$.  
+We prove that $f$ is not submodular for graphs containing zero-injection nodes (Theorem \ref{thm:submodular1}) but is submodular when restricted
+to graphs with only injection nodes (Theorem \ref{thm:submodular2}). 
+
+
+\begin{theorem}
+\label{thm:submodular1}
+$f$ is not submodular for graphs, $G_z$, with zero-injection nodes.
+\end{theorem}
+
+\begin{proof}
+Let $G_z$ be the graph from Figure \ref{fig:submodular-counter}, $A=\{a\}$, and $B=\{a,b\}$. Then, %when evaluate the observed nodes we find:
 %In this example we let $A=\{a\}$ and $B=\{a,b\}$. Then, %We show $f$ is not a submodular function
 \begin{eqnarray*}
 f(A \cup \{c\}) - f(A) &\stackrel{?}{\geq}& f(B \cup \{c\}) - f(B) \\
@@ -39,21 +50,41 @@ f(A \cup \{c\}) - 2 &\stackrel{?}{\geq}& f(B \cup \{c\}) - 3 \\
 3-2 &\stackrel{?}{\geq}& 8 - 3 \\
 1 &\stackrel{?}{\geq}& 5
 \end{eqnarray*}
-As a result, we conclude that $f$ is not submodular and therefore that our observability rules are not submodular functions.
+We conclude that $f$ is not submodular for $G_z$. % and therefore that our observability rules are not submodular functions.
+\end{proof}
 
-Note that in this example, O2 prevented us from meeting the criteria for submodular functions.  For PMU placement $B \cup \{c\}$, we are able to apply O2 at $e$, resulting in the observation of the
-chain of nodes at the top of the graph.  However, we were unable to apply O2 for PMU placement $A \cup \{c\}$.
+Note that in this example, O2 prevented us from meeting the criteria for submodular functions.  For PMU placement $B \cup \{c\}$, we were able to apply O2 at $e$, resulting in the observation of the
+chain of nodes at the top of the graph.  However, we were unable to apply O2 for the PMU placement $A \cup \{c\}$.  This observation provides the motivation for our next Theorem (\ref{thm:submodular2}).
   
 %It follows that $f(A)=2$ and $f(B)=3$. 
 
 \begin{figure}[t]
 \centering
 \includegraphics[scale=.75]{figs/submodular-counterexample.pdf}
-\caption{Example showing the observability rules are not submodular functions.}
+\caption{Example used in Theorem \ref{thm:submodular1} showing a function defined using our observability rules is not submodular for graphs with zero-injection nodes.  
+Nodes with a dashed border are zero-injection nodes and injection nodes have a solid border. For set function $f: 2^X \rightarrow \mathbb{R}$, defined as the number of observed nodes 
+resulting from placing a PMU at each $x \in X$, we have $f(A) = f(\{a\}) = 2$ where $\{a,d\}$ are observed, while $f(B) = f(\{a,b\}) = 3$ where $\{a,b,d\}$ are observed.  }
 \label{fig:submodular-counter}
 \end{figure}
 
-\xxn{Maybe we can show it is a submodular function for certain distributions of zero-injection nodes.}
+
+\begin{theorem}
+\label{thm:submodular2}
+$f$ is a submodular function for graphs, $G_I$, containing only injection nodes.
+\end{theorem}
+
+\begin{proof}
+Consider a graph $G_I=(V_I,E_I)$ where each $v \in V_I$ is an injection node. Let $A \subseteq B \subseteq V_I$ and $j \in V_I$.  Placing a PMU at $j$ can at most result in the observation of
+$j \cup \Gamma(j)$ because we cannot apply O2 in $G_I$ since we have assumed all nodes are injection nodes.
+%Since all nodes are injection nodes we cannot use O2 to observe any nodes. and thus nodes can only be observed using O1.  By O1, $j$ and $\Gamma(j)$ are observed.  
+We claim that any $x \in j \cup \Gamma(j)$ that is unobserved after placing a PMU at nodes in $B$ is not observed with the PMU placement derived from $A$.  $x$ is unobserved only if 
+$x$ has no PMU nor if any $\Gamma(x)$ has a PMU.  Since $A \subseteq B$ and we have assumed $x$ is not observed using $B$, it must be the case that $x$ is not observed under $A$.
+%Since $A \subseteq B$, we know that if any $x \in \Gamma(j)$ is unobserved after placing a PMU at nodes in $B$ that $x$ is not observed with the PMU placement derived from $A$. 
+Since we have show that all unobserved nodes resulting from PMU placement $B$ must be unobserved under $A$, we conclude that $f(A \cup \{j\}) - f(A) \geq f(B \cup \{j\}) - f(B)$ 
+and, therefore, $f$ is submodular for $G_I$.
+\end{proof}
+
+%\xxn{Maybe we can show it is a submodular function for certain distributions of zero-injection nodes.}
 
 
 %\subsection{Example Showing Greedy is not a Submodular Function}

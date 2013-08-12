@@ -3,11 +3,11 @@ The top-level auxiliary file: thesis.aux
 The style file: umthesis.bst
 Database file #1: thesis.bib
 Warning--string name "sept." is undefined
---line 315 of file thesis.bib
+--line 326 of file thesis.bib
 Warning--string name "june" is undefined
---line 373 of file thesis.bib
+--line 384 of file thesis.bib
 Warning--string name "nov." is undefined
---line 475 of file thesis.bib
+--line 486 of file thesis.bib
 A bad cross reference---entry "Gyllstrom10"
 refers to entry "DBLP:conf/networking/2010", which doesn't exist
 Warning--I didn't find a database entry for "DBLP:conf/networking/2010"
