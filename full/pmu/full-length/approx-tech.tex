@@ -1,0 +1,155 @@
+\section{Approximation Algorithms}
+\label{sec:approx}
+
+Because all four placement problems are NPC, we propose greedy approximation algorithms for each problem, which iteratively add 
+a PMU in each step to the node that observes the maximum number of new nodes. We present two such algorithms, one which directly addresses \maxinc ({\tt greedy}) and the other 
+\xvalpart ({\tt xvgreedy}). {\tt greedy} and {\tt xvgreedy} can easily be used to solve \full and \xvals, respectively, by selecting the appropriate $k$ value to ensure full observability.
+We prove these algorithms have polynomial complexity (i.e., they are in $\mathcal{P}$), making them feasible tools for approximating optimal PMU placement. 
+
+{\bf {\tt greedy} Algorithm}. We start with $\Phi = \emptyset$.  At each iteration, we add a PMU to the node that results in the observation of the maximum number of 
+new nodes. The algorithm terminates when all PMUs are placed.  {\footnote {\small This is the same greedy algorithm proposed by Aazami and Stilp \cite{Aazami07}. }}
+The pseudo-code for {\tt greedy} is given in Algorithm \ref{alg:greedy}.
+%We refer to this algorithm as {\tt greedy} and give the pseudo-code in Algorithm \ref{alg:greedy}.
+
+\begin{algorithm}
+\caption{{\tt greedy} with input $G=(V,E)$ and $k$ PMUs}
+\label{alg:greedy}
+
+\begin{algorithmic}[1]
+
+\STATE{$\Phi_G \leftarrow \emptyset$}
+\FOR{$k$ iterations}
+	\STATE{$maxObserved \leftarrow 0$}
+	\FOR{{\bf each} $v \in (V - \Phi_G$)}
+		\STATE{$numObserved \leftarrow 0$}
+		\FOR{{\bf each} $u \in (\Phi_G \cup \{v\})$}
+			\STATE{add PMU to $u$}
+			\STATE{apply O1 at $u$ and update $numObserved$}
+		\ENDFOR
+		\REPEAT
+			\STATE{$flag \leftarrow False$}
+			\FOR{{\bf each} $w \in (V - (\Phi_G \cup \{v\}))$}
+				\IF{$w \in (V_Z \cap \Phi_G^R)$ and $w$ has $1$ unobserved neighbor}
+					\STATE{apply O2 at $w$ and update $numObserved$}
+					\STATE{$flag \leftarrow True$}
+				\ENDIF
+			\ENDFOR
+		\UNTIL{$flag = False$}
+		\IF{$numObserved > maxObserved$}
+			\STATE{$greedyNode \leftarrow v$}
+			\STATE{$maxObserved \leftarrow numObserved$}
+		\ENDIF
+	\ENDFOR
+	\STATE{$\Phi_G \leftarrow \Phi_G \cup \{greedyNode\}$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+For input graph $G=(V,E)$ and $k$ PMUs {\tt greedy} has $O(dkn^3)$ complexity, where $n=|V|$ and $d$ is the maximum degree node in $V$.
+\label{thm:greedy-complex}
+\end{theorem}
+\begin{proof}
+%In our proof we implicitly refer to Algorithm \ref{alg:greedy} when referring to the steps of the algorithm.
+%Specifically, when we refer to the {\tt greedy} algorithm steps we are referencing the Algorithm \ref{alg:greedy} steps.
+The procedure to determine the number of nodes observed by a candidate PMU placement spans steps $6 - 18$.
+{\footnote {\small In this proof, step $i$ refers to the $i^{th}$ line  in Algorithm \ref{alg:greedy}.}}
+First, we apply O1 at each PMU node (steps $6 -9$). O1 takes $O(d)$ time 
+to be applied at a single node.  Because $|\Phi_G| \leq k$, the total time to apply O1 is $O(dk)$. 
+
+Then, we iteratively apply O2 (steps $10-18$), terminating when no new nodes are observed.  Like O1, applying O2 at a single node takes $O(d)$ time. 
+In each iteration, if possible we apply O2 at each $v \in (V_Z \cap \Phi_G^R)$ (steps $13-16$). %If at least one node is observed we execute another iteration of O2 evaluation.
+It total, the $loop$ spanning steps $10-18$ repeats at most $O(n)$ times.  This occurs when only a single new node is observed in each iteration.  The $for$ loop spanning steps $12-17$
+repeats $O(n)$ times. We conclude that O2 evaluation for each set of candidate PMU locations takes $O(dn^2)$ time.
+
+In order to determine the placement of each PMU, we try all possible PMU placements among nodes without a PMU. We place the PMU at the node that observes the maximum number of new nodes.  This 
+corresponds to Steps $4-23$, in which the $for$ loop iterates $O(n)$ times. 
+Thus the complexity of Steps $4-23$ is $O(dn^3)$. 
+
+Finally, the outer most $for$ loop (Steps $2-25$) iterates $k$ times: one iteration
+to determine the greedy placement of each PMU.  We conclude that the complexity of {\tt greedy} is $O(dkn^3)$. \qed
+\end{proof}
+%At most, O2 evaluation requires $O(n)$ iterations in which we attempt to apply O2 at $O(n)$ nodes. This yields $O(n^2)$ complexity.
+
+
+
+%After placing PMUs in candidate locations, we apply rule O1 at each PMU node.  It takes $O(d)$ time, where $d$ is the maximum degree of all $v \in V$, to apply O1 at each PMU node.  With 
+%$k$ PMUs, the total time to apply O1 is $O(kd)$.
+
+
+{\bf {\tt xvgreedy} Algorithm}. {\tt xvgreedy} is almost identical to {\tt greedy}, except that PMUs are added in pairs such that the selected pair observe
+the maximum number of nodes under the condition that the PMU pair satisfy one of the cross-validation rules. % and observe the maximum number of new nodes.
+We provide the pseudo code for {\tt xvgreedy} in Algorithm \ref{alg:xvgreedy}.
+%We call this algorithm {\tt xvgreedy} and provide pseudo code for {\tt xvgreedy} in Algorithm \ref{alg:xvgreedy}.
+
+\begin{algorithm}
+\caption{{\tt xvgreedy} with input $G=(V,E)$ and $k$ PMUs}
+\label{alg:xvgreedy}
+
+\begin{algorithmic}[1]
+
+\STATE{$\Phi_G \leftarrow \emptyset$}
+\FOR{$k$ iterations}
+	\STATE{$maxObserved \leftarrow 0$}
+	\STATE{$C \leftarrow$ all cross-validated node pairs in $(V - \Phi_G)$}
+	\FOR{{\bf each} $\{v_1,v_2\} \in C$}
+		\STATE{$numObserved \leftarrow 0$}
+		\FOR{{\bf each} $u \in (\Phi_G \cup \{v_1,v_2\})$}
+			\STATE{add PMU to $v_1$ and $v_2$}
+			\STATE{apply O1 at $u$ and update $numObserved$}
+		\ENDFOR
+		\REPEAT
+			\STATE{$flag \leftarrow False$}
+			\FOR{{\bf each} $w \in (V - (\Phi_G \cup \{v_1,v_2\}))$}
+				\IF{$w \in (V_Z \cap \Phi_G^R)$ and $w$ has $1$ unobserved neighbor}
+					\STATE{apply O2 at $w$ and update $numObserved$}
+					\STATE{$flag \leftarrow True$}
+				\ENDIF
+			\ENDFOR
+		\UNTIL{$flag = False$}
+		\IF{$numObserved > maxObserved$}
+			\STATE{$greedyNodes \leftarrow \{v_1,v_2\}$}
+			\STATE{$maxObserved \leftarrow numObserved$}
+		\ENDIF
+	\ENDFOR
+	\STATE{$\Phi_G \leftarrow \Phi_G \cup greedyNodes$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+For input graph $G=(V,E)$ and $k$ PMUs {\tt xvgreedy} has $O(kdn^3)$ complexity, where $n=|V|$ and $d$ is the maximum degree node in $V$.
+\label{thm:xvgreedy-complex}
+\end{theorem}
+\begin{proof}
+	The only difference between {\tt xvgreedy} and {\tt greedy} is that {\tt xvgreedy} only considers pairs of cross-validated nodes. For this reason, 
+	step $4$ in Algorithm \ref{alg:xvgreedy} does not appear in Algorithm \ref{alg:greedy}.  We can find all pairs of cross-validated nodes in $O(d^2n)$ time.  We do so by 
+	implementing a breadth-first search at each $v \in (V - \Phi_G)$ but stopping at a depth of $2$.  This takes $O(d^2)$ time for each node and since 
+	$O(n)$ searches are executed, step $4$ takes $O(d^2n)$ time.
+
+	Because all other parts of Algorithm \ref{alg:greedy} and Algorithm \ref{alg:xvgreedy} are nearly identical -- Algorithm \ref{alg:xvgreedy}
+	adds PMUs in pairs while Algorithm \ref{alg:greedy} adds PMUs one-at-a-time -- we are able to directly apply
+	the analysis from Theorem \ref{thm:greedy-complex} in this proof.  Therefore, we conclude the complexity of {\tt xvgreedy} is $O(k(d^2n + dn^3)) = O(dkn^3)$. \qed
+\end{proof}
+
+
+
+
+
+
+
+%\xvals's greedy algorithm can either:
+%\begin{itemize}
+%	\item Add pairs of PMUs at each iteration such the selected pair of nodes observes the most nodes. both nodes need to be unobserved. pros/cons
+%	\begin{itemize}
+%		\item ignores odd number of PMUs
+%	\end{itemize}
+%	\item Add a single PMU at each iteration so the PMU is cross-validated and observes the maximum nodes (among the cross-validated options). pros/cons
+%	\begin{itemize}
+%		\item may be better to add PMUs in pairs
+%
+%		\item may restrict options by having to place nodes near each other ...
+%	\end{itemize}
+%
+%\end{itemize}
+

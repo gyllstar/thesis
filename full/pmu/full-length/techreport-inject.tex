@@ -1,0 +1,130 @@
+\documentclass{acm-alternate} 
+%\documentclass{acm} 
+%\documentclass[conference]{acm} 
+%\documentclass[conference]{IEEEtran} 
+%\documentclass[10pt,conference]{IEEEtran} 
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{epsfig}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{rotating}
+\usepackage{algorithmic}
+\usepackage{epstopdf}
+\usepackage{color}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+%\usepackage{epstopdf}
+%\usepackage{amsmath}
+\DeclareGraphicsRule{.tic}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\setcounter{theorem}{0}
+%\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{meta-proposition}[theorem]{Meta-Proposition}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{proviso}[theorem]{Proviso}         
+\newtheorem{question}[theorem]{Question}         
+\newtheorem{remark}[theorem]{Remark}         
+\newtheorem{define}[theorem]{Definition}         
+
+%\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+%\setlength\fboxsep{0pt}
+%\setlength\fboxrule{0.5pt}
+
+
+\newcommand{\sat}{{\textsc{P3SAT} }}
+\newcommand{\sats}{{\textsc{P3SAT}}}
+\newcommand{\full}{{\textsc{FullObserve} }}
+\newcommand{\fulls}{{\textsc{FullObserve}}}
+\newcommand{\maxinc}{{\textsc{MaxObserve} }}
+\newcommand{\maxincs}{{\textsc{MaxObserve}}}
+\newcommand{\xval}{{\textsc{FullObserve-XV} }}
+\newcommand{\xvals}{{\textsc{FullObserve-XV}}}
+\newcommand{\xvalpart}{{\textsc{MaxObserve-XV} }}
+\newcommand{\xvalparts}{{\textsc{MaxObserve-XV}}}
+
+\newcommand{\xxx}[1]{\textit{\textcolor{red}{[[#1]]}}} % this is an elisha comment
+
+
+\makeatletter
+\newcommand{\un}[1]{%
+    \ifmmode \@@underline{#1} \else %
+             $\@@underline{\hbox{#1}}$\fi}
+\makeatother
+\raggedbottom
+
+\newcommand{\doctitle}{On the Impact of PMU Placement on Observability and Cross-Validation} 
+
+
+
+\begin{document}
+
+
+\title{\doctitle}
+
+\author{
+\alignauthor Technical Report UM-CS-2012-019 \\
+Daniel Gyllstrom, Elisha Rosensweig, and Jim Kurose \\
+\affaddr{Department of Computer Science. University of Massachusetts Amherst USA}  \\ 
+\email{\{dpg, elisha, kurose\}@cs.umass.edu} 
+}
+
+\maketitle
+
+\input{abstract}
+
+\input{intro}
+
+%\input{intuition}
+
+\input{prelim}
+
+%\input{problem-stmt-long}
+\input{problem-stmt-inject-tech}
+
+
+\input{approx-tech} 
+
+% DON'T USE THE TECH VERSION, OUTDATED (7/24/12)
+\input{simulations-inject}
+%\input{simulations-inject-tech}
+
+\input{related}
+
+%\input{weak}
+
+\input{conclude}
+
+\section{Acknowledgments}
+This work is supported by NSF grant CNS-1143655. Also, we thank Luigi Vanfretti, David Bertagnolli, and  Dan Brancaccio for helpful discussions about power systems, PMUs, and PMU errors.  
+%Finally, thank you Karl Gyllstrom, Dennis Reynolds, and Darren Lamb for proofreading.
+
+\bibliographystyle{plain}
+\bibliography{techreport-inject}
+
+\end{document}
+
+
+% (1) give decsription of PMUP problem 
+%
+%
+%
+
+%shortening ideas
+%	1. merge approx algs and simulations
+%	2. merge plots
+%	3. 
+%
+%
+

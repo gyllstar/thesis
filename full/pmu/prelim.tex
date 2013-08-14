@@ -27,7 +27,7 @@ For convenience, we refer to any node with a PMU as a \emph{PMU node}. Additiona
 \subsection{Observability Rules}
 \label{subsec:observe}
 
-We use the simplified observability rules stated by Brueni and Heath \cite{Brueni05}:
+We use the simplified observability rules stated by Brueni and Heath \cite{Brueni05}. For completeness, we restate the rules here:
 \begin{enumerate}
 	
 	\item {\bf Observability Rule 1 (O1)}.  {\it If node $v$ is a PMU node, then $v \cup \Gamma(v)$ is observed. } %Formally, if $v \in \Phi_G$, then $\Gamma[v] \subseteq \Phi^R_G$. }
@@ -36,7 +36,25 @@ We use the simplified observability rules stated by Brueni and Heath \cite{Bruen
 	%Formally, if $v \in \Phi^R_G \cap V_Z$ and $|\Gamma(v) \cap (V - \Phi^R_G)| \leq 1$, then $\Gamma[v] \subseteq \Phi^R_G$. }
 
 \end{enumerate}
+
+Consider the example in Figure \ref{fig:pmu-example}, where the shaded nodes are PMU nodes and $g$ is the only zero-injection node. 
+Nodes $a-d$ are observed by applying O1 at the PMU at $a$, and nodes $a,b,f$ and $g$ are observed by applying O1 at $b$. 
+$e$ cannot be observed via $c$ because $c$ does not have a PMU (O1 does not apply) and is an injection node (O2 does not apply). 
+Similarly, $j$ is not observed via $f$. Finally, although $g \in V_Z$, O2 cannot be applied at $g$ because $g$ has two unobserved neighbors $i,h$, so they remain unobserved.
+
 Since O2 only applies with zero-injection nodes, the number of zero-injection nodes can greatly affect system observability. 
+For example, consider the case where $c$ and $f$ are {\em zero-injection} nodes. $a-d$, $g$ and $f$ are still observed as before, as O1 makes not conditions on the node type. Additionally, 
+since now $c,f \in V_Z$ and each has a single unobserved neighbor,  we can apply O2 at each of them to observe $e,j$, respectively. % making $e$ and $j$, respectively, observed.   
+We evaluate the effect of increasing the number of zero-injection nodes on observability in our simulations (Section \ref{sec:simulations}).
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=.6]{figs/pmu-example.pdf}
+%\includegraphics[scale=0.51]{figs/example2.pdf}
+\caption{Example power system graph. PMU nodes ($a,b$) are indicated with darker shading. Injection nodes have solid borders while zero-injection nodes  ($g$) have dashed borders.}
+\label{fig:pmu-example}
+\end{figure}
 
 \subsection{Cross-Validation Rules}
 \label{subsec:xval-rules}
@@ -54,6 +72,8 @@ A PMU is \emph{cross-validated} if one of the rules below is satisfied \cite{Van
 	\item {\bf Cross-Validation Rule 2 (XV2)}. {\it If two PMU nodes have a common neighbor, then the PMUs cross-validate each other.}
 	%Formally, if $u, v \in \Phi_G$, $u\neq v$ and $\Gamma(u)\cap\Gamma(v)\neq\emptyset$, then the PMUs at $u$ and $v$ are cross-validated.}
 \end{enumerate}
+In short, the cross-validation rules require that {\em the PMU is within two hops of another PMU}.
+For example, in Figure \ref{fig:example}, the PMUs at $a$ and $b$ cross-validate each other by XV1.
 
 XV1 derives from the fact that both PMUs are measuring the current phasor of the transmission line connecting the two PMU nodes.  XV2 is more subtle.  
 Using the notation specified in XV2, when computing the voltage phasor of an element in $\Gamma(u)\cap\Gamma(v)$ the voltage equations include variables to 

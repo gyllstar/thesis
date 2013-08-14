@@ -1,0 +1,27 @@
+\section{Approximation Algorithms}
+\label{sec:approx}
+
+Because all four placement problems are NPC, we propose greedy approximation algorithms for each problem, which iteratively add 
+a PMU in each step to the node that observes the maximum number of new nodes. We present two such algorithms, one which directly addresses \maxinc ({\tt greedy}) and the other 
+\xvalpart ({\tt xvgreedy}).  \\
+{\tt greedy} and {\tt xvgreedy} can easily be used to solve \full and \xvals, respectively, by selecting the appropriate $k$ value to ensure full observability.
+%Our Technical Report \cite{Tech12} gives the pseudo code for {\tt greedy} and {\tt xvgreedy} and also includes proofs
+%that these algorithms have polynomial complexity (i.e., they are in $\mathcal{P}$), 
+%making them feasible tools for approximating optimal PMU placement. 
+%We prove these algorithms have polynomial complexity (i.e., they are in $\mathcal{P}$), making them feasible tools for approximating optimal PMU placement. 
+
+{\bf {\tt greedy} Algorithm}. We start with $\Phi = \emptyset$.  At each iteration, we add a PMU to the node that results in the observation of the maximum number of 
+new nodes. The algorithm terminates when all PMUs are placed.  {\footnote {\small The same greedy algorithm is proposed by Aazami and Stilp \cite{Aazami07}. }}
+%The pseudo-code for {\tt greedy} and a proof that {\tt greedy} has polynomial running time is given in our Technical Report \cite{Tech12}.
+
+
+{\bf {\tt xvgreedy} Algorithm}. {\tt xvgreedy} is almost identical to {\tt greedy}, except that PMUs are added in pairs such that the selected pair observe
+the maximum number of nodes under the condition that the PMU pair satisfy one of the cross-validation rules. % and observe the maximum number of new nodes.
+%We provide the pseudo code for {\tt xvgreedy} and prove that {\tt xvgreedy} has polynomial running time in our Technical Report \cite{Tech12}. 
+
+Our Technical Report \cite{Tech12} gives the pseudo code for {\tt greedy} and {\tt xvgreedy} and includes proofs
+that these algorithms have polynomial complexity, making them feasible tools for approximating optimal PMU placement. 
+%We provide the pseudo code for {\tt greedy} and {\tt xvgreedy} in our Technical Report \cite{Tech12}. Our Technical Report \cite{Tech12} also includes proofs
+%that these algorithms have polynomial complexity (i.e., they are in $\mathcal{P}$), 
+%making them feasible tools for approximating optimal PMU placement. 
+

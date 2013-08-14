@@ -177,6 +177,12 @@ Garcia-Lunes-Aceves, J.~J.
 \newblock {L}oop-free {R}outing using {D}iffusing {C}omputations.
 \newblock {\em IEEE/ACM Trans. Netw. 1}, 1 (1993), 130--141.
 
+\bibitem{Garey79}
+Garey, M.R., and Johnson, D.~S.
+\newblock {\em {C}omputers and {I}ntractability: {A} {G}uide to the {T}heory of
+  {N}{P}-{C}ompleteness}.
+\newblock W. H. Freeman \& Co., New York, NY, USA, 1979.
+
 \bibitem{Gyllstrom12}
 Gyllstrom, D., Rosensweig, E., and Kurose, J.
 \newblock On the impact of pmu placement on observability and cross-validation.
