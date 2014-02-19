@@ -183,13 +183,6 @@ Garey, M.R., and Johnson, D.~S.
   {N}{P}-{C}ompleteness}.
 \newblock W. H. Freeman \& Co., New York, NY, USA, 1979.
 
-\bibitem{Gyllstrom12}
-Gyllstrom, D., Rosensweig, E., and Kurose, J.
-\newblock On the impact of pmu placement on observability and cross-validation.
-\newblock In {\em Proceedings of the 3rd International Conference on Future
-  Energy Systems: Where Energy, Computing and Communication Meet\/} (2012),
-  ACM, p.~20.
-
 \bibitem{Gyllstrom10}
 Gyllstrom, D., Vasudevan, S., Kurose, J., and Miklau, G.
 \newblock Efficient recovery from false state in distributed routing

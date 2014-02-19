@@ -35,7 +35,7 @@
 \contentsline {subsection}{\numberline {2.3.4}The {\textsc {FullObserve-XV} }Problem}{37}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}The {\textsc {MaxObserve-XV} }Problem}{40}{subsection.2.3.5}
 \contentsline {subsection}{\numberline {2.3.6}Proving NPC for Additional Topologies}{43}{subsection.2.3.6}
-\contentsline {section}{\numberline {2.4}Approximation Algorithms}{47}{section.2.4}
+\contentsline {section}{\numberline {2.4}Approximation Algorithms}{44}{section.2.4}
 \contentsline {subsection}{\numberline {2.4.1}Observability Rules as Submodular Functions?}{47}{subsection.2.4.1}
 \contentsline {section}{\numberline {2.5}Simulation Study}{49}{section.2.5}
 \contentsline {section}{\numberline {2.6}Related Work}{51}{section.2.6}

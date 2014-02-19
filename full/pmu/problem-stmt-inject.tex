@@ -4,12 +4,11 @@
 
 In this section we define four PMU placement problems (\fulls, \maxincs, \xvals, and \xvalparts) and prove their NP-Completeness. 
 \xval and \xvalpart both consider measurement error detection, while \full and \maxinc do not.  
-In effort to keep this proposal document relatively short, we omit the actual NP-Completeness proofs and instead present proof sketches; details can be found in \cite{Gyllstrom12}.
 We begin with a general overview of NP-Completeness, as well as a high-level description of our proof strategy in this paper (Section \ref{subsec:proofstrat}). 
 In the remainder of Section \ref{sec:problem-analysis} we present and prove the NP-Completeness of four PMU placement problems, 
 in the following order: \full (Section \ref{subsec:full}), \maxinc (Section \ref{subsec:maxinc}), \xval (Section \ref{subsec:xval}), and \xvalpart (Section \ref{subsec:xvalpart}).
 
-In all four problems defined in this paper, we are only concerned with computing the voltage phasors of each bus (i.e., observing the buses). Using the values of the voltage phasors,
+In all four problems we are only concerned with computing the voltage phasors of each bus (i.e., observing the buses). Using the values of the voltage phasors,
 Ohm's Law can be easily applied to compute the current phasors of each transmission line.
 Also, we consider networks with both injection and zero-injection buses. For similar proofs for purely zero-injection systems, see Appendix \ref{ch:appendix-pmu}.
 
@@ -53,13 +52,15 @@ nodes that represent assigning it ``False". When a PMU is placed at one of these
 Thus, we use the PMU placement to determine a consistent truth value for each \sat variable. Also, clause gadgets are connected to variable gadgets at either ``True" or ``False" (but never both) 
 nodes, in such a way that the clause is satisfied if and only if {\em at least one} of those nodes has a PMU.
 
+Although the structure of our proofs is adapted from \cite{Brueni05}, the variable and clause gadgets we use to correspond to the \sat formula are novel, thus leading to a 
+different set of proofs. Our work here demonstrates how the approach from \cite{Brueni05} can be extended, using new variable and clause gadgets, to address a wide array of PMU placement problems.
+
 While we assume $G(\phi)$ is planar, we make no such claim regarding $H(\phi)$, though in practice all graphs used in our proofs are indeed planar. The proof of NPC rests on the fact that 
 solving the underlying $\phi$ formula is NPC. In what follows, for a given PMU placement problem $\Pi$, we prove $\Pi$ is NPC by showing that a PMU placement in $H(\phi)$, $\Phi$, can be 
 interpreted semantically as describing a satisfying assignment for $\phi$ iff $\Phi\in\Pi$. 
 Since \sat is NPC, this proves $\Pi$ is  NPC as well. 
 
-Although the structure of our proofs is adapted from \cite{Brueni05}, the variable and clause gadgets we use to correspond to the \sat formula are novel, thus leading to a 
-different set of proofs. Our work here demonstrates how the work in \cite{Brueni05} can be extended, using new variable and clause gadgets, to address a wide array of PMU placement problems.
+
 
 \begin{figure}
 
@@ -96,25 +97,18 @@ node in $G(\varphi)$ -- as specified by the Theorem \ref{thm:npc-full} proof -- 
 \subsection{The \full Problem}
 \label{subsec:full}
 
-The \full problem was previously discussed in the literature (e.g., the PMUP problem in \cite{Brueni05}, and the PDS problem in \cite{Haynes02}) for purely zero-injection bus systems. Here we consider networks with mixtures of injection and zero-injection buses, and modify the NPC proof for PMUP in \cite{Brueni05} to handle this mixture.
-
-\full Optimization Problem:
-\begin{itemize}
-	\item \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$ and $V_Z \neq \emptyset$.
+The \full problem has been addressed in the literature (e.g., the PMUP problem in \cite{Brueni05}, and the PDS problem in \cite{Haynes02}) but only for purely zero-injection bus systems. 
+Here we consider networks with mixtures of injection and zero-injection buses, and modify the NPC proof of PMUP in \cite{Brueni05} to handle this mixture.
+\\
+{\bf \full Optimization Problem:}\\
+\indent \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$ and $V_Z \neq \emptyset$.
 	{\footnote {\small We include the condition that $V_Z \neq \emptyset$ because otherwise \full reduces to \textsc{Vertex-Cover}, making the NP-Completeness
-	proof trivial.}}
-
-	\item \underline{Output}: A placement of PMUs, $\Phi_G$, such that $\Phi^R_G=V$ and $\Phi_G$ is minimal.
-	%\textsc{Output}: A placement of $k$ PMUs, $\Phi$, such that $|\Phi^R|$ is maximal.
-\end{itemize}
-
-\full Decision Problem:
-\begin{itemize}
-	\item \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $V_Z \neq \emptyset$, $k$ PMUs such that $k \geq 1$.
-
-	\item \underline{Question}: Is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $\Phi^R_G = V$?
-	%\item \underline{Question}: Is there a $\Phi \subseteq V$ such that $|\Phi| \leq k$ and $m \leq |\Phi^R| < |V|$?
-\end{itemize}
+	proof trivial.}} \\
+\indent \underline{Output}: A placement of PMUs, $\Phi_G$, such that $\Phi^R_G=V$ and $\Phi_G$ is minimal.
+\\
+{\bf \full Decision Problem:} \\
+\indent \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $V_Z \neq \emptyset$, $k$ PMUs such that $k \geq 1$. \\
+\indent \underline{Question}: Is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $\Phi^R_G = V$?
 
 
 \begin{theorem}
@@ -183,24 +177,14 @@ Since we assume the graph is fully observed, all $a_j$ are observed by $\Phi_H$.
 
 \maxinc is a variation of \fulls: rather than consider the minimum number of PMUs required for full system observability,
 \maxinc finds the maximum number of nodes that can be observed using a fixed number of PMUs.
-
-
-\maxinc Optimization Problem:
-\begin{itemize}
-	%\textsc{Input}: Graph $G=(V,E)$, $k$ PMUs such that $1 \leq k < k^*$.
-	\item \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $1 \leq k < k^*$.
-
-	\item \underline{Output}: A placement of $k$ PMUs, $\Phi_G$, such that $|\Phi^R_G|$ is maximum.
-%	%\textsc{Output}: A placement of $k$ PMUs, $\Phi$, such that $|\Phi^R|$ is maximal.
-\end{itemize}
-
-\maxinc Decision Problem:
-\begin{itemize}
-	\item \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $1 \leq k < k^*$.
-
-	\item \underline{Question}: For a given $m< |V|$, is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $m \leq |\Phi^R_G| < |V|$?
-	%\item \underline{Question}: Is there a $\Phi \subseteq V$ such that $|\Phi| \leq k$ and $m \leq |\Phi^R| < |V|$?
-\end{itemize}
+\\
+{\bf \maxinc Optimization Problem:} \\
+	\indent \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $1 \leq k < k^*$. \\
+	\indent \underline{Output}: A placement of $k$ PMUs, $\Phi_G$, such that $|\Phi^R_G|$ is maximum. 
+\\
+{\bf \maxinc Decision Problem:} \\
+	\indent \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $1 \leq k < k^*$.	 \\
+	\indent \underline{Question}: For a given $m< |V|$, is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $m \leq |\Phi^R_G| < |V|$?
 
 
 \begin{theorem}
@@ -246,24 +230,16 @@ Earlier we noted that for each clause gadget without a PMU, the corresponding $b
 \subsection{The \xval Problem}
 \label{subsec:xval}
 
-%First we dedine \xval as an optimization problem and then state then state the \xval as a decision problem.
-
-\xval Optimization Problem:
-\begin{itemize}
-	\item \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$.
-
-	\item \underline{Output}: A placement of PMUs, $\Phi_G$, such that $\Phi^R_G = V$,
+The \xval optimization and decision problems are defined as follows:
+\\
+{\bf \xval Optimization Problem:} \\
+	\indent \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$. \\
+	\indent \underline{Output}: A placement of PMUs, $\Phi_G$, such that $\Phi^R_G = V$,
 	and  $\Phi_G$ is minimal under the condition that each $v \in \Phi_G$ is cross-validated according to the rules specified in Section \ref{subsec:xval-rules}.
-\end{itemize}
-
-\xval Decision Problem:
-\begin{itemize}
-	\item \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $k \geq 1$.
-
-	\item \underline{Question}: Is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $\Phi^R_G = V$ under the condition that each $v \in \Phi_G$ is cross-validated?
-	%\item \underline{Question}: Is there a $\Phi_G$ such that $|\Phi_G| \leq k$, $\Phi^R_G = V$, and each $v \in \Phi_G$ is cross-validated?
-	%\item \underline{Question}: Is there a $\Phi \subseteq V$ such that $|\Phi| \leq k$, $\Phi^R = V$, and each $\phi \in \Phi$ is cross-validated?
-\end{itemize}
+\\
+{\bf \xval Decision Problem:} \\
+	\indent \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $k \geq 1$. \\
+	\indent \underline{Question}: Is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $\Phi^R_G = V$ under the condition that each $v \in \Phi_G$ is cross-validated?
 
 
 
@@ -335,24 +311,16 @@ From Lemma \ref{lem:property2}(b) we know that full observability will require P
 \subsection{The \xvalpart Problem}
 \label{subsec:xvalpart}
 
-\xvalpart Optimization Problem:
-\begin{itemize}
-
-	\item \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$ and $k$ PMUs such that $1 \leq k < k^*$.
-
-	\item \underline{Output}: A placement of $k$ PMUs, $\Phi_G$, such that $|\Phi^R_G|$ is maximum under the condition that
+The \xvalpart optimization and decision problems are defined below:
+\\
+{\bf \xvalpart Optimization Problem:} \\
+	\indent \underline{Input}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$ and $k$ PMUs such that $1 \leq k < k^*$. \\
+	\indent \underline{Output}: A placement of $k$ PMUs, $\Phi_G$, such that $|\Phi^R_G|$ is maximum under the condition that
 	each $v \in \Phi_G$ is cross-validated according to the rules specified in Section \ref{subsec:xval-rules}.
-\end{itemize}
-
-
-\xvalpart Decision Problem:
-%Given $k < k^*$ PMUs, is there a $\Phi \subseteq V$ such that $|\Phi| \leq k$ and $|\Phi^R| \geq m$?
-\begin{itemize}
-	\item \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $1 \leq k < k^*$, and some $m<|V|$.
-
-	\item \underline{Question}: Is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $m \leq|\Phi^R_G| < |V|$ under the condition that each $v \in \Phi_G$ is cross-validated?
-	%\item \underline{Question}: Is there a $\Phi \subseteq V$ such that $|\Phi| \leq k$, $m \leq|\Phi^R| < |V|$, and each $\varphi \in \Phi$ is cross-validated?
-\end{itemize}
+\\
+{\bf \xvalpart Decision Problem:} \\
+	\indent \underline{Instance}: Graph $G=(V,E)$ where $V=V_Z \cup V_I$, $k$ PMUs such that $1 \leq k < k^*$, and some $m<|V|$. \\
+	\indent \underline{Question}: Is there a $\Phi_G$ such that $|\Phi_G| \leq k$ and $m \leq|\Phi^R_G| < |V|$ under the condition that each $v \in \Phi_G$ is cross-validated?
 
 %The corresponding {\em optimization problem} is to find the maximal $m$ such that $m$ nodes can be observed using $k$ PMUs and while cross-validating all PMUs. A formal definition of the optimization problem 
 %can be found in the technical report \xxx{CITE}. 
