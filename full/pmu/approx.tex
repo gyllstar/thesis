@@ -6,7 +6,8 @@ a PMU in each step to the node that observes the maximum number of new nodes. We
 \xvalpart ({\tt xvgreedy}). {\tt greedy} and {\tt xvgreedy} can easily be used to solve \full and \xvals, respectively, by selecting the appropriate $k$ value to ensure full observability.
 
 {\bf {\tt greedy} Algorithm}. We start with $\Phi = \emptyset$.  At each iteration, we add a PMU to the node that results in the observation of the maximum number of 
-new nodes. The algorithm terminates when all PMUs are placed.  {\footnote {\small The same greedy algorithm is proposed by Aazami and Stilp \cite{Aazami07}. }}
+new nodes. The algorithm terminates when all PMUs are placed.  {\footnote {\small The same greedy algorithm is proposed by Aazami and Stilp \cite{Aazami07} and
+is shown to  $\Theta(n)$ approximation ratio under the assumption that all nodes are zero-injection.}}
 
 
 {\bf {\tt xvgreedy} Algorithm}. {\tt xvgreedy} is almost identical to {\tt greedy}, except that PMUs are added in pairs such that the selected pair observe
@@ -16,13 +17,13 @@ the maximum number of nodes under the condition that the PMU pair satisfy one of
 %Our Technical Report \cite{Tech12} gives the pseudo code for {\tt greedy} and {\tt xvgreedy} and includes proofs
 %that these algorithms have polynomial complexity, making them feasible tools for approximating optimal PMU placement. 
 
-\xxn{Aazami and Stilp prove {\tt greedy} has a $\Theta(n)$ approximation ratio under the assumption that all nodes are zero-injection.}
+%\xxn{Aazami and Stilp prove {\tt greedy} has a $\Theta(n)$ approximation ratio under the assumption that all nodes are zero-injection.}
 
 
 
 \subsection{Observability Rules as Submodular Functions?}
 
-Intuitively, submodular functions are set functions with diminishing marginal returns: the value that each subsequent element adds decreases
+Submodular functions are set functions with diminishing marginal returns: the value that each subsequent element adds decreases
 as the size of the input set increases. More formally, let $X$ be a ground set such that $|X|=n$. We define a set function on $X$ as $f: 2^X \rightarrow \mathbb{R}$.
 Using the definition from Dughmi \cite{Dughmi09} %\footnote{\url{http://theory.stanford.edu/~shaddin/papers/submodular\_survey.pdf}}, %a set function $f: 2^X \rightarrow \mathbb{R}$ 
 $f$ is \emph{submodular} if, for all $A,B \subseteq X$ with $A \subseteq B$, and for each $j \in X$,
@@ -30,8 +31,8 @@ $f$ is \emph{submodular} if, for all $A,B \subseteq X$ with $A \subseteq B$, and
 f(A \cup \{j\}) - f(A) &\geq& f(B \cup \{j\}) - f(B)
 \end{eqnarray}
 
-%For the PMU placement problems, we define $f(X)$ on graph, $G=(V,E)$, as the number of observed nodes derived by placing a PMU at each $x \in X$.  
-For the PMU placement problem, we define $f: 2^X \rightarrow \mathbb{R}$ on graph, $G=(V,E)$, as the number of observed nodes derived by placing a PMU at each $x \in X$.  
+%For the PMU placement problem, we define $f: 2^X \rightarrow \mathbb{R}$ on graph, $G=(V,E)$, as the number of observed nodes derived by placing a PMU at each $x \in X$.  
+For the PMU placement problem, consider $G=(V,E)$.  For $S \subseteq V$ we define $f(S)$ as the number of observed nodes derived by placing a PMU at each $s \in S$.  
 We prove that $f$ is not submodular for graphs containing zero-injection nodes (Theorem \ref{thm:submodular1}) but is submodular when restricted
 to graphs with only injection nodes (Theorem \ref{thm:submodular2}). 
 

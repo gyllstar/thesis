@@ -64,12 +64,6 @@ Since \sat is NPC, this proves $\Pi$ is  NPC as well.
 \subsection{The \full Problem}
 \label{subsec:full}
 
-%\begin{figure}[t]
-%\centering
-%\includegraphics[scale=0.43]{figs/diamond-gadget.pdf}
-%\caption{Variable gadget used in Theorem \ref{thm:npc-full}. $Z_i$ is a zero-injection node and all other nodes are injection nodes.}
-%\label{fig:diamond-gadget}
-%\end{figure}
 
 \begin{figure}[t]
  % \begin{center}
@@ -229,22 +223,6 @@ Next, we reduce from {\sat} as in the proof for Theorem \ref{thm:npc-full}, wher
 
 
 
-% Before beginning our proof that \maxinc is NP-hard, we briefly summarize the reduction from \sat used in \cite{Brueni05}.
-% Given a \sat formula, $\phi$, with variables $\{v_1,v_2, \dots , v_r\}$ and the set of
-% clauses $\{c_1,c_2, \dots , c_s \}$, a graph $H(\phi) = (V(\phi),E(\phi))$ is formed as follows.  Each variable, $v_i$, is replaced with a gadget shown in Figure \ref{fig:variable-gadget}.  Each
-% clause, $c_j$, is replaced with a 2-clique $C[j],C'[j]$.  The edges in $E(\phi)$ represent whether a clause contains a variable.  If the variable $v_i$ occurs in clause $c_j$, $C[j]$ is connected to
-% $v_i$'s $T$ node. Conversely, if $\overline{v_i}$ occurs in clause $c_j$, then $C[j]$ is connected to $v_i$'s $F$ node.
-% Figure \ref{fig:proof1-example} shows the graph $H(\varphi)$ formed from \sat formula $\varphi$, defined in Equation (\ref{eqn:varphi}), with one exception:
-% for each clause gadget, $C_j$, $C_j$'s two leaf nodes are removed.
-
-% In our proof, we define the same \sat formula, $\phi$, as in \cite{Brueni05}: $\phi$ has variables $\{v_1,v_2, \dots , v_r\}$ and the set of clauses $\{c_1,c_2, \dots , c_s \}$.
-% From $\phi$, we create a graph $G=(V,E)$ which is identical to $H(\phi)$ defined in \cite{Brueni05} with one exception. We replace each 2-clique $\{C[j],C'[j]\} \in H(\phi)$ with
-% clause gadget $C_j$. Each $C_j$ has the following $\Gamma$ functions: $\Gamma(d_j) = \{b_j\}$, $\Gamma(e_j) = \{b_j\}$, $\Gamma(b_j) = \{a_j,d_j,e_j\}$, and $\Gamma(a_j) = \Gamma_o(C[j]) \cup \{b_j\}$
-% where $\Gamma_o(C[j])$ is the $\Gamma$ function for $C[j] \in H(\phi)$. $C_j$ is shown in Figure \ref{fig:clause-gadget}.
-
-% For example, the graph for formula $\varphi$ defined in Equation (\ref{eqn:varphi}) is shown in Figure \ref{fig:proof1-example}.
-% $\varphi$ is satisfied by truth assignment $A_{\varphi}$: $\overline{v_1}, \overline{v_2}, v_3, \overline{v_4},$ and $\overline{v_5}$ are true.
-% The dark shaded nodes have PMUs and correspond to $A_{\varphi}$.
 
 We are now ready to show \maxinc is NP-hard. For convenience, we let $H := H_1(\phi)$.  Recall $\phi$ has $r$ variables and $s$ clauses. 
 Here we consider the instance of \maxinc where $k=r$ and $m = 4r + s$, and show that $\phi$ is satisfiable if and only if $r=|\Phi_H|$ PMUs
@@ -267,15 +245,6 @@ Thus, the $r$ PMUs must be on nodes in variable gadgets. Note that the variable 
 
 Earlier we noted that for each clause gadget without a PMU, the corresponding $b_j$ node is unobserved, which comes to $s$ nodes. To observe $m=4r+s$ nodes, we will need to observe all the remaining nodes. Thus, we have reduced the problem to that of observing all of $H_0(\phi)\subset H_1(\phi)$. Our proof for Theorem \ref{thm:npc-full} demonstrated this can only be done by placing PMUs at nodes corresponding to a satisfying assignment of $\phi$, and so our proof is complete. \qed
 \end{proof}
-%Finally, we show that $G$ is bipartite and planar. From \cite{Brueni05} we know that $H(\phi)$ is bipartite and planar.  Recall, the only difference between $G$ and $H(\phi)$ is that $G$'s clause
-%gadgets have two extra nodes: $d_j$ and $e_j$.  We must show that the addition of all $d_j$ and $e_j$ to $H(\phi)$ maintains the condition that the resulting graph, $G$, is bipartite and planar.
-%We add $d_j$ and $e_j$ to the same partition as $a_j$, $V_1$.
-%Because $d_j$ and $e_j$ are only connected to $b_j$ and $b_j \notin V_1$,
-%this maintains the condition that $G$ is bipartite.
-
-%By definition every \sat formula, $\phi$, has a planar embedding $G(\phi)$.  From \cite{Brueni05} we know that $H(\phi)$ maintains the planar
-%embedding. By inspection, adding $d_j$ and $e_j$ to $H(\phi)$ preserves the condition that $G$ is planar.
-%\end{proof}
 
 
 \subsection{The \xval Problem}

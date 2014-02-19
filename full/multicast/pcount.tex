@@ -77,6 +77,8 @@ For each sampling window of $w$ time units, \pcnt instructs $b$ to tag and count
 At the same time, $c$ is instructed by \pcnt to count the $a,\{e,f\}$ packets tagged by $b$. Then, the controller uses the OpenFlow protocol to query the packet counter values for $a,\{e,f\}$
 at $b$ and $c$.  When $(b,c)$ fails, the packet counter at $c$ for $a,\{e,f\}$ no longer increments, causing a violation of $a,\{e,f\}$'s packet loss threshold for $(b,c)$.
 
+\xxx{describe how pcount can reduce the number of necessary measurement points}
+
 %As specified, \fl measures packet loss for each \emph{multicast flow} at each link.  These flow-level measurements may obfuscate aggregate link-level packet loss. For this
 %reason, we plan to extend \fl to group flows together to enable \emph{aggregate} packet loss measurements. 
 %Because OpenFlow provides native support for grouping flows and maintains packet counters for each 

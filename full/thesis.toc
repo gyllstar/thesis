@@ -35,10 +35,10 @@
 \contentsline {subsection}{\numberline {2.3.4}The {\textsc {FullObserve-XV} }Problem}{37}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}The {\textsc {MaxObserve-XV} }Problem}{40}{subsection.2.3.5}
 \contentsline {subsection}{\numberline {2.3.6}Proving NPC for Additional Topologies}{43}{subsection.2.3.6}
-\contentsline {section}{\numberline {2.4}Approximation Algorithms}{45}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Observability Rules as Submodular Functions?}{45}{subsection.2.4.1}
+\contentsline {section}{\numberline {2.4}Approximation Algorithms}{47}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Observability Rules as Submodular Functions?}{47}{subsection.2.4.1}
 \contentsline {section}{\numberline {2.5}Simulation Study}{49}{section.2.5}
-\contentsline {section}{\numberline {2.6}Related Work}{52}{section.2.6}
+\contentsline {section}{\numberline {2.6}Related Work}{51}{section.2.6}
 \contentsline {section}{\numberline {2.7}Conclusions}{53}{section.2.7}
 \contentsline {Chapter}{\numberline {3.}\MakeTextUppercase {Recovery from Link Failures in a Smart Grid Communication Network}}{54}{chapter.3}
 \contentsline {section}{\numberline {3.1}Introduction}{54}{section.3.1}
