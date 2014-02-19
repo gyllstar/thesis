@@ -1,7 +1,12 @@
+\chapter{Additional PMU Placement Proofs}
+\label{ch:appendix-pmu}
+
 
 In Chapter \ref{ch:pmu} we proved that \full (Section \ref{subsec:full}), \maxinc (Section \ref{subsec:maxinc}), \xval (Section \ref{subsec:xval}),
 and \xvalpart (Section \ref{subsec:xvalpart}) are each NP-Complete when considering networks with both zero-injection and injection buses.  Here we prove that each problem is also NP-Complete
-for graphs containing only zero-injection nodes.  The proofs resemble those in Sections \ref{subsec:full} - \ref{subsec:xvalpart}. % but do differ in their details. 
+for graphs containing only zero-injection nodes.  The proofs closely resemble those in Sections \ref{subsec:full} - \ref{subsec:xvalpart}. % but do differ in their details. 
+Then, we provide pseudo-code and complexity proofs for the approximation algorthms described in Section \ref{sec:approx}.  These proofs consider graphs with both zero-injection and injection buses. 
+
 
 %We prove that the PMU Placement problems described in Chaper \ref{ch:pmu}: \full (Section \ref{subsec:full}), \maxinc (Section \ref{subsec:maxinc}), \xval (Section \ref{subsec:xval}),
 %and \xvalpart (Section \ref{subsec:xvalpart}) are NP-Complete when considering 
@@ -96,7 +101,7 @@ We use the proof in \cite{Brueni05} to determine that all clauses in $\phi$ are 
 \label{fig:zero-xval-gadget}
 \end{figure}
 
-\subsection{\xval Problem}
+\subsection{\xval Problem for Zero-Injection Graphs}
 \label{subsec:zero-xval}
 
 The problem statement for \xval can be found in Section \ref{subsec:xval}.  The proof for Theorem \ref{thm:zero-npc-xval}, below, closely follows the structure of Theorem \ref{thm:npc-xval}'s proof.
@@ -316,6 +321,124 @@ argument from Theorem \ref{thm:zero-npc-maxinc} to show \maxinc is NP-Complete f
   \label{fig:zero-clause-extended}
 \end{figure}
 
+\section{Approximation Algorithm Complexity Proofs}
+\label{sec:appendix-approx}
+
+In Section \ref{sec:approx} we presented two greedy approximation algorithms, {\tt greedy} and {\tt xvgreedy}, that iteratively add a PMU in each step to the node that
+observes the maximum number of new nodes.  Here the pseudo-code for each algorithm is specified and we prove that each algorithm has polynomial time complexity.  We emphasize
+that these algorithms, unlike the problems discussed in the previous section, make no assumptions that nodes must be zero-injection.
+
+The pseudo-code for {\tt greedy} and {\tt xvgreedy} can be found in Algorithm \ref{alg:greedy} and Algorithm \ref{alg:xvgreedy}, respectively.
+
+\begin{algorithm}
+\caption{{\tt greedy} with input $G=(V,E)$ and $k$ PMUs}
+\label{alg:greedy}
+
+\begin{algorithmic}[1]
+
+\STATE{$\Phi_G \leftarrow \emptyset$}
+\FOR{$k$ iterations}
+	\STATE{$maxObserved \leftarrow 0$}
+	\FOR{{\bf each} $v \in (V - \Phi_G$)}
+		\STATE{$numObserved \leftarrow 0$}
+		\FOR{{\bf each} $u \in (\Phi_G \cup \{v\})$}
+			\STATE{add PMU to $u$}
+			\STATE{apply O1 at $u$ and update $numObserved$}
+		\ENDFOR
+		\REPEAT
+			\STATE{$flag \leftarrow False$}
+			\FOR{{\bf each} $w \in (V - (\Phi_G \cup \{v\}))$}
+				\IF{$w \in (V_Z \cap \Phi_G^R)$ and $w$ has $1$ unobserved neighbor}
+					\STATE{apply O2 at $w$ and update $numObserved$}
+					\STATE{$flag \leftarrow True$}
+				\ENDIF
+			\ENDFOR
+		\UNTIL{$flag = False$}
+		\IF{$numObserved > maxObserved$}
+			\STATE{$greedyNode \leftarrow v$}
+			\STATE{$maxObserved \leftarrow numObserved$}
+		\ENDIF
+	\ENDFOR
+	\STATE{$\Phi_G \leftarrow \Phi_G \cup \{greedyNode\}$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+For input graph $G=(V,E)$ and $k$ PMUs {\tt greedy} has $O(dkn^3)$ complexity, where $n=|V|$ and $d$ is the maximum degree node in $V$.
+\label{thm:app-greedy-complex}
+\end{theorem}
+\begin{proof}
+%In our proof we implicitly refer to Algorithm \ref{alg:greedy} when referring to the steps of the algorithm.
+%Specifically, when we refer to the {\tt greedy} algorithm steps we are referencing the Algorithm \ref{alg:greedy} steps.
+The procedure to determine the number of nodes observed by a candidate PMU placement spans steps $6 - 18$.
+{\footnote {\small In this proof, step $i$ refers to the $i^{th}$ line  in Algorithm \ref{alg:greedy}.}}
+First, we apply O1 at each PMU node (steps $6 -9$). O1 takes $O(d)$ time 
+to be applied at a single node.  Because $|\Phi_G| \leq k$, the total time to apply O1 is $O(dk)$. 
+
+Then, we iteratively apply O2 (steps $10-18$), terminating when no new nodes are observed.  Like O1, applying O2 at a single node takes $O(d)$ time. 
+In each iteration, if possible we apply O2 at each $v \in (V_Z \cap \Phi_G^R)$ (steps $13-16$). %If at least one node is observed we execute another iteration of O2 evaluation.
+It total, the $loop$ spanning steps $10-18$ repeats at most $O(n)$ times.  This occurs when only a single new node is observed in each iteration.  The $for$ loop spanning steps $12-17$
+repeats $O(n)$ times. We conclude that O2 evaluation for each set of candidate PMU locations takes $O(dn^2)$ time.
+
+In order to determine the placement of each PMU, we try all possible PMU placements among nodes without a PMU. We place the PMU at the node that observes the maximum number of new nodes.  This 
+corresponds to Steps $4-23$, in which the $for$ loop iterates $O(n)$ times. 
+Thus the complexity of Steps $4-23$ is $O(dn^3)$. 
+
+Finally, the outer most $for$ loop (Steps $2-25$) iterates $k$ times: one iteration
+to determine the greedy placement of each PMU.  We conclude that the complexity of {\tt greedy} is $O(dkn^3)$. 
+\end{proof}
+
+
+\begin{algorithm}
+\caption{{\tt xvgreedy} with input $G=(V,E)$ and $k$ PMUs}
+\label{alg:xvgreedy}
+
+\begin{algorithmic}[1]
+
+\STATE{$\Phi_G \leftarrow \emptyset$}
+\FOR{$k$ iterations}
+	\STATE{$maxObserved \leftarrow 0$}
+	\STATE{$C \leftarrow$ all cross-validated node pairs in $(V - \Phi_G)$}
+	\FOR{{\bf each} $\{v_1,v_2\} \in C$}
+		\STATE{$numObserved \leftarrow 0$}
+		\FOR{{\bf each} $u \in (\Phi_G \cup \{v_1,v_2\})$}
+			\STATE{add PMU to $v_1$ and $v_2$}
+			\STATE{apply O1 at $u$ and update $numObserved$}
+		\ENDFOR
+		\REPEAT
+			\STATE{$flag \leftarrow False$}
+			\FOR{{\bf each} $w \in (V - (\Phi_G \cup \{v_1,v_2\}))$}
+				\IF{$w \in (V_Z \cap \Phi_G^R)$ and $w$ has $1$ unobserved neighbor}
+					\STATE{apply O2 at $w$ and update $numObserved$}
+					\STATE{$flag \leftarrow True$}
+				\ENDIF
+			\ENDFOR
+		\UNTIL{$flag = False$}
+		\IF{$numObserved > maxObserved$}
+			\STATE{$greedyNodes \leftarrow \{v_1,v_2\}$}
+			\STATE{$maxObserved \leftarrow numObserved$}
+		\ENDIF
+	\ENDFOR
+	\STATE{$\Phi_G \leftarrow \Phi_G \cup greedyNodes$}
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+For input graph $G=(V,E)$ and $k$ PMUs {\tt xvgreedy} has $O(kdn^3)$ complexity, where $n=|V|$ and $d$ is the maximum degree node in $V$.
+\label{thm:app-xvgreedy-complex}
+\end{theorem}
+\begin{proof}
+	The only difference between {\tt xvgreedy} and {\tt greedy} is that {\tt xvgreedy} only considers pairs of cross-validated nodes. For this reason, 
+	step $4$ in Algorithm \ref{alg:xvgreedy} does not appear in Algorithm \ref{alg:greedy}.  We can find all pairs of cross-validated nodes in $O(d^2n)$ time.  We do so by 
+	implementing a breadth-first search at each $v \in (V - \Phi_G)$ but stopping at a depth of $2$.  This takes $O(d^2)$ time for each node and since 
+	$O(n)$ searches are executed, step $4$ takes $O(d^2n)$ time.
+
+	Because all other parts of Algorithm \ref{alg:greedy} and Algorithm \ref{alg:xvgreedy} are nearly identical -- Algorithm \ref{alg:xvgreedy}
+	adds PMUs in pairs while Algorithm \ref{alg:greedy} adds PMUs one-at-a-time -- we are able to directly apply
+	the analysis from Theorem \ref{thm:greedy-complex} in this proof.  Therefore, we conclude the complexity of {\tt xvgreedy} is $O(k(d^2n + dn^3)) = O(dkn^3)$. 
+\end{proof}
 
 
 

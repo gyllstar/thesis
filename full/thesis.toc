@@ -1,6 +1,6 @@
 \contentsline {FrontMatter}{\MakeTextUppercase {\uppercase {Abstract}}}{iv}{chapter*.1}
-\contentsline {FrontMatter}{\MakeTextUppercase {List of Tables}}{x}{chapter*.3}
-\contentsline {FrontMatter}{\MakeTextUppercase {List of Figures}}{xi}{chapter*.4}
+\contentsline {FrontMatter}{\MakeTextUppercase {List of Tables}}{xi}{chapter*.3}
+\contentsline {FrontMatter}{\MakeTextUppercase {List of Figures}}{xii}{chapter*.4}
 \contentsline {Chapter}{\MakeTextUppercase {Introduction}}{1}{chapter*.5}
 \contentsline {section}{\numberline {0.1}Thesis Overview}{1}{section.0.1}
 \contentsline {subsection}{\numberline {0.1.1}Component Failure in Communication Networks}{1}{subsection.0.1.1}
@@ -36,48 +36,53 @@
 \contentsline {subsection}{\numberline {2.3.5}The {\textsc {MaxObserve-XV} }Problem}{40}{subsection.2.3.5}
 \contentsline {subsection}{\numberline {2.3.6}Proving NPC for Additional Topologies}{43}{subsection.2.3.6}
 \contentsline {section}{\numberline {2.4}Approximation Algorithms}{44}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Observability Rules as Submodular Functions?}{47}{subsection.2.4.1}
-\contentsline {section}{\numberline {2.5}Simulation Study}{49}{section.2.5}
-\contentsline {section}{\numberline {2.6}Related Work}{51}{section.2.6}
-\contentsline {section}{\numberline {2.7}Conclusions}{53}{section.2.7}
-\contentsline {Chapter}{\numberline {3.}\MakeTextUppercase {Recovery from Link Failures in a Smart Grid Communication Network}}{54}{chapter.3}
-\contentsline {section}{\numberline {3.1}Introduction}{54}{section.3.1}
-\contentsline {section}{\numberline {3.2}Background}{57}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}PMU Applications and Their QoS Requirements}{57}{subsection.3.2.1}
-\contentsline {subsection}{\numberline {3.2.2}OpenFlow}{58}{subsection.3.2.2}
-\contentsline {section}{\numberline {3.3}Related Work}{60}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Smart Grid Communication Architectures}{60}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}Detecting Packet Loss}{61}{subsection.3.3.2}
-\contentsline {subsection}{\numberline {3.3.3}Multicast Tree Recovery}{62}{subsection.3.3.3}
-\contentsline {section}{\numberline {3.4}Proposed Research}{66}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Preliminaries}{66}{subsection.3.4.1}
-\contentsline {subsubsection}{\numberline {3.4.1.1}Example Scenario}{66}{subsubsection.3.4.1.1}
-\contentsline {subsubsection}{\numberline {3.4.1.2}General Problem Scenario and Basic Notation}{67}{subsubsection.3.4.1.2}
-\contentsline {subsection}{\numberline {3.4.2}Overview of Our Recovery Solutions and Section Outline}{70}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Link Failure Detection using OpenFlow}{72}{subsection.3.4.3}
-\contentsline {subsubsection}{\numberline {3.4.3.1}\textsc {Pcount} Evaluation}{75}{subsubsection.3.4.3.1}
-\contentsline {subsection}{\numberline {3.4.4}Uninstalling Failed Trees and Installing Backup Trees}{76}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}Computing Backup Multicast Trees}{77}{subsection.3.4.5}
-\contentsline {subsubsection}{\numberline {3.4.5.1}\textsc {Min-Flows} Algorithm}{78}{subsubsection.3.4.5.1}
-\contentsline {subsubsection}{\numberline {3.4.5.2}\textsc {Min-Sinks} Algorithm}{81}{subsubsection.3.4.5.2}
-\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{83}{subsubsection.3.4.5.3}
-\contentsline {subsection}{\numberline {3.4.6}System Initialization}{84}{subsection.3.4.6}
-\contentsline {subsection}{\numberline {3.4.7}How to Efficiently Install/Activate Pre-computed Backup MTs?}{85}{subsection.3.4.7}
-\contentsline {subsection}{\numberline {3.4.8}Multiple Link Failures}{87}{subsection.3.4.8}
-\contentsline {subsection}{\numberline {3.4.9}Node Failures}{87}{subsection.3.4.9}
-\contentsline {subsection}{\numberline {3.4.10}Evaluation Ideas}{88}{subsection.3.4.10}
-\contentsline {section}{\numberline {3.5}My Notes on Actual Algorithms}{88}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}\textsc {Failed-Link} details}{88}{subsection.3.5.1}
-\contentsline {subsection}{\numberline {3.5.2}\textsc {Min-Flows} Algorithm}{89}{subsection.3.5.2}
-\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{91}{section.3.6}
-\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{93}{chapter.4}
-\contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{93}{section.4.1}
-\contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{94}{section.4.2}
+\contentsline {subsection}{\numberline {2.4.1}Greedy Approximations}{47}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}Observability Rules as Submodular Functions?}{48}{subsection.2.4.2}
+\contentsline {section}{\numberline {2.5}Simulation Study}{50}{section.2.5}
+\contentsline {subsection}{\numberline {2.5.1}Simulation 1: Impact of Number of PMUs}{51}{subsection.2.5.1}
+\contentsline {subsection}{\numberline {2.5.2}Simulation 2: Impact of Number of Zero-Injection Nodes}{52}{subsection.2.5.2}
+\contentsline {subsection}{\numberline {2.5.3}Simulation 3: Synthetic vs Actual IEEE Graphs}{54}{subsection.2.5.3}
+\contentsline {section}{\numberline {2.6}Related Work}{56}{section.2.6}
+\contentsline {section}{\numberline {2.7}Conclusions}{57}{section.2.7}
+\contentsline {Chapter}{\numberline {3.}\MakeTextUppercase {Recovery from Link Failures in a Smart Grid Communication Network}}{59}{chapter.3}
+\contentsline {section}{\numberline {3.1}Introduction}{59}{section.3.1}
+\contentsline {section}{\numberline {3.2}Background}{62}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}PMU Applications and Their QoS Requirements}{62}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}OpenFlow}{63}{subsection.3.2.2}
+\contentsline {section}{\numberline {3.3}Related Work}{65}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Smart Grid Communication Architectures}{65}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Detecting Packet Loss}{66}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Multicast Tree Recovery}{67}{subsection.3.3.3}
+\contentsline {section}{\numberline {3.4}Proposed Research}{71}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Preliminaries}{71}{subsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.1.1}Example Scenario}{71}{subsubsection.3.4.1.1}
+\contentsline {subsubsection}{\numberline {3.4.1.2}General Problem Scenario and Basic Notation}{72}{subsubsection.3.4.1.2}
+\contentsline {subsection}{\numberline {3.4.2}Overview of Our Recovery Solutions and Section Outline}{75}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Link Failure Detection using OpenFlow}{77}{subsection.3.4.3}
+\contentsline {subsubsection}{\numberline {3.4.3.1}\textsc {Pcount} Evaluation}{80}{subsubsection.3.4.3.1}
+\contentsline {subsection}{\numberline {3.4.4}Uninstalling Failed Trees and Installing Backup Trees}{81}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.5}Computing Backup Multicast Trees}{82}{subsection.3.4.5}
+\contentsline {subsubsection}{\numberline {3.4.5.1}\textsc {Min-Flows} Algorithm}{83}{subsubsection.3.4.5.1}
+\contentsline {subsubsection}{\numberline {3.4.5.2}\textsc {Min-Sinks} Algorithm}{86}{subsubsection.3.4.5.2}
+\contentsline {subsubsection}{\numberline {3.4.5.3}\textsc {Min-Control} Algorithm}{88}{subsubsection.3.4.5.3}
+\contentsline {subsection}{\numberline {3.4.6}System Initialization}{89}{subsection.3.4.6}
+\contentsline {subsection}{\numberline {3.4.7}How to Efficiently Install/Activate Pre-computed Backup MTs?}{90}{subsection.3.4.7}
+\contentsline {subsection}{\numberline {3.4.8}Multiple Link Failures}{92}{subsection.3.4.8}
+\contentsline {subsection}{\numberline {3.4.9}Node Failures}{92}{subsection.3.4.9}
+\contentsline {subsection}{\numberline {3.4.10}Evaluation Ideas}{93}{subsection.3.4.10}
+\contentsline {section}{\numberline {3.5}My Notes on Actual Algorithms}{93}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}\textsc {Failed-Link} details}{93}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}\textsc {Min-Flows} Algorithm}{94}{subsection.3.5.2}
+\contentsline {section}{\numberline {3.6}Chapter Conclusion and Future Work}{96}{section.3.6}
+\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Timeline and Future Work}}{98}{chapter.4}
+\contentsline {section}{\numberline {4.1}Planned Future Work and Timeline}{98}{section.4.1}
+\contentsline {section}{\numberline {4.2}Future Work Outside the Scope of this Thesis}{99}{section.4.2}
 \setcounter {tocdepth}{0}
-\contentsline {OnlyAppendix}{\MakeTextUppercase {PMU Placement in Zero-Injection Systems}}{96}{appendix.A}
-\contentsline {section}{\numberline {A.1}NP-Completeness Proofs for PMU Placement in Zero-Injection Graphs}{96}{section.A.1}
-\contentsline {subsection}{\numberline {A.1.1}{\textsc {MaxObserve} }Problem for Zero-Injection Graphs}{97}{subsection.A.1.1}
-\contentsline {subsection}{\numberline {A.1.2}{\textsc {FullObserve-XV} }Problem}{100}{subsection.A.1.2}
-\contentsline {subsection}{\numberline {A.1.3}{\textsc {MaxObserve-XV} }Problem for Zero-Injection Graphs}{103}{subsection.A.1.3}
-\contentsline {subsection}{\numberline {A.1.4}Extending Gadgets to Cover a Range of $m$ and $|V|$ values}{105}{subsection.A.1.4}
-\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{108}{appendix*.6}
+\contentsline {OnlyAppendix}{\MakeTextUppercase {Additional PMU Placement Proofs}}{101}{appendix.A}
+\contentsline {section}{\numberline {A.1}NP-Completeness Proofs for PMU Placement in Zero-Injection Graphs}{101}{section.A.1}
+\contentsline {subsection}{\numberline {A.1.1}{\textsc {MaxObserve} }Problem for Zero-Injection Graphs}{102}{subsection.A.1.1}
+\contentsline {subsection}{\numberline {A.1.2}{\textsc {FullObserve-XV} }Problem for Zero-Injection Graphs}{105}{subsection.A.1.2}
+\contentsline {subsection}{\numberline {A.1.3}{\textsc {MaxObserve-XV} }Problem for Zero-Injection Graphs}{108}{subsection.A.1.3}
+\contentsline {subsection}{\numberline {A.1.4}Extending Gadgets to Cover a Range of $m$ and $|V|$ values}{110}{subsection.A.1.4}
+\contentsline {section}{\numberline {A.2}Approximation Algorithm Complexity Proofs}{112}{section.A.2}
+\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{117}{appendix*.6}

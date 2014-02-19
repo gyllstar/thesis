@@ -288,6 +288,12 @@ Mohan, C., Haderle, D., Lindsay, B., Pirahesh, H., and Schwarz, P.
   {W}rite-{A}head {L}ogging.
 \newblock {\em ACM Trans. Database Syst. 17}, 1 (1992), 94--162.
 
+\bibitem{Nem78}
+Nemhauser, G., Wolsey, L., and Fisher, M.
+\newblock An analysis of approximations for maximizing submodular set
+  functions---{I}.
+\newblock {\em Mathematical Programming 14}, 1 (1978), 265--294.
+
 \bibitem{Neumann97}
 Neumnann, R.
 \newblock Internet routing black hole.

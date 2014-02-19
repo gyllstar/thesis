@@ -4,37 +4,60 @@
 Because all four placement problems are NPC, we propose greedy approximation algorithms for each problem, which iteratively add 
 a PMU in each step to the node that observes the maximum number of new nodes. We present two such algorithms, one that directly addresses \maxinc ({\tt greedy}) and the other 
 \xvalpart ({\tt xvgreedy}). {\tt greedy} and {\tt xvgreedy} can easily be used to solve \full and \xvals, respectively, by selecting the appropriate $k$ value to ensure full observability.
+We prove these algorithms have polynomial complexity (i.e., they are in $\mathcal{P}$), making them feasible tools for approximating optimal PMU placement.
+Lastly, we explore the possibility that the PMU observability rules are submodular functions (Section \ref{subsec:submodular}).
+
+\subsection{Greedy Approximations}
+\label{sec:greedy-approx}
 
 {\bf {\tt greedy} Algorithm}. We start with $\Phi = \emptyset$.  At each iteration, we add a PMU to the node that results in the observation of the maximum number of 
 new nodes. The algorithm terminates when all PMUs are placed.  {\footnote {\small The same greedy algorithm is proposed by Aazami and Stilp \cite{Aazami07} and
 is shown to  $\Theta(n)$ approximation ratio under the assumption that all nodes are zero-injection.}}
+The pseudo-code for {\tt greedy} can be found in Appendix \ref{sec:appendix-approx} (Algorithm \ref{alg:greedy}).
 
+\begin{theorem}
+For input graph $G=(V,E)$ and $k$ PMUs {\tt greedy} has $O(dkn^3)$ complexity, where $n=|V|$ and $d$ is the maximum degree node in $V$.
+\label{thm:greedy-complex}
+\end{theorem}
+\begin{proof}
+The proof can be found in Appendix \ref{sec:appendix-approx} (Theorem \ref{thm:app-greedy-complex}).
+\end{proof}
 
 {\bf {\tt xvgreedy} Algorithm}. {\tt xvgreedy} is almost identical to {\tt greedy}, except that PMUs are added in pairs such that the selected pair observe
-the maximum number of nodes under the condition that the PMU pair satisfy one of the cross-validation rules. % and observe the maximum number of new nodes.
+the maximum number of nodes under the condition that the PMU pair satisfy one of the cross-validation rules. 
+We provide the pseudo code for {\tt xvgreedy} in Algorithm \ref{alg:xvgreedy}.
 %We provide the pseudo code for {\tt xvgreedy} and prove that {\tt xvgreedy} has polynomial running time in our Technical Report \cite{Tech12}. 
 
 %Our Technical Report \cite{Tech12} gives the pseudo code for {\tt greedy} and {\tt xvgreedy} and includes proofs
 %that these algorithms have polynomial complexity, making them feasible tools for approximating optimal PMU placement. 
 
 %\xxn{Aazami and Stilp prove {\tt greedy} has a $\Theta(n)$ approximation ratio under the assumption that all nodes are zero-injection.}
-
+\begin{theorem}
+For input graph $G=(V,E)$ and $k$ PMUs {\tt xvgreedy} has $O(kdn^3)$ complexity, where $n=|V|$ and $d$ is the maximum degree node in $V$.
+\label{thm:xvgreedy-complex}
+\end{theorem}
+\begin{proof}
+This theorem is proved in Appendix \ref{sec:appendix-approx} (Theorem \ref{thm:app-xvgreedy-complex}).
+\end{proof}
 
 
 \subsection{Observability Rules as Submodular Functions?}
+\label{subsec:submodular}
 
-Submodular functions are set functions with diminishing marginal returns: the value that each subsequent element adds decreases
-as the size of the input set increases. More formally, let $X$ be a ground set such that $|X|=n$. We define a set function on $X$ as $f: 2^X \rightarrow \mathbb{R}$.
+Submodular functions are set functions with diminishing marginal returns: the value that each subsequent element adds decreases as the size of the input set increases. 
+More formally, let $X$ be a ground set such that $|X|=n$. We define a set function on $X$ as $f: 2^X \rightarrow \mathbb{R}$.
 Using the definition from Dughmi \cite{Dughmi09} %\footnote{\url{http://theory.stanford.edu/~shaddin/papers/submodular\_survey.pdf}}, %a set function $f: 2^X \rightarrow \mathbb{R}$ 
 $f$ is \emph{submodular} if, for all $A,B \subseteq X$ with $A \subseteq B$, and for each $j \in X$,
 \begin{eqnarray}
 f(A \cup \{j\}) - f(A) &\geq& f(B \cup \{j\}) - f(B)
 \end{eqnarray}
+It has been shown that greedy algorithms admit a $1-1/e$ approximation of submodular functions \cite{Nem78}, where $e$ is the base of the natural logarithm. For this reason,
+we aim to show that our observability rules are submodular.
 
 %For the PMU placement problem, we define $f: 2^X \rightarrow \mathbb{R}$ on graph, $G=(V,E)$, as the number of observed nodes derived by placing a PMU at each $x \in X$.  
 For the PMU placement problem, consider $G=(V,E)$.  For $S \subseteq V$ we define $f(S)$ as the number of observed nodes derived by placing a PMU at each $s \in S$.  
 We prove that $f$ is not submodular for graphs containing zero-injection nodes (Theorem \ref{thm:submodular1}) but is submodular when restricted
-to graphs with only injection nodes (Theorem \ref{thm:submodular2}). 
+to graphs with only injection nodes (Theorem \ref{thm:submodular2}).  
 
 
 \begin{theorem}
