@@ -1,0 +1,157 @@
+%%%%%%%%%% Appendix %%%%%%%%%%%%%%%%%%
+
+\chapter{Pseudo-Code and Analysis of Distance Vector Recovery Algorithms}
+\label{ch:appendix-rollback}
+
+\section{Distance Vector Recovery Algorithm Pseudo-Code}
+\label{sec:appendix-rollback-code}
+
+Building on the notation specified in Table \ref{tab:abbrev} (from Section \ref{sec:problem}), we define some additional notation here to use in our pseudo-code 
+specifications of \seconds, \purges, and \cprs.
+Let $msg$ refer to a message sent during \purges's diffusing computation (to globally remove false routing state). $msg$ includes:
+\begin{enumerate}
+
+	\item a field, $src$, which contains the node ID of the sending node 
+	\item a vector, $\overrightarrow{dests}$, of all destinations that include \bad as an intermediary node. 
+
+\end{enumerate}
+Let $\Delta$ refer to the maximum clock skew for \cprs. %All other notation is specified in Table \ref{tab:abbrev}.
+
+
+%%%%%%%%%%%%%%% 2nd Best ALG PART 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\second  run at each $i \in adj($\bads$)$} 
+\label{alg:second}
+%\textsc{centralized-dv}($G$)
+
+\begin{algorithmic}[1]
+%\STATE{$t_i \leftarrow t_0$}
+
+\STATE{$flag \leftarrow$ \textsc{false}}
+\STATE{set all path costs to \bad to $\infty$}
+\FOR{{\bf each} destination $d$ }
+	\IF{\bad is first-hop router in least cost path to $d$}
+		\STATE{$c \leftarrow$ least cost to $d$ using a path which does not use \bad as first-hop router} 
+		\STATE{update \minvi and \dmatrixi with $c$} 
+		\STATE{$flag \leftarrow$ \textsc{true}} 
+	\ENDIF
+\ENDFOR
+	\IF{$flag$ $=$ \textsc{true}}
+		\STATE{send \minvi to each  $j \in adj(i)$ where $j \neq$ \bads }
+	\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+%%%%%%%%%%%%%%% Purge's Purge Phase ALG PART 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\purges's diffusing computation run at each $i \in adj($\bads$)$}
+\label{alg:purge}
+
+\begin{algorithmic}[1]
+\STATE{set all path costs to \bad to $\infty$}
+\STATE{$S \leftarrow \emptyset$}
+\FOR{{\bf each} destination $d$}
+	\IF{\bad is first-hop router in least cost path to $d$}
+		\STATE{\minvis$[d] \leftarrow \infty$}
+		\STATE{$S \leftarrow S \cup \{d\}$} 
+	\ENDIF
+\ENDFOR
+	
+%\IF{$S$ is not empty}
+\IF{$S \neq \emptyset$} 
+	\STATE{send $S$ to each $j \in adj(i)$ where $j \neq$ \bads }
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+%%%%%%%%%%%%%%% Purge's Purge Phase ALG PART 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\purges's diffusing computation run at each $i \notin adj($\bads$)$}
+\label{alg:purge2}
+%\textsc{centralized-dv}($G$)
+
+{\bf Input:} $msg$ containing $src$, $\overrightarrow{dests}$ fields.
+\begin{algorithmic}[1]
+\STATE{$S \leftarrow \emptyset$}
+\FOR{{\bf each} $d \in msg.\overrightarrow{dests}$}
+	\IF{$msg.src$ is next-hop router in least cost path to $d$}
+		\STATE{\minvis$[d] \leftarrow \infty$}
+		\STATE{$S \leftarrow S \cup \{d\}$} 
+	\ENDIF
+\ENDFOR
+\IF{$S \neq \emptyset$} 
+	\STATE{send $S$ to spanning tree children}
+\ELSE
+	\STATE{send $ACK$ to $msg.src$} 
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+%%%%%%%%%%%%%%% CPR ALG PART 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\cpr rollback}
+\label{alg:rollback}
+
+\begin{algorithmic}[1]
+
+\IF{already rolled back}
+	%\STATE{{\bf exit}}
+	\STATE{send $ACK$ to spanning tree parent node} 
+\ENDIF
+\STATE{$\hat{t} \leftarrow -\infty$}
+\FOR{{\bf each} snapshot, $S$,}
+	\STATE{$t'' \leftarrow S.timestamp$}
+	\IF{$t'' < (t' - \Delta)$ {\bf and} $t'' > \hat{t}$ }
+		\STATE{$\hat{t} \leftarrow t''$}
+	\ENDIF
+\ENDFOR
+\STATE{rollback to snapshot taken at $\hat{t}$}
+\IF{not spanning tree leaf node}
+	\STATE{send rollback request to spanning tree children}
+\ELSE
+	\STATE{send $ACK$ to spanning tree parent node} 
+\ENDIF
+
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+%%%%%%%%%%%%%%% CPR ALG PART 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}
+\caption{\cpr ``steps after rollback'' run at each $i \in adj($\bads$)$}
+\label{alg:cpr}
+
+\begin{algorithmic}[1]
+
+\STATE{$flag \leftarrow$ \textsc{false}}
+\FOR{{\bf each} destination $d$}
+	\IF{\minvis$[d] = \infty$}
+		\STATE{find least cost to $d$ in \dmatrixi and set in \minvis}
+		\STATE{$flag \leftarrow$ \textsc{true}} 
+	\ENDIF
+\ENDFOR
+\IF{$flag$ $=$ \textsc{true} {\bf or} adjacent link weight changed during $[t',t]$}
+	\STATE{send \minvi to each  $j \in adj(i)$ where $j \neq$ \bads }
+\ENDIF
+
+
+
+\end{algorithmic}
+\end{algorithm}
+
+
+

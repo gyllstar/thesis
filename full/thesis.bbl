@@ -161,12 +161,6 @@ Fei, A., Cui, J., Gerla, M., and Cavendish, D.
 \newblock In {\em Communications, 2001. ICC 2001. IEEE International Conference
   on\/} (2001), vol.~3, IEEE, pp.~690--694.
 
-\bibitem{Feldmann}
-Feldmann, A., and Rexford, J.
-\newblock {IP} {N}etwork {C}0onfiguration for {I}ntradomain {T}raffic
-  {E}ngineering.
-\newblock {\em IEEE Network Magazine 15\/} (2001), 46--57.
-
 \bibitem{Friedl09}
 Friedl, A., Ubik, S., Kapravelos, A., Polychronakis, M., and Markatos, E.
 \newblock Realistic passive packet loss measurement for high-speed networks.
@@ -210,6 +204,12 @@ Jefferson, D.
 \newblock {V}irtual {T}ime.
 \newblock {\em ACM Trans. Program. Lang. Syst. 7}, 3 (1985), 404--425.
 
+\bibitem{Jensen91}
+Jensen, C., Mark, L., and Roussopoulos, N.
+\newblock {I}ncremental {I}mplementation {M}odel for {R}elational {D}atabases
+  with {T}ransaction {T}ime.
+\newblock {\em IEEE Trans. on Knowl. and Data Eng. 3}, 4 (1991), 461--473.
+
 \bibitem{Kodialam02}
 Kodialam, M., and Lakshman, TV.
 \newblock Dynamic routing of bandwidth guaranteed multicasts with failure
@@ -248,6 +248,13 @@ Liu, P., Ammann, P., and Jajodia, S.
   {T}ransactions.
 \newblock {\em Distributed and Parallel Databases 8}, 1 (2000), 7--40.
 
+\bibitem{Lomet06}
+Lomet, D., Barga, R., Mokbel, M., and Shegalov, G.
+\newblock {T}ransaction {T}ime {S}upport {I}nside a {D}atabase {E}ngine.
+\newblock In {\em ICDE '06: Proceedings of the 22nd International Conference on
+  Data Engineering\/} (Washington, DC, USA, 2006), IEEE Computer Society,
+  p.~35.
+
 \bibitem{Lu05}
 Lu, Q., and Zhang, H.
 \newblock Implementation of approximation algorithms for the multicast
@@ -281,6 +288,13 @@ Mili, L., Baldwin, T., and Adapa, R.
 \newblock In {\em Decision and Control, 1990., Proceedings of the 29th IEEE
   Conference on\/} (Dec. 1990), pp.~3033 --3038 vol.6.
 
+\bibitem{Vishal02}
+Mittal, V., and Vigna, G.
+\newblock {S}ensor-{B}ased {I}ntrusion {D}etection for {I}ntra-domain
+  {D}istance-vector {R}outing.
+\newblock In {\em CCS '02: Proceedings of the 9th ACM Conf on Comp. and
+  Communications Security\/} (New York, NY, USA, 2002), ACM, pp.~127--137.
+
 \bibitem{Mohan92}
 Mohan, C., Haderle, D., Lindsay, B., Pirahesh, H., and Schwarz, P.
 \newblock {ARIES}: {A} {T}ransaction {R}ecovery {M}ethod {S}upporting
@@ -299,6 +313,11 @@ Neumnann, R.
 \newblock Internet routing black hole.
 \newblock {\em The Risks Digest: Forum on Risks to the Public in Computers and
   Related Systems 19}, 12 (May 1997).
+
+\bibitem{Pad03}
+Padmanabhan, V., and Simon, D.
+\newblock {S}ecure {T}raceroute to {D}etect {F}aulty or {M}alicious {R}outing.
+\newblock {\em SIGCOMM Comput. Commun. Rev. 33}, 1 (2003), 77--82.
 
 \bibitem{OpenFlowSpec1.1}
 Pfaff, B., et~al.
