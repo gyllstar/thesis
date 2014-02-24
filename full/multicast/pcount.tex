@@ -1,127 +1,94 @@
-%\subsection{Link Failure Detection using OpenFlow}
-%\label{subsec:detection}
 
-%missing: (a) openflow match and action, (b) flow-level measurement or packet loss at links
+\subsection{Link Failure Detection Using OpenFlow}
+\label{subsec:pcnt}
 
-In this section, we propose a simple algorithm (\fls), used by \mdrs, that monitors links \emph{inside} the network to detect any packet loss.  To help explain \fls,
-we use the example scenario from Section \ref{subsec:scenario} and refer to a generic multicast tree with an upstream node, $u$, and downstream node, $d$.
-%Our presentation of \fl is necessarily brief but we provide additional details in Appendix \ref{subsec:pcnt}.  
+% PCount Key Points: (1) measure packet loss inside the network, rather than E2E measurements.  (2) measure packet loss of link but can be more general. 
+%    link failed if loss exceeds threshold, specified as a parameter.  threshold are packet loss at small time-scales (single w)
 
-\fl is run at the OpenFlow controller and provides accurate packet loss measurements that are the basis for identifying lossy links.
-Informally, a lossy link is one that fails to meet the packet loss conditions specified by the controller.  We refer to such a link as \emph{failed}.
-Although \mdr is ultimately concerned with meeting the per-packet \emph{delay} requirements of PMU applications, 
-we use  packet loss (as opposed to delay) as an indicator for a failed link because OpenFlow provides no native support for timers.
 
-\fl has the same input as \mdrs, specified in Section \ref{subsec:mdr}.
-The output of \fl is any link that has lost packets not meeting the packet loss condition of any multicast flow traversing the link. 
-In the remainder of this document, we assume all flows are multicast and just use \emph{flow} to refer to a multicast flow, unless otherwise specified.
+%\pcnt measures packet loss for a single link
+%We consider a link as failed when the rate of packet loss exceeds a given threshold.  Because we focus on PMU applications that are sensitive to packet loss, our aim is to detect packet loss at 
+%small timescales.  To this end, we present \pcnts, an algorithm that uses OpenFlow to detect link failures when and where
+%they occur, inside the network.  In-network detection is used to reduce the time between when the loss occurs and when it is detected. In contrast, most previous work \cite{Almes99,Caceres99, 
+%Friedl09} focuses on measuring end-to-end packet loss, resulting in slower detection times. 
 
-Recall from Section \ref{subsec:openflow} that each OpenFlow switch maintains a flow table, where each entry contains a match rule 
-(i.e., an expression defined over the packet header fields used to match incoming packets) and action 
-(e.g., ``send packet out port $2$''). For each packet that arrives at an OpenFlow switch, it is first matched to a flow entry, $e$, based on the packet's header fields; 
-then $e$'s packet counter is incremented; and, lastly, $e$'s action is executed on the packet. 
-\footnote{Not all switches are necessarily OpenFlow-enabled. In fact, we anticipate that in practice many switches will not support OpenFlow. \fl still works such scenarios, as long as 
-the packet counts are taken at OpenFlow switches. For ease of presentation, this section assumes all switches are OpenFlow-enabled.}
-\fl uses these packet counter values to compute per-flow packet loss between switches over $w$ time units. 
+%\pcnt estimates the rate of packet loss between an upstream node ($u$) and one or more downstream nodes.  
+%For simplicity, our description of \pcnt assumes only a single adjacent downstream node, $d$. 
+%For each window of length $w$, \pcnt estimates packet loss along $(u,d)$ by measuring the loss experienced by flows $M=\{f_1,f_2, ...,f_k\}$, specified as input, such that each $f_i \in M$
+%traverses $(u,d)$, using the following steps: 
 
-%pcount(upstream_switch,downstream_switchs,nw_src, nw_dst,window_size) or pcount(upstream_switch,downstream_switchs,flow,window_size) 
-\fl uses the subroutine, \pcnts, to measure the packet loss between an upstream node ($u$) and one or more downstream nodes.  For simplicity, we assume only a single downstream node, $d$. 
-\pcnt does so on a per-flow basis over a specified sampling window, $w$, 
-where $w$ is the length of time packets are counted at $u$ and $d$. For each window of length $w$, \pcnt computes packet loss for a flow $f$, that traverses $u$ and $d$, using the following steps:
+We present \pcnts, an algorithm that uses OpenFlow to detect link failures inside the network.  In-network detection is used to reduce the time between when packet loss occurs and when it is detected. 
+Fast packet loss detection is crucial to the critical PMU applications that we target in this work, as they are particularly sensitive to packet loss. Most previous work \cite{Almes99,Caceres99, 
+Friedl09} focuses on measuring end-to-end packet loss, resulting in slower detection times. 
+
+\pcnt considers a link as failed when the rate of packet loss exceeds a threshold, given as input. For simplicity, our description of \pcnt assumes it measures packet loss over a single 
+link, $(u,d)$.  At the end of the section we comment on how \pcnt can be extended to detect packet loss between multiple switches and non-adjacent switches.  
+
+For faster detection, \pcnt
+estimates packet loss over a single sampling window of length $w$.  For each $w$, \pcnt estimates packet loss along $(u,d)$ by measuring the loss experienced by flows $M=\{f_1,f_2, ...,f_k\}$, 
+specified as input, such that each $f_i \in M$ traverses $(u,d)$, using the following steps: 
 \begin{enumerate}
-	\item 
-	\textbf{At $u$, tags and counts all $f$ packets}.  
-	We assume, before any changes are made, $u$ uses flow entry $e$ to match and forward $f$ packets.
-	\pcnt creates a new flow entry, $e'$, that is an exact copy of $e$, except that $e'$ embeds a unique identifier (i.e., the tag) in the packet's VLAN Id field.  Let this identifying number
-	be $1111$.
-	$e'$ is installed with a higher priority than $e$.  In OpenFlow, each flow entry has a corresponding priority specified upon its installation.
-	%OpenFlow switches order flow entries based on their specified priority.  
-	Incoming packets are matched against flow entries in priority order, with the first matching entry being used. 
-	Thus, setting a higher priority for $e'$ than $e$, ensures that $u$ writes $1111$ in the VLAN Id field of all $f$ packets when $e'$ is installed.
 
-	\item
-	\textbf{Counts all tagged $f$ packets received at $d$.} \pcnt does so by installing a new flow entry at $d$, $e''$, that matches packets with VLAN Id equal to $1111$. 
-	%in based on the VLAN tag applied at $u$.  
+	\item \textbf{Install rules (downstream) to count all tagged $f_i$ packets received at $d$.} \pcnt does so by installing a new flow entry for each $f_i$ at $d$, 
+	that matches packets using the identifier (i.e., the tag) applied at $u$ in step (2).
 
-	\item 
-	\textbf{After $w$ time units, turns tagging off at $u$.} To do so, \pcnt simply switches the priority of $e'$ and $e$ at $u$. 
-	\footnote{\xxn{Unfortunately, OpenFlow does not allow a flow's priority to be modified.  As a workaround, we install a copy of $e$ called $e_c$.  We ensure that $e_c$ is given 
-	a higher priority than $e'$.  Finally, we delete flows $e$. }}
+	\item \textbf{Tag (upstream) all packets from each $f_i \in M$.} Suppose $u$ uses flow entry $e_i$ to match and forward flow $f_i$ packets. First, \pcnt generates
+	a unique identifier (tag). Then, for each $f_i$, \pcnt creates a new flow entry, $e_i'$, that is an exact copy of $e_i$ except that $e_i'$ embeds a the tag in the packet's 
+	{\tt dl\_vlan} field. $e_i'$ is installed with a higher OpenFlow priority than $e_i$, ensuring flow $f_i$ packets are tagged.  
 
-	\item
-	\textbf{Queries $u$ and $d$ for packet counts.} 
-	Specifically, the controller uses the OpenFlow protocol to query $u$ for $e'$'s packet count value and $d$'s packet count value for $e''$.
-	To ensure that all in-transit packets are considered, \pcnt waits ``long enough'' for in-transit packets to reach $d$, before reading $d$'s packet counter 
-	(e.g., time proportional to the average per-packet delay between $u$ and $d$).
 
-	\item
-	\textbf{Garbage collection.}
-	As a cleanup step delete $e'$ at $u$ and $e''$ at $d$.
+	\item \textbf{After $w$ time units, turn tagging off at $u$} by installing a copy of each $f_i$'s original flow entry, $e_i$, but with a higher priority than $e_i'$.
+	
+	\item \textbf{Queries $u$ and $d$ for packet counts} in order to compute the packet loss.  Each tagging rule is queried individually at $u$, while a single aggregate query (matching flows based
+	on their the {\tt vlan\_id} field) is issued at $d$ to retrieve the packet counts of total packet count of all $f_i \in M$. 
+	\footnote{We are unable to issue an aggregate query at $u$ because OpenFlow does not support query predicates specified over flow entry actions.  In our case, it would be convenient if we could
+	to specify an aggregate query of the form ``return statistics of all flow entries that write identifier $x$ in the {\tt dl\_vlan} field''. }
+	Before querying $d$, \pcnt waits time proportional to half the average RTT from $u$ to $d$, starting from the time step (3) completes, to ensure all in-transit packets are considered at $d$. 
 
-	\item 
-	\textbf{Computes packet loss.}
-	The controller computes packet loss by simply subtracting $e'$'s packet count from $e''$'s. 
+	\item \textbf{Signals an alarm} if the estimated loss rate exceeds the input threshold.
 
+	\item \textbf{Delete tagging and counting flow entries} created in steps (1) and (2).
+	
 \end{enumerate}
-In practice, \pcnt executes step (2) before step (1) to ensure that $u$ and $d$ consider the same set of packets.
 
-%execute the actions specified by the first flow entry matching the packet's header
-
-\pcnt introduced minimal overhead.  At $u$ and at each downstream counting switch, a copy of the flow entry corresponding to $f$ is required.  
-However, these copies only persist during the duration of each \pcnt interval.
-
-
-In the Figure \ref{fig:intuition-example} example, the controller uses \fl to measure the packet loss for the $a,\{e,f\}$ flow.  
-We assume for link $(b,c)$ and the $a,\{e,f\}$ flow, \fl is given a maximum packet loss threshold of $10$ packets over $w$ time units.
-For each sampling window of $w$ time units, \pcnt instructs $b$ to tag and count all packets corresponding to $a,\{e,f\}$. 
-At the same time, $c$ is instructed by \pcnt to count the $a,\{e,f\}$ packets tagged by $b$. Then, the controller uses the OpenFlow protocol to query the packet counter values for $a,\{e,f\}$
-at $b$ and $c$.  When $(b,c)$ fails, the packet counter at $c$ for $a,\{e,f\}$ no longer increments, causing a violation of $a,\{e,f\}$'s packet loss threshold for $(b,c)$.
-
-\xxx{describe how pcount can reduce the number of necessary measurement points}
-
-%As specified, \fl measures packet loss for each \emph{multicast flow} at each link.  These flow-level measurements may obfuscate aggregate link-level packet loss. For this
-%reason, we plan to extend \fl to group flows together to enable \emph{aggregate} packet loss measurements. 
-%Because OpenFlow provides native support for grouping flows and maintains packet counters for each 
-%group, \fl can be easily extended to group and count packets for any subset of multicast flows traversing the same switch.
+Consider the example in Figure \ref{fig:intuition-example} and assume \pcnt monitors packet loss of both multicast flows traversing $(g,l)$; $f_b$ for primary tree $T_b$ (blue) 
+and $f_c$ for primary tree $T_c$ (green). %-- traverse $(g,l)$ and we assume \pcnt measures packet loss of both flows. 
+First, \pcnt selects a unique {\tt dl\_vlan} value (the identifier) and installs two flow entries at $l$, one for $f_b$ and the other $f_c$. 
+These flow entries match packets based on the packet's multicast address and {\tt dl\_vlan} value.
+Next, a flow entry for $f_b$ and $f_c$ is installed upstream at $g$ that writes the {\tt dl\_vlan} identifier in each packet sent along the outgoing link to $l$.  After
+$w$ seconds, tagging is turned off at $g$ and the flow statistics are read from $g$ and $l$.  Two individual flow statistic queries are sent to $g$, while a single aggregate query
+that gathers packet counts of all flow entries with a match field using the session's {\tt dl\_vlan} identifier.  Lastly, the packet counts are used to compute the loss rate
+and, if necessary, \pcnt raises an alarm if the estimated loss rate exceeds the given threshold.
 
 
-\pcnts's approach for ensuring consistent reads of packet counters bears strong resemblance to the idea of \emph{per-packet consistency} introduced by Reitblatt et al.~\cite{Reitblatt11}.
-Per-packet consistency ensures that when a network of switches change from an old policy to a new one, that
-each packet is guaranteed to be handled exclusively by one policy, rather than some combination of the two policies.  In our case, we use per-packet consistency to ensure that when \pcnt reads
-$u$ and $d$'s packet counters, exactly the same set of packets are considered, excluding, of course, packets that are dropped at $u$ or dropped along the path from $u$ to $d$. 
-
-\xxn{\fl is fast because it detects link failures inside the network, rather than on an end-to-end basis.  We plan to quantify how much faster \fl is than end-to-end link failure detection 
-techniques.  In addition, \fl allows for link failures to be localized, whereas end-to-end techniques may not provide the necessary insight to identify and isolate the faulty link.
-}
-
-%\xxn{Advantage of in-network detection is not just the speed but also it allows us to localize the problematic links.  End-to-end detection does not provide this insight, or at least
-%not as directly.}
+%Tagging ensures that for each $f_i \in M$, \pcnt accounts for all packets dropped between $u$ and $d$ during $w$. %That is, \pcnt measures packet loss
+%Tagging ensures that for monitored flow \pcnt accounts for all packets dropped during $w$. %That is, \pcnt measures packet loss
+%Returning to our earlier generic example where \pcnt monitors link $(u,d)$
+Tagging ensures that for monitored flow \pcnt accounts for all packets dropped during $w$. %That is, \pcnt measures packet loss
+However, in some cases \pcnt may be configured to monitor a subset of flows traversing a monitored link because doing so can reduce the time required to compute packet loss since 
+$k+1$ statistic queries are required when monitoring $k$ flows.  For example, in Figure \ref{fig:intuition-example} \pcnt may only monitor $f_b$'s packet loss along $(g,l)$.  As a result,
+only a single read statistics request needs to be sent to $g$ rather than two statistic queries if $f_c$ were also monitored.  However, monitoring a subset of flows means that
+\pcnt does not account for packet loss of unmonitored flows.  In Section \ref{subsec:eval-pcount} we use simulations to explore how adjusting the number of monitored flows 
+affects the  speed and accuracy of packet loss estimates.
 
 
+%Doing so can boost packet loss detection time and reduce switch flow table size, at the cost of reducing \pcnt accuracy (from $100\%$ when all flows are monitored).
+%Faster detection time are the result of processing fewer statistic queries at $u$ in Step 4 ($k'$ rather than $k$ queries), while scarce flow table space
+%(Section \ref{subsec:openflow}) is made available since $k'$, rather than $k$, tagging and counting flow entries are installed at $u$ and $d$, respectively.
+%results from fewer having sending fewer statistic queries Detection time improves $u$ must process one statistics query per monitored flow; reduce forwarding table size at $u$ and $d$ since, for each monitored flow, a copy of the corresponding flow entry is made at $u$ and $d$,
+%In Section \ref{subsec:eval-pcount} we use simulations to explore how \pcnt accuracy can be traded for faster processing time. % by modifying the number of flows \pcnt monitors.
 
-\xxx{ $e$ matches using tuple $(src,dst,VLAN)$}
+Although \pcnt sends instructions simultaneously to start tagging each $M$ flow (step 2) and, likewise, sends all $k$ messages in parallel to stop tagging (step 3), in practice
+these actions are unlikely to be executed at the same time. %\pcnt cannot guarantee that these actions are issued at the exact same time (in fact this is quite unlikely). 
+The implication is that across each $f_i \in M$ the start and stop time of $w$ is not perfectly synchronous.  This does not affect the accuracy of \pcnt packet loss measurements.
+%because our tags ensure that for each $f_i \in M$ both $u$ and $d$ consider exactly the same set of packets, excluding, of course, packets that are dropped at $u$ or dropped along
+%the path from $u$ to $d$.  In fact, tags ensure that for each $f_i \in M$, \pcnt accounts for all packets dropped between $u$ and $d$ during the time $u$ tags packets.
 
-\subsubsection{\pcnt Evaluation}
+%{\it need to copy each $e_i$ because may have different actions (outports) at $u$ or $d$}:
 
-\xxxx{move this section, possibly the E2E discussion to the related work section.}
+%We can issue an aggregate query at $u$ based on the priority but this would rely on no other flows having the same priority.
 
-{\bf Detection using end-to-end measurements.}
-An alternative approach to link failure detection is to use end-to-end probes to infer packet loss rates of individual links. C\`{a}ceres et al. \cite{Caceres99} propose a maximum likelihood estimator
-for loss rates of internal links based on losses observed by multicast receivers. Their model uses the inherent correlation of packet loss across multicast receivers to improve accuracy 
-of their packet loss estimates.  Although impressive accuracy results are reported, the authors' simulations show that about $2000$ end-to-end probe messages are required for packet loss
-estimates to converge on the true underlying packet loss rate \cite{Caceres99}.  In our problem setting, packet loss needs to be detected over small windows of time and, unfortunately,
-$2000$ messages would correspond to too larger a window of time. For this reason, we deem solutions based on end-to-end measurements a poor match for our problem domain.
+{\bf \pcnt Extensions.}  
+{\it (1) non-adjacent switches, (2) multiple, non-adjacent switches.}
 
-{\bf 7/20/13 writing from grant about plans for evaluation.}
-To date, we have implemented \pcnt in the POX OpenFlow controller using the Mininet emulator and plan to further evaluate \pcnt by using our POX-based implementation to work with real
-OpenFlow switches.  To provide a point of reference, we plan to implement and measure a simple SNMP-based approach for detecting link-level packet loss.  We will quantify the error rate of \pcnt 
-and the SNMP-based approach as a function of the sampling window size.  We will also quantify the detection time for \pcnt and the SNMP-based approach as a function of window size. We believe our measurement study will show \pcnt  provides accurate and fast packet loss detection across all sampling window sizes, making it a superior approach for ultra- reliable data dissemination in smart grid networks
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  END OF DETECTION SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-
+%{\it 2/6/14 include: (a) write as if only monitoring a link and then, at the end of section, comment on how it can be extend to monitor multiple measurement points, (b) how threshold determined?}

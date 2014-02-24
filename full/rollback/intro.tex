@@ -2,12 +2,6 @@
 \section{Introduction}
 \label{sec:intro}
 
-\begin{framed}
-\xxxxn{TODO Notes from Proposal Defense:}
-\begin{itemize}
-	\item \xxxxn{Prashant: distributed consistent snapshots paper from 687 class, no synchronized clocks needed. }
-\end{itemize}
-\end{framed}
 
 Malicious and misconfigured nodes can degrade the performance of a distributed system by injecting incorrect state information. Such false state can then be further propagated 
 through the system either directly in its original form or indirectly, e.g., by diffusing computations initially using this false state.  In this chapter, we consider 
@@ -51,7 +45,8 @@ problem. In fact, the output of these algorithms serve as input to the
 recovery algorithms proposed in this chapter.
 
 This chapter has six sections. In Section \ref{sec:problem} we define the false-state-removal problem and state our assumptions.
-We present our three recovery algorithms in Section \ref{sec:algs}.  Then, in Section \ref{sec:analysis}, we briefly state the results of our message complexity analysis.
+We present our three recovery algorithms in Section \ref{sec:algs}.  Then, in Section \ref{sec:analysis-summary}, we briefly state the results of our message complexity analysis, leaving 
+the details to Appendix \ref{sec:analysis}.
 Section \ref{sec:eval} describes our simulation study. We detail related work in Section \ref{sec:related-rollback} and conclude the chapter 
 in Section \ref{sec:rollback-conclude}.  The research described here has been published in \cite{Gyllstrom10}.
 

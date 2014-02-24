@@ -4,7 +4,7 @@
 
 In this section we define four PMU placement problems (\fulls, \maxincs, \xvals, and \xvalparts) and prove their NP-Completeness. 
 \xval and \xvalpart both consider measurement error detection, while \full and \maxinc do not.  
-We begin with a general overview of NP-Completeness, as well as a high-level description of our proof strategy in this paper (Section \ref{subsec:proofstrat}). 
+We begin with a general overview of NP-Completeness, as well as a high-level description of the proof strategy used in this chapter (Section \ref{subsec:proofstrat}). 
 In the remainder of Section \ref{sec:problem-analysis} we present and prove the NP-Completeness of four PMU placement problems, 
 in the following order: \full (Section \ref{subsec:full}), \maxinc (Section \ref{subsec:maxinc}), \xval (Section \ref{subsec:xval}), and \xvalpart (Section \ref{subsec:xvalpart}).
 
@@ -152,7 +152,7 @@ For a given truth assignment and a corresponding PMU placement, a clause $c_j$ i
 
 
 The resulting graph for the example given in Figure \ref{fig:gvarphi} is shown in Figure \ref{fig:proof1-inject-example}.  Nodes with a dashed border are zero-injection nodes. 
-{\footnote {\small  Throughout this paper, nodes with dashed borders denote zero-injection nodes. }} 
+{\footnote {\small  Throughout this chaper, nodes with dashed borders denote zero-injection nodes. }} 
 The corresponding formula for this graph, $\varphi$,
 is satisfied by truth assignment $A_{\varphi}$: $\overline{v_1}, \overline{v_2}, v_3, \overline{v_4},$ and $\overline{v_5}$ are True. This corresponds to the dark shaded nodes in Figure
 \ref{fig:gvarphi2}. While this construction generates a graph with very specific structure, in Section \ref{subsec:extend}, we detail how to extend our proof to consider graphs with a wider range of structures.% different $\frac{|V_Z|}{|V_I|}$ ratios.

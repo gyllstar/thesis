@@ -117,24 +117,10 @@
 
 %%%%%%%%%%%%%%%  MULTICAST RECOVERY MACROS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\pcnt}{\textsc{Pcount} }
-\newcommand{\pcnts}{\textsc{Pcount}}
 
 \newcommand{\cnt}{{\tt count} }
 \newcommand{\cnts}{{\tt count}}
 
-\newcommand{\fls}{\textsc{Failed-Link}}
-\newcommand{\fl}{\textsc{Failed-Link} }
-
-\newcommand{\net}{\textsc{Pmu-Network} }
-\newcommand{\nets}{\textsc{Pmu-Network}}
-
-\newcommand{\myopic}{\textsc{Myopic Multicast Tree Repair} }
-\newcommand{\myopics}{\textsc{Myopic Multicast Tree Repair}}
-\newcommand{\bigpic}{\textsc{Multi-step Multicast Tree Repair} }
-\newcommand{\bigpics}{\textsc{Multi-step Multicast Tree Repair}}
-\newcommand{\mc}{\textsc{Min-Control} }
-\newcommand{\mcs}{\textsc{Min-Control}}
 \newcommand{\mf}{\textsc{Min-Flows} }
 \newcommand{\mfs}{\textsc{Min-Flows}}
 \newcommand{\mds}{\textsc{Min-Sinks}}
@@ -146,6 +132,45 @@
 %\newcommand{\mdrs}{\textsc{Monitor-Detect-Recover}}
 \newcommand{\mdr}{\textsc{Appleseed} }
 \newcommand{\mdrs}{\textsc{Appleseed}}
+
+\newcommand{\mc}{\textsc{Multicast Recycling} }
+\newcommand{\mcs}{\textsc{Multicast Recycling}}
+\newcommand{\mcn}{Multicast Recycling }
+\newcommand{\mco}{\textsc{1Multicast Recycling} }
+\newcommand{\mcos}{\textsc{1Multicast Recycling}}
+
+\newcommand{\pre}{\textsc{Proactive} }
+\newcommand{\pres}{\textsc{Proactive}}
+\newcommand{\preroot}{\textsc{Kotani} }
+\newcommand{\preroots}{\textsc{Kotani}}
+
+
+\newcommand{\post}{\textsc{Reactive} }
+\newcommand{\posts}{\textsc{Reactive}}
+
+\newcommand{\mdst}{{\tt 111.111.111.111} }
+\newcommand{\mdsts}{{\tt 111.111.111.111}}
+
+\newcommand{\steiner}{\textsc{Bunchy} }
+\newcommand{\steiners}{\textsc{Bunchy}}
+\newcommand{\steinern}{Bunchy }
+\newcommand{\arbor}{\textsc{Steiner-Arborescence} }
+\newcommand{\arbors}{\textsc{Steiner-Arborescence}}
+
+\newcommand{\merge}{\textsc{Merger} }
+\newcommand{\merges}{\textsc{Merger}}
+\newcommand{\mergen}{Merger }
+
+\newcommand{\base}{\textsc{Basic} }
+\newcommand{\bases}{\textsc{Basic}}
+\newcommand{\basen}{Basic }
+
+\newcommand{\lb}{\textsc{LB} }
+\newcommand{\lbs}{\textsc{LB}}
+
+\newcommand{\pcnt}{\textsc{Pcount} }
+\newcommand{\pcnts}{\textsc{Pcount}}
+
 
 
 
@@ -282,13 +307,26 @@
 \chapter{Recovery from Link Failures in a Smart Grid Communication Network}
 \label{ch:reliable-mcast}
 
-%\input{multicast/reliable-mcast-tmp-placeholder.tex}
-\input{multicast/reliable-mcast.tex}
+\input{multicast/intro}
 
-\chapter{Thesis Timeline and Future Work}
+\input{multicast/prelim}
+
+\input{multicast/algs}
+
+\input{multicast/related}
+
+\input{multicast/evaluation}
+
+\input{multicast/conclude-mcast}
+
+
+
+%\input{multicast/reliable-mcast-tmp-placeholder.tex}
+
+\chapter{Thesis Conclusion and Future Work}
 \label{ch:conclusion}
 
-\input{future.tex}
+%\input{future.tex}
 
 
 %% End of body
@@ -300,7 +338,7 @@
 
 \input{pmu/pmu-appendix.tex}
 
-%...
+\input{multicast/appendix.tex}
 
 
 %%

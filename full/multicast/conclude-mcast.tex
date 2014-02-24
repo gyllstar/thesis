@@ -1,0 +1,54 @@
+\section{Conclusions and Future Work}
+\label{sec:conclude}
+
+We addressed reliable multicasting of critical Smart Grid data.
+%In summary, we addressed the problem of providing reliable multicast data dissemination of critical Smart Grid data. 
+Towards this goal, we designed, implemented, and evaluated a suite of algorithms that collectively provide fast packet loss detection and fast rerouting using pre-computed backup multicast trees. 
+%Their OpenFlow implementation provided significantadvantages as compared to non-SDN based algorithms with similar goals. 
+
+%First, we presented \pcnts, an algorithm that uses OpenFlow primitives to tag and count individual packets, allowing for accurate packet loss detection of individual links at small time scales.
+First, we presented \pcnts, an algorithm that uses OpenFlow primitives to accurately detect per-link packet loss inside the network rather than using slower E2E measurements. % at small time scales.
+%OpenFlow packet counters and ability to mark individula packets to provide  accurate packet loss detection at small time scales. 
+Next, we formulated a new problem, \mcs, that aims to compute 
+backup trees that reuse edges of already installed multicast trees as a means to reduce control plane signaling.  \mc was proved to be at least NP-hard
+so we designed an approximation algorithm called \steiners.  Lastly, we presented two algorithms, \pre and \posts, that install backup trees at OpenFlow controlled switches. 
+As an optimization to \pre and \posts, 
+we introduced \merges, an algorithm that consolidates forwarding rules at switches where multiple trees have common children.
+%we introduced \merges, an algorithm built on the observation that forwarding rules can be consolidated at switches where multicast trees have common children.  
+%When applied to \pres, \merge reduce the amount of pre-installed control state and with \post results in fewer control messages. 
+
+
+Mininet simulations were used to evaluate our algorithms over communication networks that mirror the structure of IEEE bus systems (actual portions of the North American power grid).
+We found \pcnt estimates were accurate when monitoring even a small number of flows over short time window: after sampling only $75$ packets, the $95\%$ confidence interval of \pcnt loss estimates 
+were within $15\%$ of the true loss probability. By pre-installing 
+backup trees, \pre resulted in up to a ten-fold decrease in control messages compared with \posts, which must signal multiple switches to install each backup tree. 
+However, in scenarios with many multicast groups, \pres's pre-installed forwarding rules accounted for a significant portion of scarce OpenFlow switch table capacity (up to $35\%$ of
+a standard OpenFlow switch). Fortunately, \merge reduced the amount of pre-installed forwarding state by a factor of $2-2.5$, to acceptable levels.
+
+As future work, several problems remain unaddressed. One problem of interest is using optimization criteria different from \mcs's objective function to compute backup trees and then evaluate
+\pres, \posts, and \merge performance using these backup trees.  For example, backup trees may be computed with the goal of protecting against the worst-case impact of a subsequent link failure
+by minimizing the maximum number of multicast trees using a single link. %These backup tree help protect against the worst-case impact of a subsequent link failure. 
+It is unknown how effective our installation algorithms would be given these types of backup trees. % when given backup trees other than those computed using \steiners.
+Measurements using real OpenFlow hardware switches would strengthen our \pcnt processing time and backup tree installation time results, which both suffered from inaccuracies due to Mininet's
+performance fidelity issues.  
+%Lastly, the complexity of the problem \merge addresses is an open-question: find the minimum number of forwarding rules for a set of multicast trees. 
+Lastly, the problem \merge approximates -- find the minimum number of forwarding rules for a set of multicast trees -- has unknown complexity.
+We conjectured that this problem is NP-hard in Section \ref{subsubsec:merge-discuss}.
+
+
+%The ability to measure packet loss of individual flowsThe novelty and benefits of these algorith%m
+%These algorithms are tailored to support reliable multicasting of critical Smart Grid data.  The algorithms were 
+%We designed, implemented, and evaluated a suite of algorithms that collectively provide fast detection of packet loss and re-routing 
+
+%In conclusion, we proposed a suite of algorithms that aim to make multicast communication robust to link failures by detecting link failures at small timescales, pre-computing
+%backup multicast trees that aim to minimize control signaling needed to install them, and lastly installation algorithms that leverage common forwarding among multicast trees 
+%to reduce the amount of installed forwarding state.  
+
+% (a) link failures and 3 algorithm parts., (b) Algorithms benefit from OF impl, detect link failure inside the netwokr, pre-compute backup  differ from literature b/c use SDN,
+% (c) results -- link failure is accuracte so can avoid overhead; less control overhead, garbage collection, and faster recoveyr when preinstall.  Merger is affective optimization.
+
+%{\it \underline{Future Work Notes}:
+%Future Work: (a) other optimization criteria for computing backup trees (e.g., Min-Flows, may even want to include problem definition in appendix), (b) real measurements 
+%for \pcnt detection time and time to install backup trees (b/c of Mininet performance fidelity issues), (c) establish complexity of finding minimum number of forwarding rules,
+%which we conjectured to be NP-hard.
+%}

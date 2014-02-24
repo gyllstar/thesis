@@ -2,214 +2,561 @@
 \label{sec:eval}
 
 In this section, we use simulations to characterize the performance of each of our three recovery algorithms in terms of message and time overhead. 
-Our goal is to illustrate the relative performance of our recovery algorithms over different topologies (e.g., \er graphs, Internet-like graphs) and across
-different network conditions (e.g., topologies with fixed link costs, topologies with changing link costs, a single compromised node, and multiple compromised nodes).
-%We count the number of messages required for nodes to find valid routing paths and count the number timesteps (epochs) for each algorithm to converge.
+Our goal is to illustrate the relative performance of our recovery algorithms over different topology types (e.g., \er graphs, Internet-like graphs) and
+different network conditions (e.g., fixed link costs, changing link costs).
 
-We build a custom simulator with a synchronous communication model: nodes send and receive messages at fixed epochs.  In each epoch, a node receives a
-message from all its neighbors and performs its local computation.  In
-the next epoch, the node sends a message (if needed).   All algorithms
-are deterministic under this communication model.
-The synchronous communication model, although simple, yields
-interesting insights into the performance of each of the recovery algorithms. 
-%Evaluation of our algorithms using a more general asynchronous communication model is left for future work, beyond the scope of this thesis.
-%However, we believe an asynchronous implementation will demonstrate similar trends.  
 
-We simulate the following scenario:
+%We build a custom simulator with a synchronous communication model: nodes send and receive messages at fixed epochs.  In each epoch, a node receives a
+%message from all its neighbors and performs its local computation.  In
+%the next epoch, the node sends a message (if needed).   All algorithms
+We build a custom simulator with a synchronous communication model as described in Section \ref{sec:analysis}. All algorithms
+are deterministic under this communication model. The synchronous communication model, although simple, yields interesting insights into the performance of each of the recovery algorithms.
+We find the same trends hold when using a more general asynchronous communication model but, for ease of exposition, we only present the results found using synchronous communication.
+
+
+%Except in the case where multiple nodes are compromised, we simulate the following scenario:
+We simulate the following scenario: 
+{\footnote {\small In Section \ref{subsubsec:many} we consider the case of multiple compromised nodes.  In that simulation we modify our simulation scenario
+to consider a set of compromised nodes, $\overline{V}$, instead of \bads.}}
 \begin{enumerate}
 	\item Before $t'$, $\forall v \in V$ \minvv and \dmatrixv are correctly computed.
 
 	\item At time $t'$, \bad is compromised and advertises a \badvector (a vector with a cost of $1$ to \emph{every} node in the network) to its neighboring nodes.
 
-	\item The effect of \badvector spreads for a specified number of hops (this varies by experiment).  The variable $k$ refers to the number of hops that the effect of \badvector has spread.
+	\item \badvector spreads for a specified number of hops (this varies by simulation).  Variable $k$ refers to the number of hops that \badvector has spread.
 
 	\item At time $t$, some node $v \in V$ notifies all $v \in adj($\bads$)$ that \bad was compromised. 
 	{\footnote { \small For \cpr this node also indicates the time, $t'$, \bad was compromised.}} 
 
 \end{enumerate}
-The message and time overhead are measured in step (4) above. The pre-computation, described in Section \ref{subsec:preprocess}, is not counted towards message and time overhead
-because all three recovery algorithms use this same procedure.
-
-In order to keep this thesis proposal document brief, we only discuss a subset of our simulation results.  We focus on a simplified scenario in which a single compromised node
-has distributed false routing state.  We consider \er graphs in cases where link costs remain fixed (Section \ref{subsec:simulation-fixed}) and link costs change (Section \ref{subsec:simulation-lc}).
-The corresponding technical report \cite{TechRollback10}, discusses results using a richer simulation model that considers more realistic network conditions: an asynchronous communication model,
-Internet-like graphs generated using GT-ITM \cite{GT-ITM} and Rocketfuel \cite{Rocketfuel}, and multiple compromised nodes.  We find that the trends discussed in this report hold when using these new topologies and 
-additional simulation scenarios.
-%Because we find the same trends hold in these additional scenarios, understanding this simplified scenario is instructive in 
+The message and time overhead are measured in step (4) above. The pre-computation described in Section \ref{subsec:preprocess},
+is not counted towards message and time overhead because the same exact pre-computation steps are executed by all three recovery algorithms. 
+We describe our simulation scenario for multiple compromised nodes in Section \ref{subsubsec:many}.
 
 
+\subsection{Simulations using Graphs with Fixed Link Weights}
+\label{subsec:fixed}
 
-\subsection{Simulations using Graphs with Fixed Link Weight}
-\label{subsec:simulation-fixed}
+In the next five simulations, we evaluate our recovery algorithms over different topology types in the case where link weights remain fixed.
 
-Here we evaluate our recovery algorithms, in terms of message and time overhead, using \er graphs with fixed link weights. 
-%We start with a simplified experiment setting to measure the message and time overhead incurred by each of the recovery algorithms. 
-In particular, we consider Erd\"{o}s-R\'enyi graphs with parameters $n$ and $p$, where $n$ is the number of graph nodes and $p$ is the probability that link $(i,j)$ exists 
-where $i,j \in V$. Link weights are selected uniformly at random between $[1,n]$.
+\subsubsection{Simulation 1: \er Graphs with Fixed Unit Link Weights}
+\label{subsubsec:expt1}
 
-In order to establish statistical significance, we generate several \er graphs to be used in our simulations. 
-We iterate over different values of $k$. For each $k$, we  generate an Erd\"{o}s-R\'enyi graph, $G = (V,E)$, with parameters $n$ and $p$. Then we select a $v \in V$ uniformly at 
-random and simulate the scenario described above, using $v$ as the compromised node. In total we sample $20$ unique nodes for each $G$.
-We set $n=100$, $p=\{0.05,0.15,0.25, 0.25\}$, and let $k=\{1,2,... 10\}$. Each data point is an average over $600$ runs ($20$ runs over 
-$30$ topologies).  
+We start with a simplified setting and consider 
+Erd\"{o}s-R\'enyi graphs with parameters $n$ and $p$. 
+$n$ is the number of graph nodes and $p$ is the probability that link $(i,j)$ exists where $i,j \in V$.
+The link weight of each edge in the graph is set to $50$.
+We iterate over different values of $k$. For each $k$, we 
+generate an Erd\"{o}s-R\'enyi graph, $G = (V,E)$, with parameters $n$ and $p$. Then we select a \bad $\in V$ uniformly at random and simulate the scenario described above, 
+using \bad as the compromised node. In total we sample $20$ unique nodes for each $G$.
+We set $n=100$, $p=\{0.05,0.15,0.25, 0.50\}$, and let $k=\{1,2,
+... 10\}$. Each data point is an average over $600$ runs ($20$ runs over 
+$30$ topologies).  We then plot the $90 \%$ confidence interval.
+
+For each of our recovery algorithms, Figure \ref{fig:msg} shows the
+message overhead for different values of $k$. %The $90 \%$ confidence interval is shown.
+We conclude that \cpr outperforms \purge and \second across all topologies. \cpr performs well because \badvector is removed using a single diffusing computation,  
+while the other algorithms remove \badvector state through distance vector's iterative process.
+\cprs's global state after rolling back is almost the same as the final recovered state.
+
+\begin{figure*}
+\centering
+\subfigure[{$p=0.05$, diameter=$6.14$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg5.pdf}}
+\subfigure[{$p=0.15$, diameter=$3.01$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg15.pdf}}
+\subfigure[{$p=0.25$, diameter=$2.99$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg25.pdf}}
+\subfigure[{$p=0.50$, diameter=$2$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg50.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+\caption{Simulation 1: message overhead as a function of the number of hops false routing state has spread from the compromised node ($k$), over \er graphs with fixed link weights. 
+Note the y-axes have different scales.}
+\label{fig:msg}
+\end{figure*}
+
+\begin{figure*}
+\centering
+\subfigure[{$p=0.05$, diameter=$6.14$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch5.pdf}}
+\subfigure[{$p=0.15$}, diameter=$3.01$]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch15.pdf}}
+\subfigure[{$p=0.25$}, diameter=$2.99$]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch25.pdf}}
+\subfigure[{$p=0.50$}, diameter=$2$]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch50.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+\caption{Simulation 1: time overhead as a function of the number of hops false routing state has spread from the compromised node ($k$), over \er graphs with fixed link weights. 
+Note the different scales of the y-axes.}
+\label{fig:epoch}
+\end{figure*} 
+
+
+%In other words, \cpr performs well because its global state  (recall we define the global state of the routers as the union of their local states) is almost the same as the final recovered state.
+%Specifically, if we let $S'$ represent the global state after rolling back and let $S$ be the final recovered state, the only difference between $S$ and $S'$, is that $S'$ 
+%contains state that depends directly or transitively on \oldvector while $S$ does not. 
+%\cpr performs exactly the same as \second at $k=1$ because \second at $k=1$ also must only remove \oldvector state and uses the same iterative process as \cprs. 
+%For this reason, across all $k$ values, \cpr performs exactly the same as \second at $k=1$.  {\bf note:} {\it may need to elaborate more here.}
+
+\second recovery can be understood as follows.  By Corollary \ref{cor:startbad} and \ref{cor:during} in Section \ref{subsec:trends}, distance values increase from their initial value until they 
+reach their final (correct) value. Any intermediate, non-final, distance value uses \badvector or \oldvectors. Because \badvector and \oldvector no longer exist during recovery,
+these intermediate values must correspond to routing loops.
+%In this simulation, with \second distance estimates quickly count up to their final value.
+Table \ref{tab:loop1} shows that there are few pairwise routing loops during \second recovery in the network scenarios generated in Simulation 1, 
+indicating that \second distance values quickly count up to their final value.
+{\footnote {\small We compute this metric as follows. After each simulation timestep, we count all pairwise routing loops over all source-destination pairs and then sum all of these values.}}
+Although no pairwise routing loops exist during \purge recovery, \purge incurs overhead in performing network-wide state invalidation. Roughly, $50\%$ of \purges's messages come from these
+diffusing computations. 
+For these reasons, \purge has higher message overhead than \seconds.
+
+Figure \ref{fig:epoch} shows the time overhead for the same $p$ values. The trends for time overhead match the trends we observe for message overhead. 
+{\footnote {\small For the remaining simulations, we omit time overhead plots because time overhead follows the same trends as message overhead.}}
+
 
 \begin{table}
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{l|l|l|l|l}
+ & $k=1$&  $k=2$ & $k=3$ & $k=4-10$ \\
 \hline
-  $k=1$ & $k=2$ & $k=3$ & $k=4-10$ \\
-\hline
-  $554$ & $1303$ & $9239$ &  $12641$ \\
-\hline
- %$p=0.05$  & $554$ & $1303$ & $9239$ &  $12641$ \\
+ $p=0.05$  & $0$ & $14$ & $87$ &  $92$ \\
+ $p=0.15$  & $0$ & $7$&  $8$ & $9$ \\
+ $p=0.25$  & $0$ & $0$ & $0$ &  $0$ \\
+ $p=0.50$  & $0$ & $0$ & $0$ &  $0$ \\
+ %$p=\{0.15,0.25,0.50\}$  & $0$ & $0$&  $0$ & $0$ \\
 \end{tabular}
 \end{center}
-\caption{Average number pairwise routing loops for \second in simulation described in Section \ref{subsec:simulation-fixed}.} 
-%$p=.50$ for Experiment 1 is omitted because no pairwise routing loops are found across all $k$ values.} 
+\caption{Average number pairwise routing loops for \second in Simulation 1.}
+%$p=.50$ for Simulation 1 is omitted because no pairwise routing loops are found across all $k$ values.} 
 \label{tab:loop1}
 \end{table}
 
+\begin{table}
+\begin{center}
+\begin{tabular}{l|l|l|l|l}
+ & $k=1$&  $k=2$ & $k=3$ & $k=4-10$ \\
+\hline
+  $p=0.05$  & $554$ & $1303$ & $9239$ &  $12641$ \\
+ $p=0.15$  & $319$ & $698$&  $5514$ & $7935$ \\
+ $p=0.25$  & $280$ & $446$ & $3510$ &  $5440$ \\
+ $p=0.50$  & $114$ & $234$ & $2063$ &  $2892$ \\
+ %$p=\{0.15,0.25,0.50\}$  & $0$ & $0$&  $0$ & $0$ \\
+\end{tabular}
+\end{center}
+\caption{Average number pairwise routing loops for \second in Simulation 2.}
+%$p=.50$ for Simulation 1 is omitted because no pairwise routing loops are found across all $k$ values.} 
+\label{tab:loop2}
+\end{table}
 
-Figure \ref{fig:msg-rand-p05} shows the message overhead as a function of $k$ when $p=.05$. The $90 \%$ confidence interval is included in the plot.
-\cpr outperforms the other algorithms because \cpr removes false routing state with a single diffusing computation, rather than using an iterative process as in \second and \purges. 
-\second performs poorly because of the \infinity problem: 
-Table \ref{tab:loop1} shows the large average number of pairwise routing loops, an indicator of the occurrence of \infinity problem, \second encounters this simulation.
-In addition, we counted the number of epochs in which at least one pairwise routing loop existed.  For \second (across all topologies), on average, all but the last three 
-timesteps had at least one routing loop.  This suggests that the \infinity problem dominates the cost for \seconds. 
-In contrast, no routing loops are found with \purge or \cprs, as expected.
+
+\purge and \second message overhead increases with larger $k$. Larger $k$ imply that false state has propagated further in the network, 
+implying more paths to repair, and therefore increased messaging.
+For values of $k$ greater than a graph's diameter, the message overhead remains constant, as expected. 
+
+%However, once $k$ is equal the graph diameter, $d$, the message overhead and number of epochs do not change for larger values of $k$ for a given topology. By definition, the graph diameter is
+%the longest shortest path and so it follows that when $k > d$, each $v \in V'$ has a path less than $k$ hops to all destinations.  Therefore each $v$, does not use the $k$ hop path to \bads.
+%For this reason, the message overhead (and number of epochs) do not change for $k>d$. {\bf todo verify if this is correct}
+
+%Figure \ref{fig:compare} shows that for most values of $k$, if we do not count the epochs that occurred during \purges's purge phase 
+%(e.g., only count \purges's discovery phase epochs), the resulting epoch omplexity is lower than \seconds's epoch complexity. When $k>2$, \second has higher epoch complexity 
+%because the \infinity problem occurs with \second and not with \purges.  Table \ref{tab:loop1} shows that when $k>2$ there are pairwise routing loops during \second recovery, while
+
+%The exception to this trend is when $k=1$ for all topologies and $k=2$ for $p=.05$: \purges's discovery phase epoch complexity is higher than \seconds's total epoch complexity. 
+%In these cases, there are no or few pairwise routing loops for \seconds.  In this way, this is an ideal case for \second recovery. 
+%Meanwhile, there are several cases in which distance values that previously used \oldvectors, which do not require messaging for \second but do for \purges.  
+%Recall that \purge sets all distances that use \badvector or \oldvector to $\infty$ in its purge phase, so for \purge all distances using \oldvector must be recomputed. 
+%With \seconds, many of these same distance values do not require re-computation: the actual path changes such as not to use \oldvector but the distance does not change because an 
+%alternate path of the same distance is locally selected (since the distance does not change, no message is sent).
 
 
-However, \cprs's encouraging results should be interpreted with caution.
-\cpr requires both loosely synchronized clocks and the time that node \bad was compromised to be identified, assumptions not required by \second nor \purges.  
-Furthermore, this first simulation scenario is ideal for \cpr because fixed link costs ensure minimal stale state (i.e., residual \oldvector state)
-after \cpr rolls back.  The next two simulations present more challenging and less favorable conditions for \cprs.
+\subsubsection{Simulation 2: \er Graphs with Fixed but Randomly Chosen Link Weights}
+\label{subsec:expt2}
 
 
+The simulation setup is identical to Simulation 1 with one exception: link weights are selected uniformly at random between $[1,n]$, rather than using a
+fixed link weight of $50$.
 
+Figure \ref{fig:msg-rand} show the message overhead for different $k$ where $p=\{0.05,0.15,0.25,0.50 \}$. 
+%We omit the figures for the other $p$ values because they follow the same trend as $p=.05$.
+In striking contrast to Simulation 1, \purge outperforms \second for most values of $k$. 
+\second performs poorly because the \infinity problem: Table \ref{tab:loop2} shows the large average number of pairwise routing loops in this simulation, 
+an indicator of the occurrence of \infinity problem.
+In the few cases (e.g., $k=1$ for $p=0.15$, $p=0.25$ and $p=0.50$) that \second performs better than \purges, \second has few routing loops.
 
+No routing loops are found with \purges. \cpr performs well for the same reasons described in Section \ref{subsubsec:expt1}.  
 
-\begin{figure}[t]
+\begin{figure*}
 \centering
-\includegraphics[width=0.49\textwidth]{figs/rollback-msg-rand5.pdf}
-%\includegraphics[scale=.35]{figs/rollback-msg-rand5.pdf}
-\caption{Message overhead as function of the number of hops false routing state has spread from the compromised node ($k$), over \er graphs with fixed link weights.  The \er
-graphs are generated using $n=100$, and $p=.05$, yielding an average diameter of $6.14$.}
-\label{fig:msg-rand-p05}
-\end{figure}
-
-
+\subfigure[{$p=0.05$, diameter=$6.14$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg-rand5.pdf}}
+\subfigure[{$p=0.15$, diameter=$3.01$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg-rand15.pdf}}
+\subfigure[{$p=0.25$, diameter=$2.99$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg-rand25.pdf}}
+\subfigure[{$p=0.50$, diameter=$2$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg-rand50.pdf}}
+\caption{Simulation 2: message overhead as a function of $k$, the number of hops false routing state has spread from the compromised node.  \er graph with link weights selected 
+randomly from $[1,100]$ are used.  Note the different scales of the y-axes.} 
+\label{fig:msg-rand}
+\end{figure*}
 
 %\begin{figure*}[t]
 %\centering
+%\subfigure[{$p=0.05$, diameter=$6.14$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch-rand5.pdf}}
+%\subfigure[{$p=0.15$, diameter=$3.01$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch-rand15.pdf}}
+%\subfigure[{$p=0.25$, diameter=$2.99$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch-rand25.pdf}}
+%\subfigure[{$p=0.50$, diameter=$2$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/epoch-rand50.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+%\caption{Time overhead for \er graph with link weights selected uniformly random from $[1,100]$}
+%\label{fig:epoch-rand}
+%\end{figure*} 
 
-%\subfigure[{Message overhead for \er graph with link weights selected uniformly random from $[1,100]$. $p=.05$ and diameter=$6.14$.}]{ \includegraphics[scale=.35]{figs/rollback-msg-rand5.pdf}}
-%\subfigure[{Message overhead for $p=0.05$ \er with link weights selected uniformly random with different $\lambda$ values. $z$ refers to the number of timesteps \cpr must rollback.}]
-%	{\includegraphics[scale=.35]{figs/rollback-p05-k4.pdf}} 
+%Recall that in Simulation 1, no pairwise routing loops are found when $p=0.15,p=0.25,$ and $p=0.50$.  The only pairwise routing loops in Simulation 1 
+%are found when $p=0.05$, where a maximum of only $100$ pairwise routing loops occur. For \purges, no pairwise routing loops were found. {\bf Self-note}: {\it verify}.
 
-%\subfigure[{sim 1.}]{\label{fig:msg-rand-p05}\includegraphics[scale=.55]{figs/rollback-msg-rand5.pdf}}
-%\subfigure[{sim 2.}]{\label{fig:msg-checkpoint-p05}\includegraphics[scale=.55]{figs/rollback-p05-k4.pdf}} 
-%\caption{Rollback simulations} 
-%\label{fig:rollback-simulations}
+In addition, we counted the number of epochs in which at least one pairwise routing loop existed.  For \second (across all topologies), on average, all but the last three 
+timesteps had at least one routing loop.  This suggests that the \infinity problem dominates the cost for \seconds. 
+%In some cases (e.g., $k=1$ for $p=.15$ and $p=.50$) \second performs better than \purges.  In these cases, \second has few routing loops.
+%Table \ref{tab:loop} shows that there are fewer routing loops for small $k$. This is the case because with small $k$ there are fewer nodes using \badvectors. 
+
+%The performance gap between \second and \purge shrinks with larger $p$ because with \second there are fewer routing loops with larger $p$.  
+%This is consistent with our intuition:  larger $p$ values imply there are more alternate paths that do not use \badvectors.
+%and thus routing loops are quickly exited because a low cost alternate path is used. 
+
+
+
+
+
+\subsubsection{Simulation 3: Internet-like Topologies}
+
+%\begin{figure*}[t]
+%\centering
+%\subfigure[{AT\&T}]{\includegraphics[width=0.49\textwidth]{figs/rollback/att-msg.pdf}}
+%\subfigure[{Rocketfuel 6461}]{\includegraphics[width=0.49\textwidth]{figs/rollback/rocket-msg6461.pdf}}
+%\subfigure[{Rocketfuel 3867}]{\includegraphics[width=0.49\textwidth]{figs/rollback/rocket-msg3867.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+%\caption{Real graph message overhead}
+%\label{fig:msg-real}
+%\end{figure*}
+
+
+\begin{figure*}
+\centering
+\subfigure[{GT-ITM, $n=156$, diameter=$14.133$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg-att.pdf}}
+\subfigure[{Rocketfuel 6461, $n=141$, diameter=$8$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg6461.pdf}}
+\subfigure[{Rocketfuel 3867, $n=79$, diameter=$10$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg3867.pdf}}
+\caption{Simulation 3: Internet-like graph message overhead as a function of $k$, the number of hops false routing state has spread from the compromised node.}
+\label{fig:msg-real}
+\end{figure*}
+
+%\begin{figure*}[t]
+%\centering
+%\subfigure[{GT-ITM, $n=156$, average node degree=$2.2$, diameter=$14.133$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/att-epoch.pdf}}
+%\subfigure[{Rocketfuel 6461, $n=141$, average node degree=$2.62$, diameter=$12$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/rocket-epoch6461.pdf}}
+%\subfigure[{Rocketfuel 3867, $n=79$, average node degree=$1.8$, diameter=$10$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/rocket-epoch3867.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+%\caption{Number of epochs/timesteps for real graphs}
+%\label{fig:epoch-real}
 %\end{figure*} 
 
 
-%\begin{figure}[t]
-%\centering
-%\includegraphics[scale=.35]{figs/rollback-msg-rand5.pdf}
-%\caption{Message overhead for \er graph with link weights selected uniformly random from $[1,100]$. $p=.05$ and diameter=$6.14$.}
-%\label{fig:msg-rand}
-%\end{figure}
+
+Thus far, we studied the performance of our recovery algorithms over \er graphs, which have provided us with useful intuition about the performance
+of each algorithm. In this simulation, we simulate our algorithms over Internet-like topologies downloaded from the Rocketfuel website \cite{Rocketfuel} and generated using GT-ITM 
+\cite{GT-ITM}.  The Rocketfuel topologies have inferred edge weights. For each Rocketfuel topology, we let each node be
+the compromised node and average over all of these cases for each value of $k$.  For GT-ITM, we used the parameters specified in Heckmann et al \cite{Heckmann} for  the $154$-node AT\&T topology
+described in Section 4 of \cite{Heckmann}. For the GT-ITM topologies, we use the same criteria specified in Simulation 1 to generate each data point. 
+
+The results, shown in Figure \ref{fig:msg-real}, follow the same pattern as in Simulation 2.  
+%Due to space limitations, we only show the results for one representative topology.  The results for the other topologies follow the same pattern \cite{Tech}. 
+In the cases where \second performs poorly,
+the \infinity problem dominates the cost, as evidenced by the number of pairwise routing loops. In the few cases that \second performs better than \purges, there 
+are few pairwise routing loops.
+
+\subsubsection{Simulation 4:  Multiple Compromised Nodes}
+\label{subsubsec:many}
+
+In this simulation, we evaluate our recovery algorithms when multiple nodes are compromised. Our simulation setup is different from what we have used to this point:
+we fix $k=\infty$ and vary the number of compromised nodes. Specifically, for each topology we create $m = \{1,2, ... , 15\}$ compromised nodes, each of which is selected  
+uniformly at random (without replacement).  We then simulate the scenario described at the start of Section \ref{sec:eval} with one modification: $m$ nodes are 
+compromised during $[t',t'+ 10]$. %We set $\Delta$ such that the recovery algorithm does not need to be restarted (as described in Section \ref{subsec:mult}).
+The simulation is setup so that the outside algorithm identifies all $m$ compromised node at time $t$. %This eliminates the need to terminate and restart any recovery algorithm.
+After running the simulation for all possible values for $m$, we generate a new topology and repeat the above procedure. 
+We continue sampling topologies until the $90\%$ confidence interval for message overhead falls within $10\%$ of the mean message overhead. 
+
+First, we perform this simulation using \er graphs with fixed link costs.  The message overhead results are shown in Figure \ref{fig:many-fixed}(a) for $p=0.05$ and $n=100$. 
+{\footnote {\small We do not include the results for $p=\{0.15,0.25,0.50\}$ because they are consistent with the results for $p=0.05$.}}
+The relative performance of the three algorithms is consistent with the results from Simulation 1, in which we had a single compromised node.
+%We find the same trends we observed in Simulation 1 for large $k$ values in which there was a single compromised node.
+As in Simulation 1, \second and \cpr have few pairwise routing loops (Figure \ref{fig:many-fixed}(b)).  In fact, there is more than an order of magnitude fewer pairwise routing 
+loops in this simulation
+when compared to the results for the same simulation scenario of $m$ compromised nodes using \er graphs with random link weights (Figure \ref{fig:many}(b)).
+%The small number of pairwise routing loops is particularily evident when contrasted with the large number of pairwise routing loops 
+%found with \er graphs with random link weights (Figure \ref{fig:many}(b)).  
+Few routing loops imply that \second and \cpr (after rolling back) quickly count up to correct least costs.
+In contrast, \purge has high message overhead because \purge globally invalidates false state before computing new least cost paths, rather than directly using alternate paths that 
+are immediately available when recovery begins at time $t$. 
+%The diffusing compuations are unnecessary in this scenario because many new least cost paths can be computed using local state information (demonstrated by \seconds's performance).
+
+\second and \purge message overhead are nearly constant for $m \geq 8$ because at that point \badvector state has saturated $G$.
+Figure \ref{fig:many-fixed} shows the number of least cost paths, per node,
+that use \badvector or \oldvector at time $t$ (e.g., after \badvector state has propagated $k$ hops from \bads).  The number of least cost paths that use \badvector is nearly constant for $m \geq 8$. 
+
+In contrast, \cpr message overhead increases with the number of compromised nodes.  After rolling back, \cpr must remove all compromised nodes and all
+stale state (e.g., \oldvectors) associated with each \bads. As seen in Figure \ref{fig:many-fixed}(c), 
+the amount of \oldvector state increases as the number of compromised nodes increase. 
+
+Next, we perform the same simulation using \er graphs with with link weights selected uniformly at random from $[1,100]$. We only show the results for $p=.05$ and $n=100$ because the 
+trends are consistent for other values of $p$.
+The message overhead results for this simulation are shown in Figure \ref{fig:many}(a). \purge performs best because, unlike \second and \cprs, \purge does not suffer 
+from the \infinity problem.  Below, we explain the performance of each algorithm in detail.
+
+Consistent with Simulation 2 and 3, \second performs poorly because of the \infinity problem. 
+Figure \ref{fig:many}(b) shows that a significant number of pairwise routing loops occur during \second recovery.  
+\second message overhead remains constant when $m \geq 6$ because at this point \badvector state has saturated the network.  
+Figure \ref{fig:many}(c) confirms this: the number of effected least cost paths remains constant (at $80$) for 
+all $m \geq 6$. 
+
+%\cpr also has a significant number of pairwise routing because after rolling back \cpr uses
+%standard distance vector to compute new least cost paths for all paths using stale \oldvector state. Figure \ref{fig:many}(b) shows that the amount of \oldvector state increases as the
+%number of compromised nodes increase, resulting in more routing loops for \cprs.
+
+\cpr message overhead increases with the number of compromised nodes because the amount of \oldvector state increases as the number of compromised nodes increase (Figure \ref{fig:many}(c)). 
+More \oldvector state results in more routing loops -- as shown in Figure \ref{fig:many}(b) -- causing increased message overhead.
+
+%As with previous simulations,
+\purge performs well because unlike \cpr and \seconds, no routing loops occur during recovery. %Figure \ref{fig:many}(b) shows that many pairwise routing loops occur during \second and \cpr recovery. 
+Surprisingly, \purges's message overhead decreases when $m \geq 5$.  Although more 
+least cost paths need to be computed with larger $m$, the message overhead decreases because the residual graph, $G'$, -- resulting from the removal of all $m$ compromised nodes -- is 
+smaller than $G$.  As a result, there are $m$ fewer destinations and $m$ fewer nodes sending messages during the recovery process.
+%As seen in Figure \ref{fig:many}(b), pairwise routing loops are prominent with both \second and \cprs. 
+
+%used same topology for Rocketfuel ...
+Finally, we simulated the same scenario of $m$ compromised node using the Internet-like graphs from Simulation 3. 
+%{\footnote {\small For each Rocketfuel topology, we repeatidly selected $m$ compromised nodes until }}
+The results were consistent with those for \er graphs with random link weights. % and therefore we do not present results for Internet-like graphs with multiple compromised nodes.
 
 
 
+%Figure \ref{fig:many}(b) shows that the number of pairwise routing loops increases as the number of compromised nodes increases.  When $m \geq 6$, 
+%in additional message overhead because more routing loops are processed per message. 
+%{\bf think i want to remove the section about infinity message plot and the explanation about the number of loops per message}
+
+\begin{figure*}
+\centering
+\subfigure[{Message Overhead}]{\includegraphics[width=0.49\textwidth]{figs/rollback/many-fixed.pdf}}
+\subfigure[{Pairwise Routing Loops}]{\includegraphics[width=0.49\textwidth]{figs/rollback/loops-fixed.pdf}}
+\subfigure[{Number of Effected Least Cost Paths}]{\includegraphics[width=0.49\textwidth]{figs/rollback/initial-fixed.pdf}}
+\caption{Simulation 4: simulations with multiple compromised nodes using \er graphs with fixed link weights, $p=.05$, $n=100$, and diameter=$6.14$.  
+Results for different metrics as a function of the number of compromised nodes are shown.}
+\label{fig:many-fixed}
+\end{figure*}
+
+
+
+\begin{figure*}
+\centering
+\subfigure[{Message Overhead}]{\includegraphics[width=0.49\textwidth]{figs/rollback/many-rand.pdf}}
+\subfigure[{Pairwise Routing Loops}]{\includegraphics[width=0.49\textwidth]{figs/rollback/loops-rand.pdf}}
+\subfigure[{Number of Effected Least Cost Paths}]{\includegraphics[width=0.49\textwidth]{figs/rollback/initial-rand.pdf}}
+\caption{Simulation 4: multiple compromised nodes simulations over \er graphs with link weights selected uniformly at random from $[1,100]$, $p=.05$, $n=100$, and diameter=$6.14$. }
+\label{fig:many}
+\end{figure*}
+
+\subsubsection{Simulation 5:  Adding Poisoned Reverse}
+Poisoned reverse is a common heuristic used to remove routing loops in distance vector routing.   Poisoned reverse works as follows. 
+When a node $x$ routes through $y$ to reach a destination $w$, $x$ will advertise to $y$ that its cost to reach $w$ is $\infty$.  In doing so, this prevents $y$ from using $x$ as its first-hop
+node to reach $w$, thereby eliminating a possible routing loop between $x$ and $y$.  However, poisoned reverse only eliminates routing loops between two immediately adjacent nodes \cite{Kurose03}.
+Here we study the benefits of applying poisoned reverse to \second and \cprs. 
+
+We repeat Simulations 2, 3, and 4 using poisoned reverse with \second and \cprs.  
+We do not apply poisoned reverse to \purge because no routing loops (resulting from the removal of \bads)
+exist during \purges's recovery. Additionally, we do not repeat Simulation 1 using poisoned reverse because we observed few routing loops in that simulation. 
+
+The results from repeating Simulation 2 using poisoned reverse are shown for one representative topology in Figure \ref{fig:pr-fix}(a),
+where \seconds+{\textsc PR} and \cprs+{\textsc PR} refer to each respective algorithm
+using poisoned reverse. 
+\cprs+{\textsc PR} has modest gains over standard \cpr because few routing loops occur with \cprs. On other hand,
+\seconds+{\textsc PR} sees a significant decrease in message overhead when compared to the standard \second algorithm because poisoned reverse removes the many pairwise routing 
+loops that occur during \second recovery. However,  \seconds+{\textsc PR} still performs worse than \cprs+{\textsc PR} and \purges.  When compared to \cprs+{\textsc PR}, 
+the same reasons described in Simulation 2 account for \seconds+{\textsc PR}'s poor performance. %high message complexity.  %reverse does not remove routing loops larger than $2$. 
+
+Comparing \purge and \seconds+{\textsc PR} yields interesting insights into the two different approaches for eliminating routing loops: \purge prevents routing loops using diffusing computations
+and \seconds+{\textsc PR} uses poisoned reverse.
+Because \purge has lower message complexity than \seconds+{\textsc PR} and poisoned reverse only eliminates pairwise routing loops, 
+it suggests that \purge removes routing loops larger than $2$.  % verified this We are currently investigating this claim.
+
+Repeating Simulation 3 using poisoned reverse yields the same trends as repeating Simulation 2 with poisoned reverse.  Finally, we consider poisoned reverse in the case 
+of multiple compromised nodes (e.g., we repeat Simulation 4). \seconds+{\textsc PR} and \cprs+{\textsc PR} over \er graphs with unit link weights perform only slightly 
+better than the basic version of each algorithm, respectively.  This is expected because few pairwise routing loops occur in this scenario.  
+
+Like the single compromised node scenario, in the case of multiple compromised nodes, \seconds+{\textsc PR} and \cprs+{\textsc PR} over \er graphs with random link weights provide 
+significant improvements over the basic version of each algorithm.  Particularly for \seconds, we observed many pairwise loops in Simulation 4 (Figure \ref{fig:many}(b)). This 
+accounts for the effectiveness of poisoned reverse in this simulation.  Despite the significant improvements, \seconds+{\textsc PR} still performs worse than \cprs+{\textsc PR} and \purges. 
+\cprs+{\textsc PR} performs best among all the recovery algorithms because, as we have discussed, rolling back to a network-wide checkpoint is more efficient than using distance vector's
+iterative procedure. Furthermore, poisoned reverse helps \cprs+{\textsc PR} reduce the \infinity problem, improving \cprs's effectiveness in the face of multiple 
+compromised nodes. 
+
+
+\begin{figure*}
+\centering
+%\subfigure[{Simulation 1}]{\includegraphics[scale=0.47]{figs/rollback/msg5.pdf}}
+%\subfigure[{Simulation 2 and 4}]{\includegraphics[scale=0.48]{figs/rollback/msg-rand-pr5.pdf}}
+%\subfigure[{Simulation 1}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg5.pdf}}
+\subfigure[{Single Compromised Node}]{\includegraphics[width=0.49\textwidth]{figs/rollback/msg-rand-pr5.pdf}}
+\subfigure[{Multiple Compromised nodes}]{\includegraphics[width=0.49\textwidth]{figs/rollback/many-pr-rand5.pdf}}
+\caption{Simulation 5 plots.  Algorithms run over \er graphs with random link weights, $n=100$, $p=.05$, and average diameter=$6.14$. 
+\seconds+{\textsc PR} refers to \second using poisoned reverse. Likewise, \cprs+{\textsc PR} is \cpr using poisoned reverse.}
+\label{fig:pr-fix}
+\end{figure*}
 
 
 
 
 \subsection{Simulations using Graphs with Changing Link Weights}
-\label{subsec:simulation-lc}
+\label{subsec:change}
 
-In the next two simulations we evaluate our algorithms over graphs with changing link costs. We introduce link cost changes between the time \bad is compromised and when \bad is discovered 
-(e.g. during $[t',t]$). 
-In particular, there are $\lambda$ link cost changes per timestep, where $\lambda$ is deterministic. 
-To create a link cost change event, we modify links uniformly at random (except for all $(v,\bar{v})$ links), where the new link cost is selected uniformly at random from $[1,n]$. 
+So far, we have evaluated our algorithms over different topologies with fixed link costs in scenarios with single and multiple compromised nodes.
+We found that \cpr using poisoned reverse outperforms the other algorithms because \cpr removes false
+routing state with a single diffusing computation, rather than using an iterative distance vector process as in \second and \purges, and poisoned reverse removes
+all pairwise routing loops that occur during \cpr recovery. 
 
+In the next three simulations we evaluate our algorithms over graphs with changing link costs. We introduce link cost changes between the time \bad is compromised and when \bad is discovered 
+(e.g., during $[t',t_b]$). 
+In particular, let there be $\lambda$ link cost changes per timestep, where $\lambda$ is deterministic. 
+To create a link cost change event, we choose a link (except for all $(v,\bar{v})$ links) whose link will change equiprobably among all links. 
+The new link cost is selected uniformly at random from $[1,n]$. 
 
-%\subsubsection{Experiment 4}
+\subsubsection{Simulation 6: Effects of Link Cost Changes}
 
-{\bf Effects of Link Cost Changes.}
-Except for $\lambda$, our simulation setup is identical to that of the previous section. We let $\lambda = \{1,4,8\}$. In order to isolate the effects of link costs changes,
+Except for $\lambda$, our simulation setup is identical to the one in Simulation 2. We let $\lambda = \{1,4,8\}$. In order to isolate the effects of link costs changes,
 we assume that \cpr checkpoints at each timestep.
 
-For the sake of brevity, we only show results for $n=100,p=.05, \lambda=4$ in Figure \ref{fig:lc-p05}.  
-{\footnote {\small Our simulations for different $p$ values, yield the same trends.  Refer to our technical report for more details \cite{TechRollback10}.}}
-\purge yields the lowest message overhead, but only slightly lower than \cprs. 
+Figure \ref{fig:lc} shows \purge yields the lowest message overhead for $p=.05$, but only slightly lower than \cprs. 
 \cprs's message overhead increases with larger $k$ because there are more link cost change events to process. After \cpr rolls back, it must process all link cost
-changes that occurred in $[t',t]$. 
-In contrast, \second and \purge process some of the link cost change events during the interval $[t',t]$ as part of normal distance vector execution. 
-%In our experimental setup, these messages are not counted because they do not occur in Step 4 (i.e., as part of the recovery process) of our simulation scenario described in Section \ref{sec:eval}.
+changes that occurred in $[t',t_b]$. 
+In contrast, \second and \purge process some of the link cost change events during the interval $[t',t_b]$ as part of normal distance vector execution. 
+In our simulation setup, these messages are not counted because 
+they do not occur in Step 4 (i.e., as part of the recovery process) of our simulation scenario described in Section \ref{sec:eval}.
 
-Our analysis further indicates that \second performance suffers because of the \infinity problem. 
-The gap between \second and the other algorithms shrinks as $\lambda$ increases because link cost changes have a larger effect on message overhead as $\lambda$ grows.
+Our analysis further indicates that \second performance suffers because of the \infinity problem. %\purge and \second must 
+The gap between \second and the other algorithms shrinks as $\lambda$ increases because as $\lambda$ increases, link cost changes have a larger effect on message overhead.
 
 
-
-\begin{figure*}[t]
+\begin{figure*}
 \centering
-\subfigure[{Message overhead as a function of the number of hops false routing state has spread ($k$) 
-where $\lambda=4$ link cost changes occur at each timestep.}]{\label{fig:lc-p05}\includegraphics[width=0.49\textwidth]{figs/p05-lc4.pdf}}
-\subfigure[{Message overhead as function of varying the checkpoint frequency, $z$. $z=0$ implies checkpointing occurs at every timestep, $z=1$ creates checkpoints every other timestamp, etc.}]
-{\label{fig:msg-checkpoint-p05}\includegraphics[width=0.49\textwidth]{figs/rollback-p05-k4.pdf}} 
-%\subfigure[{sim 2.}]{\label{fig:msg-checkpoint-p05}\includegraphics[scale=.55]{figs/rollback-p05-k4.pdf}} 
-\caption{Section \ref{subsec:simulation-lc} plots.  Both plots consider \er graphs with changing link costs generated using $n=100$ and $p=.05$.
-The average diameter of the generated graphs is $6.14$.}
-%\caption{Message overhead for $p=0.05$ \er with link weights selected uniformly random with different $\lambda$ values.}
-\label{fig:rollback-lc}
-\end{figure*} 
+\subfigure[{$p=0.05$, diameter=$6.14, \lambda=1$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-lc1.pdf}}
+%\subfigure[{$p=0.05$, diameter=$6.14, \lambda=2$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-lc2.pdf}}
+\subfigure[{$p=0.05$, diameter=$6.14,\lambda=4$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-lc4.pdf}}
+\subfigure[{$p=0.05$, diameter=$6.14, \lambda=8$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-lc8.pdf}}
+\subfigure[{$p=0.15$, diameter=$3.01, \lambda=1$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p15-lc1.pdf}}
+\subfigure[{$p=0.15$, diameter=$3.01,\lambda=4$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p15-lc4.pdf}}
+\subfigure[{$p=0.15$, diameter=$3.01, \lambda=8$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p15-lc8.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+\caption{Simulation 6: Message overhead as a function of the number of hops false routing state has spread from the compromised node ($k$) for $p=\{0.05,0.15\}$ \er with 
+link weights selected randomly with different $\lambda$ values.}
+\label{fig:lc}
+\end{figure*}
+
+%\begin{figure*}[t]
+%\centering
+%\subfigure[{$p=0.15$, diameter=$3.01, \lambda=1$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p15-lc1.pdf}}
+%\subfigure[{$p=0.15$, diameter=$3.01,\lambda=4$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p15-lc4.pdf}}
+%\subfigure[{$p=0.15$, diameter=$3.01, \lambda=8$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p15-lc8.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+%\caption{Message overhead for $p=0.15$ \er with link weights selected uniformly random with different $\lambda$ values.}
+%\label{fig:lc-p15}
+%\end{figure*} 
+
+With larger $p$ values, $\lambda$ has a smaller effect on message complexity because more alternate paths are available. Thus when $p=0.15$ and $\lambda=1$,
+most of \purges's recovery effort is towards removing \badvector state, rather than processing link cost changes.  Because
+\cpr removes \badvector using a single diffusing computation and there are few link cost changes, \cpr has lower message overhead than \purge in this case. 
+As $\lambda$ increases, \cpr has higher message overhead than \purges: there are more link cost changes to process and \cpr must process all such link cost changes, 
+while \purge processes some link cost changes during the interval $[t',t_b]$ as part of normal distance vector execution. 
+
+\subsubsection{Simulation 7: Applying Poisoned Reverse Heuristic}
+In this simulation, we apply poisoned reverse to each algorithm and repeat Simulation 6. Because \purges's diffusing computations only eliminate routing loops corresponding 
+to \badvector state, \purge is vulnerable to routing loops stemming from link cost changes.  Thus, contrary to Simulation 5, poisoned reverse improves \purge performance.
+The results are shown in Figure \ref{fig:prlc}. %Each algorithm using poisoned reverse has label ``{\tt algorithm-name}''+{\textsc PR}).
+Results for different $p$ values yield the same trends. 
+
+All three algorithms using poisoned reverse show remarkable performance gains.
+As confirmed by our profiling numbers, the improvements are significant because routing loops are more pervasive when link costs change.  
+Accordingly, the poisoned reverse optimization yields greater benefits as $\lambda$ increases. % because larger $\lambda$ result in more routing loops. %for the standard \second and \cpr algorithms.
+
+%Each algorithm using poisoned reverse is vulnerable to routing loops larger than $2$ that originate from link cost changes,
+\purges+{\textsc PR} removes all routing loops including loops with more than two nodes, while \seconds+{\textsc PR} does not. 
+For this reason, \purges+{\textsc PR} has lower message complexity.   %We are currently investigating this claim.
+%As in Simulation 3, \seconds+{\textsc PR} performs worse than \purges+{\textsc PR} because we believe that for \badvector state \emph{only},
+%\purges+{\textsc PR} removes routing loops larger than $2$ while \seconds+{\textsc PR} does not. Meanwhile, both 
+% \seconds+{\textsc PR} and \purges+{\textsc PR} use poisoned reverse to address routing loops resulting from link cost changes.  Thus both algorithms (and \cprs+{\textsc PR})
+%are equally vulnerable to routing loops  larger than $2$ originating from link cost changes.
+\cprs+{\textsc PR} has the lowest message complexity. %among the three algorithms. 
+In this simulation, the benefits of rolling back to a global snapshot taken before \bad was compromised outweigh the message overhead required to update stale state pertaining to 
+link cost changes that occurred during $[t',t_b]$. As $\lambda$ increases,
+the performance gap decreases because \cprs+{\textsc PR} must process all link cost changes that occurred in $[t',t_b]$ while \seconds+{\textsc PR}  and \purges+{\textsc PR}
+process some link cost change events during $[t',t_b]$ as part of normal distance vector execution.
+
+%However, we make the strong performance of \cprs+{\textsc PR} comes wiHh
+However, \cprs+{\textsc PR} only achieves such strong results by making two optimistic assumptions:  we assume perfectly synchronized clocks and checkpointing occurs at each timestep.
+In the next simulation we relax the checkpointing assumption.
+%However, we make two optimistic assumptions in order to achieve such favorable results for \cprs+{\textsc PR}: we assume clocks are perfectly synchronized and checkpointing occurs at each timestep.
+%In the next simulation we relax the checkpoint assumption.
 
 
+\begin{figure*}
+\centering
+\subfigure[{$p=0.05$, $\lambda=1$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/pr-p05-lc1.pdf}}
+%\subfigure[{$p=0.05, \lambda=2$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-lc2.pdf}}
+\subfigure[{$p=0.05$, $\lambda=4$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/pr-p05-lc4.pdf}}
+\subfigure[{$p=0.05$, $\lambda=8$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/pr-p05-lc8.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+\caption{Plots for Simulation 7 using \er graphs with link weights selected uniformly at random, $p=0.05$, average diameter is $6.14$, and $\lambda=\{1,4,8\}$.
+Message overhead is plotted as a function of $k$, the number of hops false routing state has spread from the compromised node.
+The curves for \seconds+{\textsc PR}, \purges+{\textsc PR}, and \cprs+{\textsc PR} refer to each algorithm using poisoned reverse, respectively.} 
+\label{fig:prlc}
+\end{figure*}
 
-%\subsubsection{Experiment 5}
 
-{\bf Effects of Varying Checkpoint Frequency}.
-In this simulation, we study the trade-off between message overhead and storage overhead for \cprs. To this end, we vary the frequency at which \cpr checkpoints and fix 
-the interval $[t',t]$. Otherwise, our simulation setup is the same as the one just described (under the title ``Effects of Link Cost Changes''). %(\ref{subsec:simulation-lc}).
+\subsubsection{Simulation 8:  Effects of Checkpoint Frequency}
 
-For conciseness, we only display a single plot.  Figure \ref{fig:msg-checkpoint-p05} shows the results for an \er graph with link weights selected
-uniformly at random between $[1,n]$,
-$n=100$, $p=.05$, $\lambda=4$ and $k=2$. We plot message overhead against the number of timesteps \cpr must rollback, $z$. \cprs's message overhead increases with larger $z$ 
+In this simulation we study the trade-off between message overhead and storage overhead for \cprs. To this end, we vary the frequency at which \cpr checkpoints and fix 
+the interval $[t',t_b]$. Otherwise, our simulation setup is the same as Simulation 6.
+
+Figure \ref{fig:lc-fixk} shows the results for an \er graph with link weights selected uniformly at random between $[1,n]$,
+$n=100$, $p=.05$, $\lambda=\{1,4,8\}$ and $k=2$. We plot message overhead against the number of timesteps \cpr must rollback, $z$. \cprs's message overhead increases with larger $z$ 
 because as $z$ increases there are more link cost change events to process. \second and \purge have constant message overhead because they operate independent of $z$.
 
 We conclude that as the frequency of \cpr snapshots decreases, \cpr incurs higher message overhead.  Therefore, when choosing the frequency of checkpoints,
 the trade-off between storage and message overhead must be carefully considered. 
 
 
-%\begin{figure}[t]
-%\centering
-%\includegraphics[scale=.35]{figs/rollback-p05-k4.pdf}
-%\caption{Message overhead for $p=0.05$ \er with link weights selected uniformly random with different $\lambda$ values. $z$ refers to the number of timesteps \cpr must rollback.}
-%\label{fig:lc-fixk}
-%\end{figure} 
 
-
-
-
+\begin{figure*}
+\centering
+\subfigure[{$p=0.05$, $k=2, \lambda=1$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-k1.pdf}}
+\subfigure[{$p=0.05$, $k=2, \lambda=4$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-k4.pdf}}
+\subfigure[{$p=0.05$, $k=2, \lambda=8$}]{\includegraphics[width=0.49\textwidth]{figs/rollback/p05-k8.pdf}}
+%\subfigure[{Cumulative path cost decreases during the simulation}]{\includegraphics[width=0.49\textwidth]{figs/rollback/tsdecrease6.pdf}}
+\caption{Simulation 8: message overhead for $p=0.05$ \er with link weights selected uniformly random with different $\lambda$ values. $z$ refers to the number of timesteps \cpr must 
+rollback. Note the y-axes have different scales.}
+\label{fig:lc-fixk}
+\end{figure*} 
 
 
 \subsection{Summary of Simulation Results}
 \label{subsec:discuss}
 
-Our results show that for graphs with fixed link costs, \cpr yields the lowest message and time overhead. \cpr benefits from removing false state with a single
-diffusing computation. However, \cpr has storage overhead, requires loosely synchronized clocks, and requires the time that node \bad was compromised to be identified.
 
-\seconds's performance is determined by the \infinity problem. \purge avoids the \infinity problem by first globally invalidating false state.  Therefore in cases where the \infinity problem is 
-significant, \purge outperforms \seconds.
+Our results show \cpr using poisoned reverse yields the lowest message and time overhead in all scenarios. \cpr benefits from removing false state with a single
+diffusing computation. Also, applying poisoned reverse significantly reduces \cpr message complexity by eliminating pairwise routing loops resulting from
+link cost changes. However, \cpr has storage overhead, requires loosely synchronized clocks, and requires the time \bad was compromised.
 
-When considering graphs with changing link costs, \cprs's performance suffers because it must process all valid link cost changes that occurred since \bad was compromised.
-Meanwhile, \second and \purge make use of computations that followed the injection of false state, that do not depend on false routing state. However, \seconds's performance degrades 
-because of the \infinity problem.  \purge eliminates the \infinity problem and therefore yields the best performance over topologies with changing link costs.
+\seconds's performance is determined by the \infinity problem. In the case of \er graphs with fixed unit link weights, the \infinity problem was minimal, 
+helping \second perform better than \purges. % In all other scenarios, poisoned reverse significantly improves \second performance because routing loops are pervasive.
+For all other topologies, poisoned reverse significantly improves \second performance because routing loops are pervasive.
+Still, \second using poisoned reverse is not as efficient as \cpr using poisoned reverse and \purges.
 
-Finally, we found that an additional challenge with \cpr is setting the parameter that determines the checkpoint frequency.
-More frequent checkpointing yields lower message and time overhead at the cost of more storage overhead. Ultimately, application-specific factors must be considered
+In cases where link costs change, we found that \purge using poisoned reverse is only slightly worse than \cprs+{\textsc PR}. % with poisoned reverse. 
+Unlike \cprs, \purge makes use of computations that follow the injection of false state, that do not depend on false routing state.  
+Because \purge does not make the assumptions that \cpr requires, \purge using poisoned reverse is a suitable alternative for topologies with link cost changes.
+%In contrast to \cprs, \purge makes no assumptions 
+%other than the identification of \bads, making \purge a suitable algorithm for topologies with link cost changes.
+
+%\purge avoids the \infinity problem by first globally invalidating false state.  Therefore in cases where the \infinity problem is 
+%significant, \purge outperforms \seconds.
+
+%When considering graphs with changing link costs, \cprs's performance suffers because it must process all valid link cost changes that occurred since \bad was compromised.
+%Meanwhile, \second and \purge make use of computations that followed the injection of false state, that do not depend on false routing state. However, \seconds's performance degrades 
+%because of the \infinity problem.  \purge eliminates the \infinity problem and therefore yields the best performance over topologies with changing link costs.
+
+Finally, we found that an additional challenge with \cpr is setting the parameter which determines checkpoint frequency.
+Frequent checkpointing yields lower message and time overhead at the cost of more storage overhead. Ultimately, application-specific factors must be considered
 when setting this parameter. 
-

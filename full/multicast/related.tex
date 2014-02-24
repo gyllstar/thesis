@@ -1,0 +1,177 @@
+
+\section{Related Work}
+\label{sec:related}
+
+Related work divides into the following categories: smart grid communication networks (Section \ref{subsec:related-grid-comm}), algorithms for detecting packet loss 
+(Section \ref{subsec:related-detection}), and link failure recovery algorithms (Section \ref{subsec:related-recovery}).
+
+%{\bf Smart Grid Communication Architectures}
+\subsection{Smart Grid Communication Networks}
+\label{subsec:related-grid-comm}
+
+
+The Gridstat project, started in 1999, was one of the first research projects to consider smart grid communication.\footnote{\url{http://gridstat.net/}}
+Our work has benefited from their detailed requirements specification \cite{Bakken11}.
+Gridstat proposes a publish-subscribe architecture for PMU data dissemination. By design, subscription criteria are simple to enable fast forwarding of PMU data.
+%(and as a measure towards meeting the low latency requirements of PMU applications).  
+
+Gridstat separates their system into a data plane and a management plane. The management plane keeps track of subscriptions,
+monitors the quality of service provided by the data plane, and computes paths from subscribers to publishers.  To increase reliability, each Gridstat publisher sends data over multiple paths
+to each subscriber. Each of these paths is a part of a different (edge-disjoint) multicast tree.  Meanwhile, the data plane simply forwards data according to the paths and subscription 
+criteria maintained by the management plane.  
+
+In North America, all PMU deployments are overseen by the North American SynchroPhasor Initiative (NASPI) \cite{Naspi10}.  NASPI has proposed and started (as of December 2012) to build the
+communication network used to deliver PMU data, called NASPInet. The interested reader can consult \cite{Naspi10} for more details.
+%\xxx{Mention: (a) hub-and-spoke architecture, (b) PMU data aggregated by Phasor Data Concentrator, (c) not sure if use multicast? }
+
+Although Gridstat \cite{Bakken11} and NASPI \cite{Naspi10} have similarities with \mdrs, these projects have a different focus than ours.  Gridstat and NASPI specify overlay networks 
+built on top of existing network protocols (e.g., IP, MPLS), while the emphasis of our work is in making network protocols more robust to handle PMU application requirements. 
+
+Hopkinson et al \cite{Hopkinson09} propose a Smart Grid communication architecture that handles heterogeneous traffic: traffic with strict timing requirements (e.g., protection systems), 
+periodic traffic with greater tolerance for delay, and aperiodic traffic. They advocate multi-tiered data dissemination that uses a technology such as MPLS to make hard
+bandwidth reservations for critical applications, Gridstat to handle predictable traffic with less strict delivery requirements, and finally Astrolab (which uses a gossip protocol) 
+to manage aperiodic traffic sent over the remaining available bandwidth. They advocate hard bandwidth reservations -- modeled as a multi-commodity flow problem -- for critical Smart
+Grid applications.
+
+%Although Gridstat \cite{Bakken11}, NASPI \cite{Naspi10}, and the work of Hopkinson et al \cite{Hopkinson09} all have similarities with \mdrs, these projects provide an architecture, rather
+%than the specific algorithms, for reliable smart grid communication. For example, Gridstat provides no protocol for defining communication between the management and data plane.  Our work
+%Additionally, there is no explicit indication if the multicast trees are source-based.
+
+
+\subsection{Detecting Packet Loss}
+\label{subsec:related-detection}
+
+Most previous work for detecting packet loss \cite{Almes99,Caceres99} is based on end-to-end measurements.  These approaches require too many measurements (and therefore too much time 
+between when the loss occurs and when it is detected) to accurately
+measure packet loss in our problem setting. For example, the loss model proposed by C\`{a}ceres et al. \cite{Caceres99} requires approximately $2000$ end-to-end probe messages for 
+packet loss estimates to converge on the true underlying packet loss rate.  In our problem, where packet loss must be detected at small time scales, these $2000$ probe messages 
+would either need to be sent at a high rate to detect packet loss at small time scales (e.g., to detect packet loss at $1$ second intervals, probe messages would need to be sent at a rate 
+$30$ times higher than PMU sending rates of $60$ msgs/sec) \footnote{The would likely lead to inaccurate results \cite{Barford04}.}
+or require a prohibitively large window of time if probes are sent at a rate proportional to PMU measurement rates
+(e.g., over $30$ seconds is required to send $2000$ probes at a rate of $60$ msgs/sec).   
+\pcnt provides faster and more accurate loss estimates of individual links than these approaches based on end-to-end measurements 
+because \pcnt directly measures actual traffic \emph{inside} the network.
+
+
+%Because the time delay between when the loss occurs and when it is detected needs to be small 
+
+Friedl et al. \cite{Friedl09} propose a \emph{passive} measurement algorithm that directly measures actual network traffic to determine application-level packet loss rates. 
+Unfortunately, their approach can only measure packet loss after a flow is expired.  This makes their algorithm unsuitable for our purposes because
+PMU application flows are long lasting (running continuously for days, weeks, and even years).  \pcnt has no restriction that packet loss can only be measured over expired flows.
+%For this reason we propose a new algorithm that provides in-network packet loss detection for long running active flows (Section \ref{subsec:detection}).
+
+%C\`{a}ceres et al. \cite{Caceres99} report impressive accuracy results 
+%Although impressive accuracy results are reported (e.g., C\`{a}ceres et al. \cite{Caceres99} show through simulations that about $2000$ end-to-end probe messages are required for packet loss
+%estimates to converge on the true underlying packet loss rate), end-to-end measurements a poor match for our problem domain because too many probe messages (or sampled packets are required to
+%achieve accuracte loss estimates.  The stringent delay and reliabilitly requirements of PMU applications necessitates that link failures are detected fast
+
+
+
+%Because PMU applications have small per-packet delay requirements (Section \ref{subsec:pmu-requirements}), the time delay between when the loss occurs and when it is detected needs to be small.  
+%For this reason, we will investigate detecting lossy links \emph{inside} the network. 
+%Additionally, most previous work takes an \emph{active measurement} approach towards detecting lossy links in which probe messages are injected to estimate packet loss.  Injecting packets can
+%potentially skew measurements -- especially since accurate packet loss estimates require a high sampling probing rate -- leading to inaccurate results \cite{Barford04}. 
+
+
+A standard Internet-based approach to passive monitoring of packet loss is to query the native Management Information Base (MIB) counters stored at each router using Simple Network
+Management Protocol (SNMP) \cite{Barford04}. This approach is well-suited for course-grained packet loss measurements but not for the fine-grained packet loss detection required
+by critical PMU applications.  Specifically, this approach cannot provide synchronized reads of packet counts across routers/switches, resulting inaccuracies too large for the applications
+we target.
+
+Existing network protocols, such as BGP, send periodic keep-alive messages between routers to ensure network links are operational.  Detecting down links is a different (but complementary) problem than 
+the one we consider, estimating packet loss rates over small time scales. 
+%different from those we target in our work Decting if links 
+
+%perform in-network detection of link failure, but not of individual packet loss. They do so by having routers exchange ``keep-alive'' or ``hello'' messages and detect a link failure when these messages or their acknowledgments are lost.
+
+
+%{\bf Detection using end-to-end measurements.}
+%An alternative approach to link failure detection is to use end-to-end probes to infer packet loss rates of individual links. C\`{a}ceres et al. \cite{Caceres99} propose a maximum likelihood estimator
+%for loss rates of internal links based on losses observed by multicast receivers. Their model uses the inherent correlation of packet loss across multicast receivers to improve accuracy 
+%of their packet loss estimates.  Although impressive accuracy results are reported, the authors' simulations show that about $2000$ end-to-end probe messages are required for packet loss
+%estimates to converge on the true underlying packet loss rate \cite{Caceres99}.  In our problem setting, packet loss needs to be detected over small windows of time and, unfortunately,
+%$2000$ messages would correspond to too larger a window of time. For this reason, we deem solutions based on end-to-end measurements a poor match for our problem domain.
+%In addition, \pcnt allows for link failures to be localized, whereas end-to-end techniques may not provide the necessary insight to identify and isolate the faulty link.
+
+\pcnts's approach for ensuring consistent reads of packet counters bears strong resemblance to the idea of \emph{per-packet consistency} introduced by Reitblatt et al.~\cite{Reitblatt11}.
+Per-packet consistency ensures that when a network of switches changes from an old policy to a new one, that
+each packet is guaranteed to be handled exclusively by one policy, rather than some combination of the two policies.  In our case, we use per-packet consistency to ensure that when \pcnt reads
+packet counters between an upstream node, $u$, and downstream node, $d$, that exactly the same set of packets are considered (excluding, of course, packets that are dropped at $u$ or dropped 
+along the path from $u$ to $d$.)
+
+
+
+\subsection{Recovery from Link Failures}
+\label{subsec:related-recovery}
+
+%In keeping with their best-effort philosophy, most Internet-based algorithms compute backup paths on-demand, after a failure is detected \cite{Cui04}. 
+%On-demand solutions are too slow to meet the strict delivery requirements of critical smart grid applications.  
+
+MPLS is commonly used to extend IP routing with traffic engineering capabilities and fast failure recovery \cite{Rosen01}.  
+MPLS pre-computes backup paths for link and router (node) failures and stores these paths at the node immediately upstream from the failed component. 
+This allows for fast, localized recovery: the node detecting a link or node failure immediately reroutes packets along its pre-computed backup path.  
+Unfortunately, MPLS cannot be directly applied to our multicast problem scenario because MPLS addresses unicast communication (a backup unicast path applied to a multicast tree may not
+not result in a valid tree).
+However, \pre is in-part inspired by MPLS fast reroute's approach of storing pre-computed backup paths inside the network.
+%Unfortunately, MPLS only addresses unicast IP and therefore if MPLS-based backup paths were to applied to multicast, a valid mulicast tree may not result. 
+
+
+%\mc uses different optimization criteria, minimize control overhead, than prior work \cite{Cui04,Fei01,Kodialam02,Lau05,Li06,Luebben09,Medard99,Pointurier02,Wu97}. 
+%Previous work computes backup paths or trees that optimize one of the following criteria: maximize node (link) disjointedness with the primary 
+%path \cite{Cui04,Fei01,Luebben09,Medard99}, minimize bandwidth usage \cite{Wu97}, minimize backup bandwidth reservations \cite{Kodialam02,Lau05,Li06}, minimize the number of group members which become disconnected (using either the primary or backup path) after a link failure \cite{Pointurier02}, or minimize path length \cite{Tian05}.
+
+\mc uses different optimization criteria to compute backup trees than prior work \cite{Cui04,Fei01,Kodialam02,Lau05,Li06,Luebben09,Medard99,Pointurier02,Wu97}.
+Past approaches use local/myopic optimization criteria (i.e., constraints specified over a \emph{single} multicast tree),
+while we consider global (network-wide) criteria (i.e., constraints specified across \emph{multiple} multicast trees).  
+\footnote{Li et al. \cite{Li06} is an exception; they compute backup paths that aim to minimize the total bandwidth reserved by all backup paths.}
+In addition, none of these approaches seek to reuse already installed forwarding rules or minimize control signaling as \mc does.
+Instead, backup paths or trees are computed with one of the following objective functions: maximize node (link) disjointedness with the primary 
+path \cite{Cui04,Fei01,Luebben09,Medard99}, minimize bandwidth used \cite{Wu97}, minimize backup bandwidth reservations \cite{Kodialam02,Lau05,Li06}, minimize the number of group
+members that become disconnected after a link failure \cite{Pointurier02}, or minimize path length \cite{Tian05}.
+
+
+Because these backup paths/trees are computed using distributed algorithms, the mechanisms to install these backup trees must navigate an inherent trade-off between high overhead
+(e.g., message complexity, storing large number of backup paths at routers) and fast recovery (i.e., the time between when the failure is detected and when the multicast tree is repaired
+should be small) \cite{Cui04}.  Algorithms that compute and install backup paths on-demand (after a component failure is detected) scale well since forwarding state for backup paths is only
+installed after a failure is detected.  However, on-demand solutions can be have slow convergence time. % of their distributed computation.  
+
+Algorithms that pre-compute and pre-install backup path/trees are fast but scale poorly as significant forwarding state must be stored and maintained at routers. 
+Scalability is particularly challenging because previous work  \cite{Cui04,Fei01,Kodialam02,Lau05,Li06,Luebben09,Medard99,Pointurier02,Wu97} is tailored to support Internet-based applications that 
+typically have a large number of short-lived multicast groups and dynamic group membership. %scalability is particularly challenging.  %\cite{Cui04,Fei01,Medard99}.
+
+Our algorithms for installing backup trees avoid the scalability issues addressed by prior work \cite{Cui04,Fei01,Medard99}.  SDN allows backup trees to be pre-computed offline and stored (in the
+case of \posts) at the controller, thus introducing no extra forwarding state at the switches.  In the case of \pres, where backup trees are pre-installed in the network, managing
+extra forwarding state is tractable because the smart grid operating environment is very different from the Internet-based applications discussed in the literature.  
+Specifically, the smart grid is many orders of magnitude smaller that the Internet and smart grid multicast group membership is mostly static \cite{Bakken11}
+(a utility company subscribing to a PMU data stream are likely to always want to receive updates from this PMU).  As a result, the volume of pre-installed state is manageable and 
+requires infrequent updates.
+
+In the context of OpenFlow, Kotani et al. \cite{Kotani12} propose an approach for fast switching between IP multicast trees, where 
+each multicast group has two multicast trees, a primary tree and a backup tree.  
+Each tree is assigned a unique tree ID and both trees are installed in the network, but only the primary tree is used during normal operation.  
+After a link failure, the root node is signaled to write the backup tree ID in each packet header to force packets to be forwarded using the backup tree.  \pre uses a similar 
+backup tree ID to quickly activate a pre-installed backup tree.  However, \pre takes advantage of common forwarding state between a backup tree and its primary tree to reduce
+the amount of pre-installed state, while Kotani et al. \cite{Kotani12} wastefully pre-installs forwarding rules at each switch in the backup tree.  
+
+
+%The mechanisms to install backup paths/trees \cite{Cui04,Fei01,Kodialam02,Lau05,Li06,Luebben09,Medard99,Pointurier02,Wu97} must navigate an inherent trade-off between high overhead
+%(e.g., message complexity, storing large number of backup paths at routers) and fast recovery (i.e., the time between when the failure is detected and when the multicast tree is repaired
+%should be small).  Backup paths computed on-demand (after a component failure is detected) scale well but can be slow since backup paths are the distributed computation of 
+%backup paths can have slow convergence time.
+
+%Typical 
+
+%Li et al. \cite{Li06} optimize for criteria spanning several multicast trees: minimizing the \emph{total} bandwidth reserved by backup paths.
+%Their problem formulation assumes that each source and destination flow is associated with a bandwidth reservation. 
+%Under their scheme, backup paths are computed with the goal of minimizing both the restoration time and the total backup bandwidth reserved over \emph{all}
+%backup paths.  In our research, we also plan to compute backup trees by optimizing for network-wide constraints but we consider criteria other than backup bandwidth reservation. 
+
+
+
+
+
+
+%OpenFlow is similar in spirit to past work in Active Networking \cite{Psounis99}, as both aim to create programmable networks, but is implemented differently. 
+%Active Networking puts the smarts \emph{inside} the network: customized smart routers are used to interpret and execute commands (that may modify network state) specified in
+%code-carrying packets. In contrast, OpenFlow moves the network intelligence (i.e., control logic) \emph{outside} of the network 
+%and into the controller, while switches become dumb forwarders of data as they simply follow the instructions dictated by the controller.

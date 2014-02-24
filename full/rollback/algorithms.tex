@@ -14,7 +14,8 @@ With one exception, the input and output of each algorithm is the same.
 %(adj(\bar{v}),\bar{v})$ $\forall adj(\bar{v})$,
 and link weight function $w:E \rightarrow \mathbb{N}$.  \minvv and \dmatrixv are computed via the algorithms discussed below $\forall  v \in V'$. 
 \end{itemize}
-Before we describe each recovery algorithm, we outline a preprocessing procedure common to all three recovery algorithms.
+Before we describe each recovery algorithm, we outline a preprocessing procedure common to all three recovery algorithms. Correctness proofs for \seconds, \purges, and \cpr
+can be found in Appendix \ref{sec:correct}.
 %First we describe a preprocessing procedure common to all three recovery algorithms. Then we describe each recovery algorithm. 
 
 
@@ -140,7 +141,7 @@ false state from the entire network. However, globally invalidating false state 
 is our third and final recovery algorithm. 
 Unlike \second and \purges, \cpr only requires that clocks across different
 nodes be loosely synchronized i.e. the maximum clock offset between
-any two nodes is assumed to be $\delta$. For ease of explanation, we
+any two nodes is assumed to be  bounded. For ease of explanation, we
 describe \cpr as if the clocks at different nodes are perfectly
 synchronized. Extensions to handle loosely synchronized clocks should
 be clear. Accordingly, we assume that all neighbors of \bads, are
@@ -172,7 +173,8 @@ Rollback is implemented using diffusing computations. Neighbors of the compromis
 before $t'$.  Each such node, $i$, rolls back to this snapshot by restoring the \minvi and \dmatrixi values from the snapshot.  Then, $i$ initiates a diffusing computation to inform all other
 nodes to do the same. If a node has already rolled back and receives an additional rollback message, it is ignored. 
 (Note that this rollback algorithm ensures that no reinstated distance value uses \badvector because every node rolls back to a snapshot 
-with a timestamp less that $t'$. ) Algorithm \ref{alg:rollback} in the Appendix gives the pseudo-code for the rollback algorithm.
+with a timestamp less that $t'$).  A pseudo-code specification of this rollback algorithm can be found in the Appendix (Algorithm \ref{alg:rollback}).  
+%in the Appendix gives the pseudo-code for the rollback algorithm.
 
 
 {\bf Step 3: Steps after rollback.} After Step 2 completes, the algorithm in Section \ref{subsec:preprocess} is executed.

@@ -1,0 +1,87 @@
+\section{Introduction}
+\label{sec:intro}
+
+
+An electric power grid consists of a set of buses  -- electric substations, power generation centers, or aggregation points of electrical loads -- and transmission lines connecting those buses.
+The operation of the power grid can be greatly improved by high-frequency voltage and current measurements. Phasor Measurement Units (PMUs) are  
+sensors that provide such measurements. PMUs are currently being deployed in electric power grids worldwide, providing the potential to both 
+(a) drastically improve existing power grid operations and applications and (b) enable an entirely new set of applications,
+such as real-time visualization of electric power grid dynamics and the reliable integration of renewable energy resources. 
+
+PMU applications have stringent and in many cases ultra-low \emph{per-packet} delay and loss requirements.  
+If these per-packet delay requirements are not met, PMU applications can miss a critical power grid event (e.g., lightning strike, power link failure), potentially leading to a 
+cascade of incorrect decisions and corresponding actions. For example, closed-loop control applications require delays of $8-16$ ms per-packet \cite{Bakken11}. 
+If \emph{any} packet is not received within this time window, the closed-loop control application may take a wrong control action.
+In the worst case, this can lead to a cascade of power grid failures similar to the August 2003 blackout in the USA 
+\footnote{\url{http://en.wikipedia.org/wiki/Northeast_blackout_of_2003}} and the recent power grid failures in India \cite{IndiaBlackout}. 
+
+
+As a result of this sensitivity, the communication network that disseminates PMU data must provide hard end-to-end data delivery guarantees \cite{Bakken11}. 
+For this reason, the Internet's best-effort service model alone is unable to meet the stringent packet delay and loss requirements of PMU applications \cite{Birman05}. 
+Instead, either a new network architecture or enhancements to the Internet architecture and its protocols are needed \cite{Bakken11,Birman05,Naspi10,Hopkinson09} to provide efficient, in-network forwarding and fast recovery from link and switch failures. 
+Additionally, multicast should figure prominently in data  delivery, since PMUs disseminate  data  to applications across many locations \cite{Bakken11}.
+
+We design algorithms for fast recovery from link failures in a Smart Grid communication network. 
+Informally, a link that does not meet its packet delivery requirement (either due to excessive delay or actual packet loss) is considered failed. 
+We propose, design and evaluate solutions to all three aspects of link failure recovery: link failure detection, algorithms for pre-computing backup multicast trees, 
+and fast backup tree installation. 
+
+We make the following contributions in this paper: 
+\begin{itemize}
+
+	%\item {\bf Link-failure detection algorithm}. 
+	\item {\bf Design a link-failure detection algorithm}. 
+	We design a link-failure detection and reporting mechanism, \pcnts, that uses OpenFlow \cite{OpenFlow08} -- an open source framework 
+	that centralizes network management and control -- to detect link failures when and where they occur, \emph{inside} the network.  In-network detection is used to reduce the 
+	time between when the loss occurs and when it is detected. In contrast, most previous work \cite{Almes99,Caceres99,Friedl09} focuses on measuring end-to-end packet loss, 
+	resulting in slower detection times. 
+
+	%Using Mininet we show ...
+
+	\item {\bf Formulate a novel optimization problem for computing backup multicast trees.} 
+	Inspired by MPLS fast-reroute algorithms that quickly reroute time-critical unicast IP flows over pre-computed backup paths \cite{Rosen01}, 
+	we formulate a new problem, \mcs, that pre-computes backup multicast trees, to be used after a link failure, with the aim 
+	of minimizing the control overhead required to install the backup trees. 
+	 This optimization criteria differs from those proposed in the literature \cite{Cui04,Fei01,Medard99,Pointurier02,Wu97} that use optimization
+ 	criteria specified over a \emph{single} multicast tree, while we consider conditions specified across \emph{multiple} multicast trees. 
+
+	\item {\bf Prove \mc is at least NP-hard and propose an approximation algorithm, \steiners, for \mcs.} 
+	\steiner uses an approximation to the directed Steiner Tree problem taken from the literature \cite{Charikar98} to compute backup trees and modifies link weights to 
+	encourage backup trees to reuse existing forwarding rules installed in the network. Doing so reduces both the number of control messages the controller must send to install each backup tree
+	and the number of forwarding rules maintained at each switch.
+	%Using a copy of the network graph, \steiner modifies link weights to encourage its directed Steiner Tree computation  reuse of existing forwarding rules installed in the network,
+	%thereby reducing the number of control messages the controller must send to install each backup tree.
+
+	\item {\bf Propose \merges, an OpenFlow implementation of multicast that aims to reduce forwarding state.}  \merge uses local optimization to create a near minimal set of forwarding rules 
+	by ``merging'' forwarding rules in cases where multiple multicast trees have common forwarding behavior.
+
+	\item {\bf Design two algorithms -- \pre and \post -- for fast backup tree installation.}  \pre pre-installs backup tree forwarding rules and
+	activates these rules after a link failure is detected, while, \post installs backup trees \emph{after} a link a failure is detected.  
+	We show how \merge can be applied to \pre and \post to reduce the amount of \pre pre-installed forwarding state and decrease \post signaling overhead. 
+
+	\item {\bf Provide a prototype implementation of our algorithms, \mdrs, using POX and 
+	evaluate each algorithm using Mininet.} \pcnts, \steiners, \merges, \pres, and \post are implemented in POX \cite{Pox}, 
+	an open-source OpenFlow controller. 
+	
+	We use simulations based on the Mininet emulator \cite{Lantz10} to evaluate our algorithms over synthetic graphs and actual IEEE bus systems.
+	We find that \pcnt provides fast and accurate link loss estimates: after sampling only $75$ packets
+	the $95\%$ confidence interval is within $15\%$ of the true loss probability.  Additionally, we find \pre yields faster recovery than \post -- 
+	\post sends up to $10$ times more control messages than \pre -- but at the cost of storage overhead at each switch (in our simulations, pre-installed backup trees can account for as much
+	as $35\%$ of the capacity a conventional OpenFlow switch \cite{Curtis11}).
+	Lastly, we observe that \merge reduces control plane messaging and the amount of pre-installed forwarding state by a factor of $2$ to $2.5$ when compared to a standard multicast
+	implementation, resulting in faster installation and manageable sized flow tables.
+	% may want to better estimate how many PMUs and multicat trees is reasonable
+
+
+		
+\end{itemize}
+
+The remainder of this paper is structured as follows.  In the following section (Section \ref{sec:prelim}), we provide necessary background on PMU application requirements and OpenFlow, as well
+as introduce a running example later used to describe our algorithms.  
+Then, we outline our algorithms in Section \ref{sec:algs}:
+Section \ref{subsec:pcnt} details our link-failure detection algorithm called \pcnts; in Section \ref{subsec:min-control}, we outline our algorithms for computing backup multicast trees; and
+then describe algorithms for installation backup trees in Section \ref{subsec:install-backups}; Section \ref{subsec:merge} presents \merges, a fast multicast implementation 
+when applied to our backup tree installation algorithms can significantly improve performance.
+Next, we briefly survey relevant literature (Section \ref{sec:related}).
+Our simulation study is presented in Section \ref{sec:evaluation}. Section \ref{sec:conclude} concludes the paper with a summary and directions for future work.
+

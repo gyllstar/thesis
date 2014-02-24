@@ -1,0 +1,48 @@
+\section{Algorithms}
+\label{sec:algs}
+
+We propose a set of algorithms, collectively referred to as \mdrs, that make multicast trees robust to link failures.  
+\footnote{The name \mdr is inspired by Johnny Appleseed, the famous American pioneer and conservationist known for planting apple nurseries and caring for its trees. }
+\mdr runs at the OpenFlow controller with the goal of minimizing packet loss associated with link failures while ensuring that end-to-end delay requirements are satisfied.
+\mdr divides into three parts: %each presented in detail in this section: 
+\begin{enumerate}
+	\item {\bf \pcnt algorithm: monitor and quickly detect link failures} when and where they occur inside the network (Section \ref{subsec:pcnt}).
+	
+	\item {\bf Precompute backup trees} that are amenable to fast installation.  In Section \ref{subsec:min-control} we formulate a new problem, \mcs, that aims to compute backup trees that
+	reuse primary tree edges, prove \mc is at least NP-hard, and provide an approximation algorithm for \mc called \steiners.
+	%minimize control plane signaling overhead, prove \mc is at least NP-hard, and provide an approximation algorithm for \mc called \steiners.
+
+	\item {\bf Fast install of pre-computed backup trees} by reusing existing forwarding rules installed in the network, sharing forwarding rules among backup trees with common links, and
+	in some cases pre-installing forwarding rules before link failures occur (Section \ref{subsec:install-backups}).  The backup trees are computed using \steiner from part (2) and \pcnts, from
+	part (1), triggers their installation.
+
+	 %backup tree installed and shown in Figure \ref{fig:intuition-example-t2}).
+	
+\end{enumerate}
+
+
+%to make multicast trees robust to link failures by monitoring and detecting failed links, precomputing backup multicast trees, and efficiently installing backup multicast trees after a link failure.
+%As input, \mdr is given an undirected graph containing OpenFlow switches; the set of all multicast trees ($T$); the set of all active multicast flows ($F$); the length of each sampling window, 
+%$w$, used to monitor links and specified in units of time; and, for each multicast flow, a packet loss condition for each link the flow traverses. For now, we restrict packet loss conditions 
+%to be threshold-based that indicate the maximum number of packets that can be lost over $w$ time units. 
+%The output of \mdr is a new set of precomputed backup multicast trees installed in the network and a set of uninstalled multicast trees.   All $T_i \in T$ that use the failed link are uninstalled and we call each such $T_i$ a \emph{failed multicast tree}.
+%%The set of installed MTs includes each $T_i \in T$ that does not use the failed link and a backup tree for any $T_i$ that does. %does use a failed link.
+
+%{\it TODO: write overview that unifies packet loss and E2E delay.}
+
+
+
+
+
+
+\input{multicast/pcount}
+
+%\input{basic}
+
+\input{multicast/min-control}
+
+\input{multicast/installing-backups}
+
+\input{multicast/garbage}
+
+\input{multicast/merger}

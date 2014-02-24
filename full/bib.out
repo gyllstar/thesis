@@ -3,20 +3,22 @@ The top-level auxiliary file: thesis.aux
 The style file: umthesis.bst
 Database file #1: thesis.bib
 Warning--string name "sept." is undefined
---line 390 of file thesis.bib
+--line 421 of file thesis.bib
 Warning--string name "june" is undefined
---line 448 of file thesis.bib
+--line 479 of file thesis.bib
 Warning--string name "nov." is undefined
---line 550 of file thesis.bib
+--line 581 of file thesis.bib
 A bad cross reference---entry "Gyllstrom10"
 refers to entry "DBLP:conf/networking/2010", which doesn't exist
+Warning--I didn't find a database entry for "Ji03"
+Warning--I didn't find a database entry for "Clark88"
 Warning--I didn't find a database entry for "DBLP:conf/networking/2010"
 Warning--to sort, need author or key in 2003Blackout
-Warning--to sort, need author or key in GT-ITM
 Warning--to sort, need author or key in Rocketfuel
-Warning--to sort, need author or key in PF5820
-Warning--can't use both volume and number fields in Ethane07
+Warning--to sort, need author or key in GT-ITM
 Warning--can't use both volume and number fields in Curtis11
+Warning--empty booktitle in Johnson84b
+Warning--empty journal in Rosen01
 Warning--empty institution in Xu05
 Warning--there's a month but no year in IndiaBlackout
 (There was 1 error message)

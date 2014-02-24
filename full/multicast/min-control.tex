@@ -1,0 +1,158 @@
+\subsection{Computing Backup Trees}
+\label{subsec:min-control}
+
+\mdr pre-computes backup trees to install after \pcnt detects a link failure.  Here we present a new problem, \mcs, and approximate solution to \mcs, called \steiners, that aim to facilitate fast
+recovery by computing backup trees that maximize the number of edges common between each backup tree and its primary tree.  This reuse of primary tree edges speeds recovery from link
+failures because, in SDN, this reduces the number of new flow entries that need to be installed in the network in response to a link failure.
+
+\mdr uses \steiner as a part of system initialization where a set of backup trees are computed for each network link, $l$; \mdr computes a single backup tree for each primary tree using $l$. 
+Additionally, \steiner is used after a set of backup trees, $\hat{T}^l$, are installed in response to a link failure.  For each newly installed tree $\hat{T}^l_i \in \hat{T}^l$, \mdr computes 
+a backup tree for each link in $\hat{T}^l_i$.
+%recovery by minimizing control overhead (i.e., number of new flow entries) required to install backup trees.  
+
+%In SDNs, reusing forwarding rules which under SDN reduces the number of new flow entries required to install backup trees.  
+
+%\mdr uses \steiner in two scenarios. One, as a part of system 
+%initialization where a set of backup trees are computed for each network link, $l$; \mdr computes a single backup tree for each primary tree using $l$.  Two, \mdr triggers the execution of 
+%backup tree computations after backup trees, $T_l$, are installed in response $l$'s failure. \mdr recomputes backup trees for all primary trees as opposed to only the newly install $T_l$ trees.
+%The motivation for recomputing all backup trees is that the network state -- the set of installed forwarding rules -- is 
+% the entire computation (as opposed to only computing backup trees for the newly installed
+%Tl trees): for each network link, l, Appleseed computes a backup MT for each MT that would be affected if l failed. Appleseed recomputes all backup MTs because installing the Tl MTs changes how flows are distributed and processed inside the network and, as a result, may adversely affect flows processed by MTs other than those in Tl. In other words, backup MTs computed before l fails may become stale when the Tl MTs are installed since the algorithms used to compute them considered an old network state in their optimization. 
+
+\subsubsection{\mcn Problem}
+\label{subsubsec:min-control}
+
+% Existing Outline:  (a) control overhead definition + example, (b) multiple PTs need entry for each tree (c) benefits of reducing control overhead, (d) problem definition, (e) NP-hard
+% Revised Outline:  (a) informal control overhead + benefits, (b) control overhead definition, (c) example, (d) problem statement, (e) NP-hardness outline
+%control overhead definition + example, (b) multiple PTs need entry for each tree (c) benefits of reducing control overhead, (d) problem definition, (e) NP-hard 
+% make sure handle 1 message per flow assumptio
+
+\mc considers backup trees that maximize reuse of primary tree edges.  Recycling primary tree edges allows the SDN controller, when generating the forwarding rules for multicasting 
+packets using the backup tree, to use primary tree rules already installed in the network rather than install new ones.
+%Recycling primary tree rules reduces the number rule installation messages, referred to as control messages, the controller must send network switches. 
+This speeds recovery in cases where backup trees are installed \emph{after} a link failure is detected and reduces the number of flow entries pre-installed at switches (control state) 
+when backup trees are installed \emph{before} a link failure occurs.  
+Reducing control state is especially important with OpenFlow because OpenFlow switches can only store a limited number of flow entries (see Section \ref{subsec:openflow}).
+\footnote{Following from our assumption that a single link fails at-a-time, \mc assumes that all other links besides the failed one, $l$, satisfy packet loss requirements. }
+%\footnote{Our \mc description implies that all other links besides the failed one, $l$, satisfy packet loss requirements. This follows from our assumption that only a single link fails at-a-time.}
+
+For the primary tree $T^l_i = (V^l_i,E^l_i,r,S)$ and its backup $\hat{T}^l_i=(\hat{V}^l_i,\hat{E}^l_i,r,S)$, we define a binary variable $c_v^l$ for all $v \in \hat{V}_i^l$. 
+If $v$ has exactly the same predecessors (outgoing edges) in $T^l_i$ and $\hat{T}^l_i$, then $c_v^l$ takes value $0$.  Otherwise, $c_v^l=1$.  
+%Using  $c_v^l$, define: %Define multicast recycling, for the $T^l_i$,$\hat{T}^l_i$ pair as:
+For the $T^l_i$,$\hat{T}^l_i$ pair define:
+\begin{eqnarray}
+\label{eqn:control-overhead}
+ C_i^l &=&  \sum_{\forall v \in \hat{V}_i^l} c_v^l 
+\end{eqnarray}
+For our purposes, $C_i^l$ is the number of new rules (i.e., non-recycled primary tree rules) needed to install $\hat{T}^l_i$.
+
+Consider the example in Figure \ref{fig:intuition-example} where $(g,l)$ fails. The green backup tree, $\hat{T}_b$, shown in Figure \ref{fig:intuition-example-t2}, has $C_b =2$ because 
+a new forwarding rule is required at $b$, and $f$ to account for the new outgoing links at each node. $\hat{T}_c$, in blue, has
+only one link, $(m,l)$ not in $\hat{T}_c$'s primary tree. As a result, $C_c =3$.
+
+Our \mc problem definition below references a modified version of the Steiner tree problem, called the \arbor problem \cite{Charikar98}. As input \arbors, is given 
+a directed graph $G=(V,A)$, a root vertex $r$, and a set of terminals, $S$. An arborescence is defined as a tree directed away from $r$ that spans $S$.  \arbor aims to find a minimum cost 
+arborescence, called a Steiner arborescence or directed Steiner tree. We denote $SA_i(G) = (V,E,r,S)$ as the $ith$ Steiner arborescence computed over directed graph, $G$, .
+
+We use the following formulation for the \mc problem: 
+\begin{itemize}
+
+	%\item  \underline{Input}: $(G,T,l)$ where $G=(V,E)$ is directed graph, $T=\{T_1,T_2, \dots T_m\}$ where each $T_i \in T$ is a primary tree, and $l \in E$.
+	\item  \underline{Input}: $(G,T^l,l,\alpha)$ where $G=(V,E)$ is a directed graph, $T^l=\{T_1^l,T_2^l, \dots T_k^l\}$ where each $T_i^l \in T^l$ is a primary tree that uses $l$, 
+	$l \in E$, and $\alpha \geq 1$. 
+	%computed using the directed Steiner tree approximation algorithm described by Charikar et al. \cite{Charikar98}, and $l \in E$.
+
+
+	\item \underline{Output}: A backup tree for each primary tree using $l$. This set of backup trees, $\hat{T}^l = \{\hat{T}^l_1,\hat{T}^l_2,\dots,\hat{T}^l_k\}$:
+		\begin{equation}
+		\label{eqn:mc-obj-function}
+		\begin{aligned}
+			& {\text{minimize}}
+			& & \sum_{1 \leq i \leq k} C^l_i \\
+			& \text{subject to}
+			& & w(\hat{T}^l_i) \leq \alpha \cdot w(SA_i(G')), \;  \forall \hat{T}^l_i \in \hat{T}^l \\
+		\end{aligned}
+		\end{equation}
+		where $G'=(V',E')$ such that $E' = E - \{l\}$ and $w(\hat{T}^l_i)$ is the sum of $\hat{T}^l_i$'s link weights.	
+		\footnote{We assume $\hat{T}^l_i$, satisfies all per-packet delay and loss requirements if $l \notin \hat{T}^l_i$ and $w(\hat{T}^l_i) \leq \alpha \cdot w(SA_i(G'))$}
+
+\end{itemize}   % (a) assumes all other links up, (b) C^l defined between pt and bt, point shall revisit later in approx, (c) \alpha keeps tree from growing too larger
+The objective function maximizes the reuse of primary tree edges, while $\alpha$ bounds how large the backup tree can grow as consequence of minimizing $C^l_i$.  When applied to our
+problem scenario this formulation reduces the number of installation rules by reusing rules already installed in the network, under the constraint that the 
+backup tree does not become too large to meet the end-to-end latency requirements. 
+By defining $G'$ as a copy of $G$ with the failed link removed from $G$, we are assuming that all links in $G$ besides $l$ are operational.  For
+our purposes, this amounts to assuming that all non-$l$ links have packet loss rates less than their threshold. %below the satisfy their packet loss rate condition.  
+
+Notice that we have defined $C^l_i$ in Equation \ref{eqn:control-overhead} on a per-backup tree basis where for backup tree $\hat{T}^l_i$, $C^l_i$ is a relationship defined strictly between 
+$\hat{T}^l_i$ and its primary tree $T^l_i$ (there are no constraints specified across any other primary or backup tree). 
+%\footnote{This simplification is reasonable for our OpenFlow-based application of \mcs. In cases where multiple backup trees require a new forwarding rule at the same switch, $v$, a separate
+%forwarding rule must be installed (even if these backup trees have exactly the same predecessors at $v$) for each of these backup trees because under our multicast implementation, 
+%\bases, each forwarding rule matches packets using the tree's multicast address. }
+As a result, the globally optimal solution for \mc  (i.e., the optimal set of backup trees for a single link)  can be found by computing the optimal backup for each primary tree in isolation
+and then taking the union of these solution We shall revisit this important property when describing our approximation algorithm for \mcs.
+
+\begin{theorem}
+\label{thm:mc-npc}
+\mc is at least NP-hard.
+\end{theorem}
+\begin{proof}
+The details of our proof can be found in Appendix \ref{sec:mc-npc}. This proof shows that \mc is NP-hard even when considering just a single backup tree.  The proof demonstrates that
+in some cases an optimal solution to \mc requires a solution to \arbors, a problem known to be NP-hard.  This proves \mc is NP-hard when considering a single backup tree and therefore
+the general \mc problem for $k$ backup trees must at least be NP-hard. 
+\end{proof}
+
+
+%to derive a globally optimal solution for \mcs.  
+%Notice that we have defined the control overhead as the difference between the directed edges from the backup tree and its corresponding primary tree.  This formulation
+%is convenient because for a given link, $l$, we can solve \mco seperately for each directed tree using $l$ and then simply take the union of these solutions to derive a 
+%globally optimal solution for \mc (for $l$).  
+
+
+
+
+\subsubsection{\steinern Approximation Algorithm}
+\label{subsubsec:steiner-approx}
+
+\steiner is a simple approximation algorithm for \mc that manipulates link weights to encourage each backup tree to reuse primary tree edges.
+For each link $l$,  \steiner separately computes a backup tree for primary tree using $l$ and then returns the union of these computed trees. 
+
+%Our \mc approximation algorithm, \steiners, computes each backup tree for link $l$ separately and then returns the union of these computed trees. 
+%\steiner manipulates link weights to encourage each backup tree to reuse primary tree edges. 
+
+%\steiner leverages the \arbor approximation algorithm from Charikar et al. \cite{Charikar98}.  Their approximation algorithm computes a bunch: a subgraph 
+%formed by taking the shortest path from the root to an intermediate vertex, $j$, and the union of shortest paths from $j$ to the terminal nodes.  
+\steiner leverages the $\sqrt{s}$ \arbor approximation, where $s$ is the number of terminal nodes, from Charikar et al. \cite{Charikar98}. Their approximation algorithm computes bunches, 
+where a \emph{bunch} is a subgraph formed by taking the shortest path from the root to an intermediate vertex, $i$, and the union of shortest paths from $i$ to the terminal nodes.  
+The algorithm produces the bunch with best \emph{density} -- density is the average cost of connecting a terminal node with the root -- as its approximation.   The lowest density bunch can 
+easily be computed in polynomial time: a brute-force approach that tries all possible nodes as the intermediate vertex yields an $O(ns^2 \log s)$ time algorithm. 
+%where $s$ is the number of terminal nodes.  The authors prove this is a $\sqrt{s}$ approximation.
+
+
+%\steiner leverages the \arbor approximation algorithm from Charikar et al. \cite{Charikar98}.  Their approximation algorithm recursively finds ``bunches'', where a bunch is a subgraph 
+%formed by taking the shortest path from the root to an intermediate vertex, $j$, and the union of shortest paths from $j$ to a subset of the terminal nodes.  
+%Th%e overall solution is the union of each bunch.  %We denote $B_i(G) = (V,E,r,S)$ as the $ith$ Steiner arborescence computed over directed graph, $G$, using this algorithm.
+%\footnote{In our work, the initial set of primary trees (i.e., the primary trees used before any link failures) are computed using the Steiner arborescence approximation from \cite{Charikar98}.}
+
+%Our approximation algorithm for \mc solves computes for each $T_i^l \in T^l$ and then returns the union of these results. 
+%We leverage the Steiner arborescence approximation described in \cite{Charikar98} to approximate \mcos.  Abusing notation, we refer to the \mco primary tree as $T^l$ and its backup as $\hat{T}^l$.  
+
+Given $(G,T^l,l,\alpha)$, for each $T_i^l \in T^l$ \steiner uses the following two-step procedure to compute $\hat{T}^l_i$:
+\begin{enumerate}
+	
+	\item Make a copy of $G$ called $G'=(V',E')$ and remove $l$ from $E'$.  Set the link weight of each $e \in T^l_i$ to $0$ and the link weight of $e \notin T^l_i$ to $1$. 
+
+	\item Run the \arbor approximation, using the brute-force approach described above, over $G'$ and set $\hat{T}^l_i$ to be the result.
+	If $\hat{T}^l_i$ satisfies the Equation \ref{eqn:mc-obj-function} constraint, return $\hat{T}^l_i$ as the solution.  Otherwise, return False. 
+	%Otherwise, compute the backup tree from scratch -- run the \arbor approximation 
+	%over a copy of $G$ that uses $G$'s original link weights and has link $l$ removed -- and return this result.
+
+\end{enumerate}
+Setting the primary tree link weights to $0$ in Step (1) allows the \arbor approximation algorithm to use any primary tree edge without penalty (i.e., adding cost to the 
+backup tree) and so encourages reusing primary tree edges.  If \steiner returns False in Step (2) either $\alpha$ must be made larger or a new multicast tree should be computed from
+scratch that satisfies the tree size constraint.
+
+In Figure \ref{fig:intuition-example}, \steiner uses $f$ as the the intermediate node for $\hat{T}_b$, yielding density of $2$ (the cost of connecting terminals $p$,$q$,$r$, and $s$ to the 
+root is $2$).   The bunch for $\hat{T}_c$ is formed using $m$ as the intermediate node with density $0.4$: the cost of connecting $r$ and $s$ to the root is $1$ and $t$,$u$, and $v$ connect
+with the root at $0$ cost. 
+
+
