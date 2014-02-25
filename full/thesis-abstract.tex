@@ -29,17 +29,27 @@ for measurement error detection and use the minimal number of PMUs to infer the 
 For each PMU placement problem, we prove it is NP-Complete, propose a simple greedy approximation algorithm, and evaluate our greedy solutions.
 
 
-Lastly, we design algorithms for fast recovery from link failures in a smart grid communication network. 
-This is a two-part problem: (a) link detection failure and (b) algorithms for pre-computing backup multicast trees.  
-To address (a), we design link-detection failure and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
+%This is a three-part problem: (a) link failure detection, (b) algorithms for pre-computing backup multicast trees, and (c) fast installation of these backup trees.
+In the last section of this thesis, we design algorithms for fast recovery from link failures in a smart grid communication network. 
+We propose, design, and evaluate solutions to all three aspects of link failure recovery: (a) link failure detection, (b) algorithms for pre-computing backup multicast trees, and
+(c) fast backup tree installation. 
+
+To address (a), we design link-failure detection and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
 OpenFlow is an open source framework that cleanly separates the control and data planes for use in network management and control.
-For part (b), we propose a set of algorithms that precompute backup multicast trees to be used after a link failure. 
-Each algorithm aims to minimize end-to-end packet loss and delay but each uses different optimization criteria to achieve this goal: minimizing control overhead, 
-minimizing \xxn{the maximum number of flows impacted by the ``next'' link failure (\mfs)}, and minimizing \xxn{the maximum number of sink nodes impacted by the ``next'' link failure (\mds)}.
-%minimize the number of affected flows across all multicast trees, and minimize the number of affected sink nodes across all multicast trees.
-We implement and evaluate these algorithms in Openflow. 
+For part (b), we formulate a new problem, \mcs, that pre-computes backup multicast trees that aim to minimize control plane signinaling overhead. We prove \mc 
+is at least NP-hard and present a corresponding approximation algorithm.
+Lastly, two control plane algorithms are proposed that signal data plane switches to install pre-computed backup trees. 
+An optimized version of each installation algorithm is designed that finds a near minimum set of forwarding rules 
+by sharing forwarding rules across multicast groups. This optimization
+%by using OpenFlow to dynamically write (and delete) identifiers in packet headers to allow forwarding rules to be shared across multicast groups. This optimization
+reduces backup tree install time and control state.  
+We implement these algorithms using the POX open-source OpenFlow controller and evaluate them using the Mininet emulator. 
 		
 
+%for fast installation of backup trees that both use OpenFlow to signal switches to install backup trees. 
+%An optimization applied to each installation algorithm is designed to speed backup tree installation and reduce the amount of pre-installed control state.
+%by identifying common forwarding behavior across multicast groups and using OpenFlow to dynamically write identifiers in packet headers to allow forwarding rules to be shared across multicast groups.
+%consolidating forwarding rules in cases where multiple multicast trees have the same forwarding behavior. 
 
 \end{abstract}
 
