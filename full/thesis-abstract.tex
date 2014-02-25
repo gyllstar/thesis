@@ -30,13 +30,13 @@ For each PMU placement problem, we prove it is NP-Complete, propose a simple gre
 
 
 %This is a three-part problem: (a) link failure detection, (b) algorithms for pre-computing backup multicast trees, and (c) fast installation of these backup trees.
-In the last section of this thesis, we design algorithms for fast recovery from link failures in a smart grid communication network. 
+In the last part of this thesis, we design algorithms for fast recovery from link failures in a smart grid communication network. 
 We propose, design, and evaluate solutions to all three aspects of link failure recovery: (a) link failure detection, (b) algorithms for pre-computing backup multicast trees, and
 (c) fast backup tree installation. 
 
 To address (a), we design link-failure detection and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
 OpenFlow is an open source framework that cleanly separates the control and data planes for use in network management and control.
-For part (b), we formulate a new problem, \mcs, that pre-computes backup multicast trees that aim to minimize control plane signinaling overhead. We prove \mc 
+For part (b), we formulate a new problem, \mcs, that pre-computes backup multicast trees that aim to minimize control plane signaling overhead. We prove \mc 
 is at least NP-hard and present a corresponding approximation algorithm.
 Lastly, two control plane algorithms are proposed that signal data plane switches to install pre-computed backup trees. 
 An optimized version of each installation algorithm is designed that finds a near minimum set of forwarding rules 

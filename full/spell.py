@@ -9,7 +9,9 @@ import os
 rollback_folder="rollback"
 pmu_folder="pmu"
 multicast_folder = "multicast"
+curr_folder = "."
 folderList = list()
+folderList.append(curr_folder)
 folderList.append(rollback_folder)
 folderList.append(pmu_folder)
 folderList.append(multicast_folder)

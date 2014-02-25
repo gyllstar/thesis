@@ -61,13 +61,19 @@ We formulate a set of problems that consider PMU measurement errors, which have 
 that aim to satisfy two constraints: place PMUs ``near'' each other to allow for measurement error detection and use the minimal number of PMUs to infer the state of the maximum number of system buses and transmission lines. 
 For each PMU placement problem, we prove it is NP-Complete, propose a simple greedy approximation algorithm, and evaluate our greedy solutions.
 
-In our final technical thesis chapter, we present the initial design for algorithms that provide recovery from link failures in a smart grid communication network.  
-The recovery problem divides into two parts: (a) link failure detection and (b) algorithms for pre-computing backup multicast trees.  
-To address (a), we sketch the design of a link-failure detection and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
-OpenFlow is an open source framework that cleanly separates the control and data planes for use in centralized network management and control.
-For part (b), we propose initial outlines for a set of algorithms that precompute backup multicast trees to be installed after a link failure.
-As future work, we plan to implement these algorithms in Openflow and evaluate them.
-
+In our final technical chapter, we design algorithms that provide fast recovery from link failures in a smart grid communication network. 
+We propose, design, and evaluate solutions to all three aspects of link failure recovery: (a) link failure detection, (b) algorithms for pre-computing backup multicast trees, and
+(c) fast backup tree installation. 
+To address (a), we design link-failure detection and reporting mechanisms that use OpenFlow -- an open standard that cleanly separates the control and data planes for use 
+in network management and control -- to detect link failures when and where they occur \emph{inside} the network.
+For part (b), we formulate a new problem, \mcs, that pre-computes backup multicast trees with the aim of minimizing control plane signaling overhead. We prove \mc 
+is at least NP-hard and present a corresponding approximation algorithm.
+Lastly, two control plane algorithms are proposed that signal data plane switches to install pre-computed backup trees. 
+An optimized version of each installation algorithm is designed that finds a near minimum set of forwarding rules 
+by sharing forwarding rules across multicast groups. This optimization
+%by using OpenFlow to dynamically write (and delete) identifiers in packet headers to allow forwarding rules to be shared across multicast groups. This optimization
+reduces backup tree install time and control state.  
+We implement these algorithms using the POX open-source OpenFlow controller and evaluate them using the Mininet emulator. 
 
 
 
@@ -81,7 +87,8 @@ The main contributions of this thesis are:
 
 	\item  We design, develop, and evaluate three different algorithms -- \seconds, \purges, and \cpr -- for correctly recovering from the injection of false routing state in distance vector routing.
 		\second performs localized state invalidation, followed by network-wide recovery using the traditional distance vector algorithm. 
-		\purge first globally invalidates false state and then uses distance vector routing to recompute distance vectors.  \cpr takes and stores local routing table snapshots at each router, and then uses 
+		\purge first globally invalidates false state and then uses distance vector routing to recompute distance vectors.  \cpr takes and stores local routing table 
+		snapshots at each router, and then uses 
 		a rollback mechanism to implement recovery. We prove the correctness of each algorithm for scenarios of single and multiple compromised nodes.
 
 	
@@ -102,15 +109,31 @@ The main contributions of this thesis are:
 		when PMU placements require cross-validation versus placements that do not. 
 	
 
-	\item We propose initial approaches for algorithms that perform preplanned recovery from link failures in a smart grid communication network.
-	Our proposed research divides into two parts: link failure detection and algorithms for pre-computing backup multicast trees.  For the first part, we design algorithms 
-	that use OpenFlow to detect and report link failures when and where they occur, \emph{inside} the network.  To address the second part, we 
-	propose a set of algorithms that precompute backup multicast trees that are installed after a link failure.  Each algorithm computes a backup multicast tree that aims to
-	minimize end-to-end packet loss and delay, but each algorithm uses different optimization criteria in achieving this goal: 
-	minimizing control overhead, minimizing \xxn{the maximum number of flows impacted by the ``next'' link failure (\mfs)}, and minimizing
-	\xxn{the maximum number of sink nodes impacted by the ``next'' link failure (\mds)}.
-	%minimizing the number of affected flows across all multicast trees, and minimizing the number of affected sink nodes across all multicast trees. 
-	These optimization criteria differ from those proposed in the literature.
+	\item We propose, implement, and evaluate a suite of algorithms for fast recovery from link failures in a smart grid communication network: \pcnts, \steiners, \pres, \posts, and \merges.
+	\pcnt uses OpenFlow to accurately detect link failures inside the network, rather than using slower end-to-end measurements. Then, we define a new problem, \mcs, that computes backup 
+	multicast trees with the aim of minimizing control plane signaling overhead. %`multicast trees with the aim of maximizing the reuse of installed multicast trees. 
+	This problem is shown to be at least NP-hard, motivating the design of an approximation, \steiners. 
+	Next, we design two algorithms -- \pre and \post -- for fast backup tree installation. \pre pre-installs backup tree forwarding rules and
+	activates these rules after a link failure is detected, while, \post installs backup trees \emph{after} a link a failure is detected. 
+	Lastly, we present \merges, an algorithm that can be applied to \pre and \post to speed backup tree installations and reduces the amount of pre-installed forwarding state. 
+	\merge does so using local optimization to create a near minimal set of forwarding rules by ``merging'' forwarding rules in cases where multiple multicast trees have common forwarding behavior.
+
+	\item 
+	We use Mininet \cite{Lantz10} simulations to evaluate our algorithms over communication networks based on real portions of the power grid.
+	We find that \pcnt provides fast and accurate link loss estimates: after sampling only $75$ packets
+	the $95\%$ confidence interval is within $15\%$ of the true loss probability.  
+	Additionally, we find \pre yields faster recovery than \post -- 
+	\post sends up to $10$ times more control messages than \pre -- but at the cost of storage overhead at each switch (pre-installed backup trees can account for as much
+	as $35\%$ of the capacity a conventional OpenFlow switch \cite{Curtis11}).
+	Finally, we observe that \merge reduces control plane messaging and the amount of pre-installed forwarding state by a factor of $2$ to $2.5$ when compared to a standard multicast
+	implementation, resulting in faster installation and manageable sized flow tables.
+
+
+	%Lastly, we present \merges, an algorithm that can be applied to \pre and \post to boost performance; 
+	%with \posts, \merge speeds backup tree installations and, when used with \pres, reduces the amount of pre-installed forwarding state. 
+
+
+
 
 		
 
@@ -121,7 +144,6 @@ The main contributions of this thesis are:
 
 \section{Thesis Outline}
 
-The rest of this thesis proposal is organized as follows.  We present algorithms for recovery from false routing state in distributed routing algorithms in Chapter \ref{ch:rollback}.  
-In Chapter \ref{ch:pmu} we formulate PMU placement problems that provide measurement error detection.  Chapter \ref{ch:reliable-mcast} presents our initial and proposed research on 
-efficient recovery from link failures in a smart grid communication network.  We conclude by outlining planned future work in Chapter \ref{ch:conclusion}.
-
+The rest of this thesis is organized as follows.  We present algorithms for recovery from false routing state in distributed routing algorithms in Chapter \ref{ch:rollback}.  
+In Chapter \ref{ch:pmu}, we formulate PMU placement problems that provide measurement error detection.  Chapter \ref{ch:reliable-mcast} presents our algorithms for fast recovery 
+from link failures in a smart grid communication network.  We conclude, in Chapter \ref{ch:conclusion}, with a summary and discussion of open problems emerging from this thesis.
