@@ -137,40 +137,50 @@ false state from the entire network. However, globally invalidating false state 
 \subsection{The CPR Algorithm}
 \label{subsec:cpr}
 
-\cprs {\footnote {\small The name is an abbreviation for {\bf C}heck{\bf P}oint and {\bf R}ollback. }} 
-is our third and final recovery algorithm. 
-Unlike \second and \purges, \cpr only requires that clocks across different
-nodes be loosely synchronized i.e. the maximum clock offset between
-any two nodes is assumed to be  bounded. For ease of explanation, we
-describe \cpr as if the clocks at different nodes are perfectly
-synchronized. Extensions to handle loosely synchronized clocks should
-be clear. Accordingly, we assume that all neighbors of \bads, are
-notified of the time, $t'$, at which \bad was compromised.  At the end of this section we comment on how the clock synchronization requirement assumption can be dropped by
-using logical clocks.
+%\cprs {\footnote The name is an abbreviation for {\bf C}heck{\bf P}oint and {\bf R}ollback. } is our third and final recovery algorithm. 
+%Unlike \second and \purges, \cpr requires that clocks across differentnodes be loosely synchronized i.e. the maximum clock offset between
+%any two nodes is assumed to be  bounded. For ease of explanation, we describe \cpr as if the clocks at different nodes are perfectly
+%synchronized. Extensions to handle loosely synchronized clocks should be clear. Accordingly, we assume that all neighbors of \bads, are notified of the time, $t'$, at which \bad was compromised.
 
+\cprs {\footnote The name is an abbreviation for {\bf C}heck{\bf P}oint and {\bf R}ollback. } is our third and final recovery algorithm.  
+%\cpr periodically creates network-wide checkpoints, an archived copy of each node's distance matrix.  After being notified and uses these checkpoints to roll back distance matrices to a s
 For each node, $i \in G$, \cpr adds a time dimension to \minvi and \dmatrixis, which \cpr then uses to locally archive a complete history of values. 
-Once the compromised node is discovered, 
-the archive allows the system to rollback to 
-a system snapshot from a time before \bad was compromised. From this point, \cpr needs to remove \bad and \oldvector and update stale distance values resulting from link cost changes.
-We describe each algorithm step in detail. % (1) Create a \minv and \dmatrix archive. (2) roll back to a valid snapshot, and (3) steps after the rollback. 
+Once the compromised node is discovered, the archive allows the system to rollback to a system snapshot from a time before \bad was compromised. From this point, \cpr needs to 
+remove \bad and \oldvector and update stale distance values resulting from link cost changes.
+This approach is similar to ones used in temporal databases \cite{Jensen91,Lomet06}.
+
+Unlike \second and \purges, \cpr requires that the detection algorithm specify either \badvector or the logical time \bad was compromised.  This requirement will become more clear as 
+we describe each \cpr step in detail below.
+%We describe each \cpr algorithm step in detail
 
 {\bf Step 1: Create a \minv and \dmatrix archive.} 
-	We define a  \emph{snapshot} of a data structure to be a copy of all current distance values along with a timestamp.
-	{\footnote {\small In practice, we only archive distance values that have changed. Thus each distance value is associated with its own timestamp.}}
-	The timestamp marks the time at which that set of distance values start being used. 
-	\minv and \dmatrix are the only data structures that need to be archived. This approach is similar to ones used in temporal databases 
-  \cite{Jensen91,Lomet06}.
+	We define a \emph{snapshot} or \emph{checkpoint} as a copy of the current distance values of \minv and \dmatrix along with a timestamp. 
+	Lamport's clock algorithm  \cite{Lamport78} is used to compute the logical timestamp associated with each snapshot.  Periodically, a node initiates a diffusing computation to compute a network-wide
+	snapshot (i.e., a checkpoint at each network node).  The logical clock is piggybacked in each diffusing computation message. 
 
-  Our distributed archive algorithm is quite simple.  %For a given data structure, a node archives all current distance values whenever one of the values change. 
-	Each node has a choice of archiving at a given frequency (e.g., every $m$ timesteps) or after some number of distance value changes (e.g., each time a distance 
-	value changes).  Each node must choose the same option, which is specified as an input parameter to \cprs. A node archives independently of all other nodes.
-  A side effect of independent archiving, is that even with perfectly synchronized clocks, the union of all snapshots may not constitute a globally consistent snapshot. 
-  For example, a link cost change event may only have propagated 
-  through part of the network, in which case the snapshot for some nodes will reflect this link cost change (i.e., among nodes that have learned of the event) 
-  while for other nodes no local snapshot will reflect the occurrence of this event. We will see that a globally consistent snapshot is not required for correctness.  
+	
+	Under this checkpoint algorithm, the union of all node snapshots may not constitute a globally consistent snapshot.
+ 	For example, a link cost change event may only have propagated 
+  	through part of the network, in which case the snapshot for some nodes will reflect this link cost change (i.e., among nodes that have learned of the event) 
+  	while for other nodes no local snapshot will reflect the occurrence of this event. We will see that a globally consistent snapshot is not required for correctness.  
+	
+	Each node, $j$, additionally records each \minvi vector received from $i \in adj(j)$ and the computed Lamport timestamp.  This step is necessary to later determine 
+	the checkpoint to restore after the bad node is compromised (Step 2).
+
+  %Our distributed archive algorithm is quite simple.  %For a given data structure, a node archives all current distance values whenever one of the values change. 
+%	Each node has a choice of archiving at a given frequency (e.g., every $m$ timesteps) or after some number of distance value changes (e.g., each time a distance 
+%	value changes).  Each node must choose the same option, which is specified as an input parameter to \cprs. A node archives independently of all other nodes.
+  
+
 
 {\bf Step 2: Rolling back to a valid snapshot.} 
-Rollback is implemented using diffusing computations. Neighbors of the compromised node independently select a snapshot to roll back to, such that the snapshot is the most recent one taken
+Rollback is implemented using diffusing computations. First, each neighbor, $i$, of the compromised node determines the logical timestamp of the snapshot it wishes to restore.  
+$i$ searches its archive for the oldest logical timestamp associated 
+Using \badvector
+ We assume the detection algorithm specifies \badvector.  Using \badvectors, e
+independently determines the timestamp
+
+Neighbors of the compromised node independently select a snapshot to roll back to, such that the snapshot is the most recent one taken
 before $t'$.  Each such node, $i$, rolls back to this snapshot by restoring the \minvi and \dmatrixi values from the snapshot.  Then, $i$ initiates a diffusing computation to inform all other
 nodes to do the same. If a node has already rolled back and receives an additional rollback message, it is ignored. 
 (Note that this rollback algorithm ensures that no reinstated distance value uses \badvector because every node rolls back to a snapshot 
@@ -199,35 +209,6 @@ However, \cpr incurs storage overhead resulting from periodic snapshots of \minv
 This can be expensive to update.
 Finally, unlike \purge and \seconds, \cpr requires loosely synchronized clocks because without a bound on the clock offset, nodes may rollback to highly inconsistent local snapshots.
 Although correct, this would severely degrade \cpr performance.
-
-{\bf Using Logical Clock Timestamps.}
-We can use Lamport's clock algorithm  \cite{Lamport78} to assign timestamps based on logical, rather than physical, clocks.  This allows us to drop the inconvenient assumption of loosely 
-synchronized clocks. Here we briefly outline how the stated \cpr algorithm can be modified to use Lamport timestamps to create and restore system snapshots.
-
-%First, \cpr is modified to create network-wide snapshots are periodically computed using diffusing computations instead of each node creating snapshots independently.   
-First, \cpr is modified to create network-wide snapshots using diffusing computations instead of each node creating snapshots independently.   
-Here each node records the logical timestamp when creating a checkpoint. 
-The logical clock values are determined using the ``happened before'' relation defined by Lamport \cite{Lamport78}, where we limit events to be messages sent and received, and 
-by piggybacking each node's logical clock value with each message it sends.  
-
-%After being notified of \bads, each neighbor, $i$, of the compromised node determines the logical timestamp of the snapshot it wishes to restore.  
-%This requires that either the detection algorithm specifies either \badvector or the logical time \bad was compromised. 
-The second change to \cpr is in how each node determines the snapshot to restore during the roll back process (i.e., Step 2 above). Starting with each $i \in adj(\overline{v})$, 
-$i$ determines the logical timestamp of the snapshot it wishes to restore.  This requires that the detection algorithm specifies either \badvector or the logical time \bad was compromised. 
-In the latter case, finding the appropriate snapshot to restore is straightforward.
-If only \badvector is provided, $i$ must additionally record each \minv vector received (as a part of standard distance vector messaging) 
-along with the corresponding Lamport timestamp.  By doing so, this archive can be searched
-to find the logical timestamp in which \badvector was first received at $i$.  Let $t_l$ denote this timestamp.  Next, $i$ initiates a diffusing computation instructing all other nodes 
-to roll back to their most recent snapshot taken before $t_l$.  After this point, the diffusing computations continue as described in Step 2 above and Step 3 
-remains unchanged.
-
-Rolling back using logical timestamps does not guarantee that all \badvector state is removed because Lamport timestamps only provide partial ordering of events. 
-With logical clocks, \cpr can be thought of as a best-effort approach to quickly removing false routing state by rolling back in time.  \cpr is still correct with logical clocks
-for the reasons described in its correctness proof (Corollary \ref{cor:cpr-correct-single}).  
-%This version of \cpr can be thought of as a best-effort approach to quickly removing false routing state.
-
-
-
 
 \subsection{Multiple Compromised Nodes}
 \label{subsec:mult}

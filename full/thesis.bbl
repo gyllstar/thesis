@@ -238,6 +238,11 @@ Kurose, J., and Ross, K.
   internet}, second edition~ed.
 \newblock Addison-Wesley, Reading, 2003.
 
+\bibitem{Lamport78}
+Lamport, L.
+\newblock Time, clocks, and the ordering of events in a distributed system.
+\newblock {\em Communications of the ACM 21}, 7 (1978), 558--565.
+
 \bibitem{Lantz10}
 Lantz, B., Heller, B., and McKeown, N.
 \newblock A network in a laptop: Rapid prototyping for software-defined
