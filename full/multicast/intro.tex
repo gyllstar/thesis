@@ -18,21 +18,49 @@ In the worst case, this can lead to a cascade of power grid failures similar to 
 
 As a result of this sensitivity, the communication network that disseminates PMU data must provide hard end-to-end data delivery guarantees \cite{Bakken11}. 
 For this reason, the Internet's best-effort service model alone is unable to meet the stringent packet delay and loss requirements of PMU applications \cite{Birman05}. 
-Instead, either a new network architecture or enhancements to the Internet architecture and its protocols are needed \cite{Bakken11,Birman05,Naspi10,Hopkinson09} to provide efficient, in-network forwarding and fast recovery from link and switch failures. 
-Additionally, multicast should figure prominently in data  delivery, since PMUs disseminate  data  to applications across many locations \cite{Bakken11}.
+Instead, either a new network architecture or enhancements to the Internet architecture and its protocols are needed \cite{Bakken11,Birman05,Naspi10,Hopkinson09} to provide efficient, 
+in-network forwarding and fast recovery from link and switch failures. Additionally, multicast should figure prominently in data  delivery, since PMUs disseminate data to applications 
+across many locations \cite{Bakken11}.
 
-We design algorithms for fast recovery from link failures in a Smart Grid communication network. 
+We believe that new network protocols or changes to existing ones are required to meet PMU application requirements. Software-defined networking (SDN) provides a vehicle for this type of innovation 
+by providing access to the forwarding plane of network switches and routers. % New services can be defined in a programmable control plane
+New network services are defined in a programmable control plane, which SDN cleanly separate from the data plane (e.g., forwarding), and are instantiated as forwarding rules installed
+at network switches.  %As their only task, the data plane switches forward packets according to these forwarding rules.  
+The communication between the control and data planes, including the messaging to install forwarding rules, are typically managed by the OpenFlow protocol \cite{OpenFlow08}.
+\footnote{Protocols other than OpenFlow can be used.  OpenFlow is the first and most popular protocol used to interface between SDN control and data planes.  }
+
+This separation of control and data planes is similar in spirit to the Gridstat system \cite{Bakken11}, which also manages data plane actions through a separate control plane. 
+Gridstat \cite{Bakken11} is a publish-subscribe system designed specifically for disseminating critical power grid data. 
+Because Gridstat is an overlay service built on top of existing network protocols, Gridstat alone cannot meet delivery requirements of PMU applications. 
+Rather, the underlying network protocols themselves must also be improved. %to meet PMU delivery requirements.  
+This is the emphasis of our work here. 
+
+In this chapter, we use OpenFlow to define new control plane algorithms, tailored specifically for disseminating critical power grid data, and to execute these algorithms by installing
+new forwarding rules at network switches.
+We focus on algorithms for fast recovery from link failures.
 Informally, a link that does not meet its packet delivery requirement (either due to excessive delay or actual packet loss) is considered failed. 
 We propose, design, and evaluate solutions to all three aspects of link failure recovery: link failure detection, algorithms for pre-computing backup multicast trees, 
 and fast backup tree installation. 
 
-We make the following contributions in this paper: 
+
+%SDN decouples the control plane (e.g., network management, routing) from the data plane (e.g., forwarding), allowing for new services to be defined in a programmable control plane.   and implemented  
+
+
+
+%Gridstat \cite{Bakken11} is a publish-subscribe system designed specifically for disseminating critical power grid data. 
+%Because Gridstat is an overlay service built on top of existing network protocols, Gridstat alone cannot meet delivery requirements of PMU applications. 
+%Rather, the underlying network protocols themselves must be improved to meet PMU delivery requirements.  This is the emphasis of our work here. 
+%We use OpenFlow to make changes to existing routers and switches installed
+
+
+
+We make the following contributions in this chapter: 
 \begin{itemize}
 
 	%\item {\bf Link-failure detection algorithm}. 
 	\item {\bf Design a link-failure detection algorithm}. 
-	We design a link-failure detection and reporting mechanism, \pcnts, that uses OpenFlow \cite{OpenFlow08} -- an open source framework 
-	that centralizes network management and control -- to detect link failures when and where they occur, \emph{inside} the network.  In-network detection is used to reduce the 
+	We design a link-failure detection and reporting mechanism, \pcnts, that uses OpenFlow \cite{OpenFlow08}  
+	to detect link failures when and where they occur, \emph{inside} the network.  In-network detection is used to reduce the 
 	time between when the loss occurs and when it is detected. In contrast, most previous work \cite{Almes99,Caceres99,Friedl09} focuses on measuring end-to-end packet loss, 
 	resulting in slower detection times. 
 
@@ -65,8 +93,8 @@ We make the following contributions in this paper:
 	
 	We use simulations based on the Mininet emulator \cite{Lantz10} to evaluate our algorithms over synthetic graphs and actual IEEE bus systems.
 	We find that \pcnt provides fast and accurate link loss estimates: after sampling only $75$ packets
-	the $95\%$ confidence interval is within $15\%$ of the true loss probability.  Additionally, we find \pre yields faster recovery than \post -- 
-	\post sends up to $10$ times more control messages than \pre -- but at the cost of storage overhead at each switch (in our simulations, pre-installed backup trees can account for as much
+	the $95\%$ confidence interval is within $15\%$ of the true loss probability.  Additionally, we find \pre yields faster recovery than \post 
+	(\post sends up to $10$ times more control messages than \pres) but at the cost of storage overhead at each switch (in our simulations, pre-installed backup trees can account for as much
 	as $35\%$ of the capacity a conventional OpenFlow switch \cite{Curtis11}).
 	Lastly, we observe that \merge reduces control plane messaging and the amount of pre-installed forwarding state by a factor of $2$ to $2.5$ when compared to a standard multicast
 	implementation, resulting in faster installation and manageable sized flow tables.
@@ -76,12 +104,12 @@ We make the following contributions in this paper:
 		
 \end{itemize}
 
-The remainder of this paper is structured as follows.  In the following section (Section \ref{sec:prelim}), we provide necessary background on PMU application requirements and OpenFlow, as well
+The remainder of this chapter is structured as follows.  In the following section (Section \ref{sec:prelim}), we provide necessary background on PMU application requirements and OpenFlow, as well
 as introduce a running example later used to describe our algorithms.  
 Then, we outline our algorithms in Section \ref{sec:algs}:
 Section \ref{subsec:pcnt} details our link-failure detection algorithm called \pcnts; in Section \ref{subsec:min-control}, we outline our algorithms for computing backup multicast trees; and
 then describe algorithms for installation backup trees in Section \ref{subsec:install-backups}; Section \ref{subsec:merge} presents \merges, a fast multicast implementation 
 when applied to our backup tree installation algorithms can significantly improve performance.
 Next, we briefly survey relevant literature (Section \ref{sec:related}).
-Our simulation study is presented in Section \ref{sec:evaluation}. Section \ref{sec:conclude} concludes the paper with a summary and directions for future work.
+Our simulation study is presented in Section \ref{sec:evaluation}. Section \ref{sec:conclude} concludes the chapter with a summary and directions for future work.
 

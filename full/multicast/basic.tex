@@ -13,7 +13,7 @@ matches packets using the group's multicast address (all other field are left as
 outgoing links in $E_i$. If a switch in $E_i$ is adjacent to a downstream host, $h_j$, in the multicast group, then the flow entry rewrites the destination layer 2 and 3 addresses of the 
 packet copy sent to $h_j$ to $h_j$'s layer 2 and 3 addresses.
 \footnote{Our initial plan was to use the group table abstraction described in the OpenFlow 1.1 specification \cite{OpenFlowSpec1.1} to implement multicast but, unfortunately,
-as of the writing of this paper, this feature is not yet supported by the POX controller \cite{Pox} used to implement our algorithms and 
+as of the writing of this chapter, this feature is not yet supported by the POX controller \cite{Pox} used to implement our algorithms and 
 the Mininet emulator \cite{Lantz10} used in our simulations.}
 
 % (1) mcast group assigned mcast address, (2) After mcast tree computed for mcast group, use dst address to match packets at each switch.  packets fwded out the ports corresponding to

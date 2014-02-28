@@ -179,16 +179,16 @@ However, we caution that the (Bernoulli) loss process is biased in favor of \pcn
 
 \begin{figure}
   \centering
-   \includegraphics[scale=0.71]{figs/pcount-setup.pdf}
+   \includegraphics[scale=0.75]{figs/pcount-setup.pdf}
 \caption{Dumbbell topology used in the \pcnt evaluation.}
 \label{fig:eval-pcount-setup}
 \end{figure}
 
 \begin{figure*}[t]
   \begin{center}
-    \subfigure[Loss estimates as function of \pcnt window size.]{\label{fig:pcount-loss-windows}\includegraphics[scale=0.31]{figs/pcount-loss-windows.pdf}}
-    \subfigure[Loss estimates as function of number of packets.]{\label{fig:pcount-loss-pkts}\includegraphics[scale=0.31]{figs/pcount-loss-pkts.pdf}}
-    \subfigure[Processing time, with $95\%$ confidence intervals, as a function of number of monitored flows.]{\label{fig:pcount-dtime}\includegraphics[scale=0.31]{figs/pcount-dtime-w5-j4000.pdf}}
+    \subfigure[Loss estimates as function of \pcnt window size.]{\label{fig:pcount-loss-windows}\includegraphics[scale=0.4]{figs/pcount-loss-windows.pdf}}
+    \subfigure[Loss estimates as function of number of packets.]{\label{fig:pcount-loss-pkts}\includegraphics[scale=0.4]{figs/pcount-loss-pkts.pdf}}
+    \subfigure[Processing time, with $95\%$ confidence intervals, as a function of number of monitored flows.]{\label{fig:pcount-dtime}\includegraphics[scale=0.4]{figs/pcount-dtime-w5-j4000.pdf}}
   \end{center}
 	\caption{\pcnt results monitoring a single link, $(u,d)$, from Figure \ref{fig:eval-pcount-setup}.}
   \label{fig:pcount-res}
@@ -531,12 +531,12 @@ table capacity.
 
 \begin{figure*}[t]
   \begin{center}
-    \subfigure[Number of control messages to activate backup trees.]{\label{fig:msgs57}\includegraphics[scale=0.31]{figs/msgs-ieee57.pdf}}
-	\subfigure[Total time to install all backup tree flow entries.]{\label{fig:install-time57}\includegraphics[scale=0.31]{figs/install-time-ieee57.pdf}}
-	\subfigure[\pres: mean number of pre-installed rules per switch.]{\label{fig:preinstall57}\includegraphics[scale=0.31]{figs/preinstall-ieee57.pdf}}
+    \subfigure[Number of control messages to activate backup trees.]{\label{fig:msgs57}\includegraphics[scale=0.4]{figs/msgs-ieee57.pdf}}
+	\subfigure[Total time to install all backup tree flow entries.]{\label{fig:install-time57}\includegraphics[scale=0.4]{figs/install-time-ieee57.pdf}}
+	\subfigure[\pres: mean number of pre-installed rules per switch.]{\label{fig:preinstall57}\includegraphics[scale=0.4]{figs/preinstall-ieee57.pdf}}
     %\subfigure[\pres: maximum number of pre-installed rules at a single switch]{\label{fig:preinstall-max57}\includegraphics[scale=0.31]{figs/preinstall-max-ieee57.pdf}}
-	\subfigure[\posts: number of stale flow entries resulting from link failure. ]{\label{fig:reactive-garbage57}\includegraphics[scale=0.31]{figs/garbage-ieee57.pdf}}
-    \subfigure[\pres: number of stale flow entries resulting from link failure. ]{\label{fig:preinstall-garbage57}\includegraphics[scale=0.31]{figs/preinstall-garbage-ieee57.pdf}}
+	\subfigure[\posts: number of stale flow entries resulting from link failure. ]{\label{fig:reactive-garbage57}\includegraphics[scale=0.4]{figs/garbage-ieee57.pdf}}
+    \subfigure[\pres: number of stale flow entries resulting from link failure. ]{\label{fig:preinstall-garbage57}\includegraphics[scale=0.4]{figs/preinstall-garbage-ieee57.pdf}}
   \end{center} 
 	\caption{\post and \pre results for a single random link failure of synthetic topologies based on IEEE bus system $57$. 
 	Each data point is the mean over $105$ simulation runs and the $95\%$ confidence interval is shown in all plots expect (c).} %\ref{fig:preinstall57}.}

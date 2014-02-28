@@ -1,0 +1,79 @@
+\section{Thesis Summary}
+\label{sec:thesis-summary}
+
+This thesis examined component failures in communication networks and algorithms to make networks robust to these failures.  
+Three separate but related problems were considered: node (i.e., switch or router) failure in traditional networks such as the Internet or wireless sensor networks,
+the failure of critical sensors that measure voltage and current throughout the smart grid, and link failures in a smart grid communication network.
+
+Chapter \ref{ch:rollback} considered scenarios where a malicious node injects and spreads false routing state throughout a network of routers.
+We presented and evaluated three new algorithms -- \seconds, \purges, and \cpr -- for recovery in such scenarios. %from false state in distance vector routing 
+Among these algorithms, we found that \cpr -- a checkpoint-rollback based algorithm -- yielded the lowest message overhead and convergence time over topologies
+with fixed link weights but at the cost of storage overhead at the routers.
+%However, \cpr required that routing table copies are stored at each router while the other two algorithms did not. %and synhcronization using logical clocks.
+For topologies where link weights could change, \purge performed best because \purge globally invalidated false routing state, helping \purge avoid the problems that 
+plagued \cpr and \seconds: updating large amounts of stale state (\cprs) and the \infinity problem (\seconds).
+%Unlike \cprs, \purge had no stale state to update because \purge does not rollback in time.  
+%The \infinity problem resulted in high message overhead for \seconds, while \purge eliminated the \infinity problem by globally purging false state before finding new least cost paths.
+
+
+Next, in Chapter \ref{ch:pmu} we studied PMUs -- critical sensors being deployed in electric power grids worldwide that provide voltage and current measurements to power grid operators -- and 
+a set of placement problems that considered detecting PMU measurement errors.  We formulated four PMU placement problems that 
+considered two constraints: place PMUs ``near'' each other to allow for measurement error detection and use the minimal number of PMUs to infer the state 
+of the maximum number of system buses and transmission lines. Each PMU placement problem was proved to be NP-Complete. As a first step, we proposed and evaluated  
+a simple greedy approximation algorithm to each placement problem.  Using simulations based on topologies generated from real portions of the North American electric power grid, we found 
+our greedy algorithms consistently reached close-to-optimal performance (on average within $97\%$ of optimal).  
+Additionally, our simulations showed that requiring PMUs to placed near each other (in order to detect measurement errors) resulted in only a small decrease in system observability (on average
+only $5\%$ fewer buses were observed with this additional constraint), which made for a strong case for imposing this requirement.
+%Additionally, results showed that imposing a requirement that PMUs be placed near each other (in order to detect measurement errors) resulted in a small marginal decrease
+
+In our final technical chapter, we designed algorithms that provide fast recovery from link failures in a smart grid communication network. 
+We proposed, designed, and evaluated solutions to all three aspects of link failure recovery: link failure detection, algorithms that pre-computed backup multicast trees, and
+fast backup tree installation.  Because these algorithms required making changes to network switches, these algorithms used OpenFlow to access and modify the forwarding plane of switches. 
+
+
+As an alternative to slower algorithms based on end-to-end measurements, we presented \pcnts.  \pcnt used OpenFlow primitives to detect and report link failures inside the network.  
+Next, a new problem was formulated, \mcs, that considered computing backup trees that reuse edges of already installed multicast trees as a means to reduce control plane signaling.
+\mc was proved to be at least NP-hard so we designed an approximation algorithm for \mcs. Lastly, we presented two algorithms, \pre and \posts, that installed backup trees 
+at OpenFlow controlled switches.  As an optimization to \pre and \posts, we designed \merges, an algorithm that consolidated forwarding rules at switches where multiple trees have common children.
+
+These algorithms were evaluated using Mininet simulations and considered communication networks that mirrored the structure of actual portions of the North American power grid.
+\pcnt packet loss estimates were accurate when monitoring even a small number of flows over short time window: after sampling only $75$ packets, the $95\%$ confidence interval of \pcnt loss estimates 
+were within $15\%$ of the true loss probability. 
+\pre had a $10x$ decrease in control messages compared with \post because \pre required only a single control message to install each backup tree since all other rules were pre-installed,
+whereas \post had to signal multiple switches to install each backup tree. 
+However, \pres's pre-installed forwarding rules accounted for a significant portion of scarce OpenFlow switch table capacity, especially in cases with many multicast groups (up to $35\%$ of
+flow table capacity of a standard OpenFlow switch). Fortunately, \merge reduced the amount of pre-installed forwarding state by a factor of $2-2.5$, to acceptable levels.
+
+
+\section{Future Work}
+\label{sec:thesis-future}
+
+Our research in Chapter \ref{ch:rollback} %on recovery from false routing state injected into a network of routers 
+only considered a single instance of false state, which was our best guess of the worst possible false routing state (we assumed that the compromised
+node falsely claimed the minimum distance to all nodes).  As future work, we are interested in exploring how our algorithms (i.e, \seconds, \purges, and \cprs) 
+respond to other possible false state values. Some interesting values include false state that maximizes the effect of the \infinity problem and false state that contaminates a bottleneck link.
+
+
+%finding the worst possible false state a compromised node can inject. Some options include the minimum distance to all nodes (e.g., our choice for false state used in this paper), 
+%state that maximizes the effect of the count-to-∞ problem, and false state that contaminates a bottleneck link.
+
+There are several topics for future work from Chapter \ref{ch:pmu} on PMU placement. The success of the greedy PMU placement algorithms suggests that bus systems have special topological characteristics,
+and investigating these properties could provide interesting insight to power grid topologies. 
+%As additional item for future work, we would like to evaluate our greedy approximations 
+%using the IEEE bus systems used to evaluate our greedy approximations are based on portions of the North American power grid from the 1960s
+Because our brute-force optimal algorithm could only produce data points for small inputs, much could be learned by implementing  
+the integer programming approach proposed by Xu and Abur \cite{Xu04} to solve \fulls.  This would provide valuable data points to measure the relative performance of {\tt greedy}.
+
+
+From Chapter \ref{ch:reliable-mcast}, several problems remain unaddressed. One problem of interest is using optimization criteria different from \mcs's objective function 
+to compute backup trees and then evaluate \pres, \posts, and \merge performance using these backup trees.  
+For example, backup trees may be computed with the goal of protecting against the worst-case impact of a subsequent link failure
+by minimizing the maximum number of multicast trees using a single link. %These backup tree help protect against the worst-case impact of a subsequent link failure. 
+It is unknown how effective our installation algorithms would be given these types of backup trees. % when given backup trees other than those computed using \steiners.
+Measurements using real OpenFlow hardware switches would strengthen our \pcnt processing time and backup tree installation time results, which both suffered from inaccuracies due to Mininet's
+performance fidelity issues.  
+%Lastly, the complexity of the problem \merge addresses is an open-question: find the minimum number of forwarding rules for a set of multicast trees. 
+Lastly, the problem \merge addresses -- find the minimum number of forwarding rules for a set of multicast trees -- has unknown complexity.
+We conjectured that this problem is NP-hard in Section \ref{subsubsec:merge-discuss}.
+
+

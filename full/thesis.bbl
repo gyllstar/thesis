@@ -19,20 +19,10 @@ Aazami, A., and Stilp, M.D.
   {P}ropagation.
 \newblock {\em CoRR abs/0710.2139\/} (2007).
 
-\bibitem{Almes99}
-Almes, G., Kalidindi, S., and Zekauskas, M.
-\newblock A one-way packet loss metric for ippm.
-\newblock Tech. rep., RFC 2680, September, 1999.
-
 \bibitem{Liu98}
 Ammann, P., Jajodia, S., and Liu, Peng.
 \newblock {R}ecovery from {M}alicious {T}ransactions.
 \newblock {\em IEEE Trans. on Knowl. and Data Eng. 14}, 5 (2002), 1167--1185.
-
-\bibitem{Bakken11}
-Bakken, D.E., Bose, A., Hauser, C.H., Whitehead, D.E., and Zweigle, G.C.
-\newblock Smart generation and transmission with coherent, real-time data.
-\newblock {\em Proceedings of the IEEE 99}, 6 (2011), 928--951.
 
 \bibitem{Baldwin93}
 Baldwin, T.L., Mili, L., Boisen, M.B., Jr., and Adapa, R.
@@ -40,22 +30,10 @@ Baldwin, T.L., Mili, L., Boisen, M.B., Jr., and Adapa, R.
   {M}easurement {P}lacement.
 \newblock {\em Power Systems, IEEE Transactions on 8}, 2 (May 1993), 707 --715.
 
-\bibitem{Barford04}
-Barford, P., and Sommers, J.
-\newblock Comparing probe-and router-based packet-loss measurement.
-\newblock {\em Internet Computing, IEEE 8}, 5 (2004), 50--56.
-
 \bibitem{Gall87}
 Bertsekas, D., and Gallager, R.
 \newblock {\em {D}ata {N}etworks}.
 \newblock Prentice-Hall, Inc., Upper Saddle River, NJ, USA, 1987.
-
-\bibitem{Birman05}
-Birman, K.P., Chen, J., Hopkinson, E.M., Thomas, R.J., Thorp, J.S.,
-  Van~Renesse, R., and Vogels, W.
-\newblock Overcoming communications challenges in software for monitoring and
-  controlling power systems.
-\newblock {\em Proceedings of the IEEE 93}, 5 (2005), 1028--1041.
 
 \bibitem{Naspi10}
 Bobba, R., Heine, E., Khurana, H., and Yardley, T.
@@ -68,30 +46,11 @@ Brueni, D.~J., and Heath, L.~S.
 \newblock The {PMU} {P}lacement {P}roblem.
 \newblock {\em SIAM Journal on Discrete Mathematics 19}, 3 (2005), 744--761.
 
-\bibitem{Caceres99}
-C{\'a}ceres, R., Duffield, N.G., Horowitz, J., and Towsley, D.F.
-\newblock Multicast-based inference of network-internal loss characteristics.
-\newblock {\em Information Theory, IEEE Transactions on 45}, 7 (1999),
-  2462--2480.
-
-\bibitem{Charikar98}
-Charikar, M., Chekuri, C., Cheung, T., Dai, Z., Goel, A., Guha, S., and Li, M.
-\newblock Approximation algorithms for directed steiner problems.
-\newblock In {\em Proceedings of the ninth annual ACM-SIAM symposium on
-  Discrete algorithms\/} (1998), Society for Industrial and Applied
-  Mathematics, pp.~192--200.
-
 \bibitem{Abur06}
 Chen, J., and Abur, A.
 \newblock {P}lacement of {PMU}s to {E}nable {B}ad {D}ata {D}etection in {S}tate
   {E}stimation.
 \newblock {\em Power Systems, IEEE Transactions on 21}, 4 (2006), 1608 --1615.
-
-\bibitem{Cui04}
-Cui, J.H., Faloutsos, M., and Gerla, M.
-\newblock An architecture for scalable, efficient, and fast fault-tolerant
-  multicast provisioning.
-\newblock {\em Network, IEEE 18}, 2 (2004), 26--34.
 
 \bibitem{Curtis11}
 Curtis, Andrew~R, Mogul, Jeffrey~C, Tourrilhes, Jean, Yalagandula, Praveen,
@@ -129,24 +88,6 @@ Feamster, N., and Balakrishnan, H.
 \newblock In {\em 2nd Symp. on Networked Systems Design and Implementation
   (NSDI)\/} (Boston, MA, May 2005).
 
-\bibitem{Fei01}
-Fei, A., Cui, J., Gerla, M., and Cavendish, D.
-\newblock A ``dual-tree'' scheme for fault-tolerant multicast.
-\newblock In {\em Communications, 2001. ICC 2001. IEEE International Conference
-  on\/} (2001), vol.~3, IEEE, pp.~690--694.
-
-\bibitem{Ferguson13}
-Ferguson, Andrew~D., Guha, Arjun, Liang, Chen, Fonseca, Rodrigo, and
-  Krishnamurthi, Shriram.
-\newblock {P}articipatory {N}etworking: An {API} for application control of
-  {SDN}s.
-\newblock In {\em ACM SIGCOMM\/} (2013).
-
-\bibitem{Friedl09}
-Friedl, A., Ubik, S., Kapravelos, A., Polychronakis, M., and Markatos, E.
-\newblock Realistic passive packet loss measurement for high-speed networks.
-\newblock {\em Traffic Monitoring and Analysis\/} (2009), 1--7.
-
 \bibitem{JJ93}
 Garcia-Lunes-Aceves, J.~J.
 \newblock {L}oop-free {R}outing using {D}iffusing {C}omputations.
@@ -157,13 +98,6 @@ Garey, M.R., and Johnson, D.~S.
 \newblock {\em {C}omputers and {I}ntractability: {A} {G}uide to the {T}heory of
   {N}{P}-{C}ompleteness}.
 \newblock W. H. Freeman \& Co., New York, NY, USA, 1979.
-
-\bibitem{Gyllstrom12}
-Gyllstrom, D., Rosensweig, E., and Kurose, J.
-\newblock On the impact of pmu placement on observability and cross-validation.
-\newblock In {\em Proceedings of the 3rd International Conference on Future
-  Energy Systems: Where Energy, Computing and Communication Meet\/} (2012),
-  ACM, p.~20.
 
 \bibitem{Gyllstrom10}
 Gyllstrom, D., Vasudevan, S., Kurose, J., and Miklau, G.
@@ -183,11 +117,6 @@ Heckmann, O., Piringer, M., Schmitt, J., and Steinmetz, R.
   Models, methods and tools for reproducible network research\/} (New York, NY,
   USA, 2003), ACM, pp.~28--32.
 
-\bibitem{Hopkinson09}
-Hopkinson, K., Roberts, G., Wang, X., and Thorp, J.
-\newblock Quality-of-service considerations in utility communication networks.
-\newblock {\em Power Delivery, IEEE Transactions on 24}, 3 (2009), 1465--1474.
-
 \bibitem{Jeff}
 Jefferson, D.
 \newblock {V}irtual {T}ime.
@@ -198,13 +127,6 @@ Jensen, C., Mark, L., and Roussopoulos, N.
 \newblock {I}ncremental {I}mplementation {M}odel for {R}elational {D}atabases
   with {T}ransaction {T}ime.
 \newblock {\em IEEE Trans. on Knowl. and Data Eng. 3}, 4 (1991), 461--473.
-
-\bibitem{Johnson07}
-Johnson, Anthony, Tucker, Robert, Tran, Thuan, Paserba, John, Sullivan, Dan,
-  Anderson, Chris, and Whitehead, Dave.
-\newblock Static var compensation controlled via synchrophasors.
-\newblock In {\em proceedings of the 34th Annual Western Protective Relay
-  Conference, Spokane, WA\/} (2007).
 
 \bibitem{Johnson84b}
 Johnson, M.J.
@@ -217,20 +139,6 @@ Johnson, M.J.
 \newblock Updating routing tables after resource failure in a distributed
   computer network.
 \newblock {\em Networks 14\/} (1984), 379--391.
-
-\bibitem{Kodialam02}
-Kodialam, M., and Lakshman, T.
-\newblock Dynamic routing of bandwidth guaranteed multicasts with failure
-  backup.
-\newblock In {\em Network Protocols, 2002. Proceedings. 10th IEEE International
-  Conference on\/} (2002), IEEE, pp.~259--268.
-
-\bibitem{Kotani12}
-Kotani, D., Suzuki, K., and Shimonishi, H.
-\newblock A design and implementation of openflow controller handling ip
-  multicast with fast tree switching.
-\newblock In {\em Applications and the Internet (SAINT), 2012 IEEE/IPSJ 12th
-  International Symposium on\/} (2012), IEEE, pp.~60--67.
 
 \bibitem{Kurose03}
 Kurose, J., and Ross, K.
@@ -250,19 +158,6 @@ Lantz, B., Heller, B., and McKeown, N.
 \newblock In {\em Proceedings of the 9th ACM SIGCOMM Workshop on Hot Topics in
   Networks\/} (New York, NY, USA, 2010), Hotnets-IX, ACM, pp.~19:1--19:6.
 
-\bibitem{Lau05}
-Lau, W., Jha, S., and Banerjee, S.
-\newblock Efficient bandwidth guaranteed restoration algorithms for multicast
-  connections.
-\newblock {\em NETWORKING 2005. Networking Technologies, Services, and
-  Protocols; Performance of Computer and Communication Networks; Mobile and
-  Wireless Communications Systems\/} (2005), 237--243.
-
-\bibitem{Li06}
-Li, G., Wang, D., and Doverspike, R.
-\newblock Efficient distributed mpls p2mp fast reroute.
-\newblock In {\em Proc. of IEEE INFOCOM\/} (2006).
-
 \bibitem{Lich82}
 Lichtenstein, D.
 \newblock {P}lanar {F}ormulae and {T}heir {U}ses.
@@ -280,30 +175,6 @@ Lomet, D., Barga, R., Mokbel, M., and Shegalov, G.
 \newblock In {\em ICDE '06: Proceedings of the 22nd International Conference on
   Data Engineering\/} (Washington, DC, USA, 2006), IEEE Computer Society,
   p.~35.
-
-\bibitem{Luebben09}
-Luebben, R., Li, G., Wang, D., Doverspike, R., and Fu, X.
-\newblock Fast rerouting for ip multicast in managed iptv networks.
-\newblock In {\em Quality of Service, 2009. IWQoS. 17th International Workshop
-  on\/} (2009), IEEE, pp.~1--5.
-
-\bibitem{Pox}
-Mccauley, J.
-\newblock P{O}{X}: {A} {P}ython-based {O}penflow {C}ontroller.
-\newblock \url{http://www.noxrepo.org/pox/about-pox/}.
-
-\bibitem{OpenFlow08}
-McKeown, Nick, Anderson, Tom, Balakrishnan, Hari, Parulkar, Guru~M., Peterson,
-  Larry~L., Rexford, Jennifer, Shenker, Scott, and Turner, Jonathan~S.
-\newblock Openflow: enabling innovation in campus networks.
-\newblock {\em Computer Communication Review 38}, 2 (2008), 69--74.
-
-\bibitem{Medard99}
-M{\'e}dard, M., Finn, S.G., Barry, R.A., and Gallager, R.G.
-\newblock Redundant trees for preplanned recovery in arbitrary vertex-redundant
-  or edge-redundant graphs.
-\newblock {\em IEEE/ACM Transactions on Networking (TON) 7}, 5 (1999),
-  641--652.
 
 \bibitem{Mili90}
 Mili, L., Baldwin, T., and Adapa, R.
@@ -343,44 +214,11 @@ Padmanabhan, V., and Simon, D.
 \newblock {S}ecure {T}raceroute to {D}etect {F}aulty or {M}alicious {R}outing.
 \newblock {\em SIGCOMM Comput. Commun. Rev. 33}, 1 (2003), 77--82.
 
-\bibitem{OpenFlowSpec1.1}
-Pfaff, B., et~al.
-\newblock Openflow switch specification version 1.1.0 implemented (wire
-  protocol 0x02), 2011.
-
-\bibitem{Pointurier02}
-Pointurier, Y.
-\newblock Link failure recovery for mpls networks with multicasting.
-\newblock Master's thesis, University of Virginia, 2002.
-
-\bibitem{Reitblatt11}
-Reitblatt, M., Foster, N., Rexford, J., and Walker, D.
-\newblock Consistent updates for software-defined networks: Change you can
-  believe in!
-\newblock In {\em Proceedings of the 10th ACM Workshop on Hot Topics in
-  Networks\/} (2011), ACM, p.~7.
-
-\bibitem{Rosen01}
-Rosen, E., Viswanathan, A., Callon, R., et~al.
-\newblock Multiprotocol label switching architecture.
-
-\bibitem{Rotsos12}
-Rotsos, C., Sarrar, N., Uhlig, S., Sherwood, R., and Moore, A.
-\newblock O{F}{L}{O}{P}{S}: An {O}pen {F}ramework for {O}penflow {S}witch
-  {E}valuation.
-\newblock In {\em Passive and Active Measurement\/} (2012), Springer,
-  pp.~85--95.
-
 \bibitem{Paul02}
 School, K., and Westhoff, D.
 \newblock {C}ontext {A}ware {D}etection of {S}elfish {N}odes in {DSR} based
   {A}d-hoc {N}etworks.
 \newblock In {\em Proc. of IEEE GLOBECOM\/} (2002), pp.~178--182.
-
-\bibitem{Tian05}
-Tian, A.J., and Shen, N.
-\newblock Fast reroute using alternative shortest paths.
-\newblock draft-tian-frr-alt-shortest-path-01.txt, July 2004.
 
 \bibitem{Vanfretti-thesis}
 Vanfretti, L.
@@ -394,14 +232,6 @@ Vanfretti, L., Chow, J.~H., Sarawgi, S., and Fardanesh, B.~(B.).
 \newblock A {P}hasor-{D}ata-{B}ased {St}ate {E}stimator {I}ncorporating {P}hase
   {B}ias {C}orrection.
 \newblock {\em Power Systems, IEEE Transactions on 26}, 1 (Feb 2011), 111--119.
-
-\bibitem{Wu97}
-Wu, C.S., Lee, S.W., and Hou, Y.T.
-\newblock Backup vp preplanning strategies for survivable multicast atm
-  networks.
-\newblock In {\em Communications, 1997. ICC 97 Montreal,'Towards the Knowledge
-  Millennium'. 1997 IEEE International Conference on\/} (1997), vol.~1, IEEE,
-  pp.~267--271.
 
 \bibitem{Xu04}
 Xu, B., and Abur, A.

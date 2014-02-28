@@ -24,7 +24,7 @@ single misconfigured router that had spread false routing state to several Inter
 
 
 %In a smart grid, especially, component failure can be catastrophic.
-In particular, component failure in a smart grid can be catastrophic.
+Component failure in a smart grid can be especially catastrophic.
 For example, if smart grid sensors or links in its supporting communication network fail, smart grid applications can make incorrect decisions and take corresponding (incorrect) actions. 
 Critical smart grid applications required to operate and manage a power grid are especially vulnerable to such failures because typically these applications have strict data delivery requirements,
 needing both ultra low latency and assurance that data is received correctly. 
@@ -47,14 +47,18 @@ from incorrectly injected state information.
 Distance vector forms the basis for many routing algorithms widely used in the Internet (e.g., BGP, a path-vector algorithm) and in multi-hop wireless networks (e.g., AODV, diffusion routing).
 
 In the first technical chapter of this thesis, we design, develop, and evaluate three different approaches for correctly recovering from the injection of false distance vector routing state (e.g., a compromised node incorrectly
-claiming a distance of $0$ to all destinations). Such false state, in turn, may propagate to other routers through the normal execution of distance vector routing, causing other nodes to (incorrectly) route via the misconfigured node,
-making this a network-wide problem. Recovery is correct if the routing tables in all nodes have converged to a global state in which all nodes have removed each compromised node as a destination,
-and no node has a least cost path to any destination that routes through a compromised node.  
+claiming a distance of $0$ to all destinations). Such false state, in turn, may propagate to other routers through the normal execution of distance vector routing, causing other nodes to (incorrectly) route via the misconfigured node, making this a network-wide problem.
+Recovery is correct if the routing tables of all nodes have converged to a global state where, for each node, all compromised nodes are removed as a destination and
+no least cost path routes through a compromised node.  
+%Recovery is correct if the routing tables of all nodes have converged to a global state meeting the following conditions.  
+%For each node, all compromised nodes are removed as a destination and no least cost path routes through a compromised node.  
+%Recovery is correct if the routing tables of all nodes have converged to a global state where all nodes have removed each compromised node as a destination
+%and no node has a least cost path to any destination that routes through a compromised node.  
 
-The second and third thesis chapters consider robustness from component failure specifically in the context of the smart grid. Because reliability is a key requirement for the smart grid, we focus on 
+The second and third thesis chapters consider robustness from component failure  in the context of the smart grid. Because reliability is a key requirement for the smart grid, we focus on 
 preplanned approaches to failure recovery.
 
-In our second thesis chapter, we study a type of sensor, a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
+In our second thesis chapter, we study a sensor, called a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
 PMUs provide voltage and current measurements at a sampling rate orders of magnitude higher than the status quo.  As a result, PMUs can 
 both drastically improve existing power grid operations and enable an entirely new set of applications, such as the reliable integration of renewable energy resources. 
 We formulate a set of problems that consider PMU measurement errors, which have been observed in practice.  Specifically, we specify four PMU placement problems
@@ -63,9 +67,11 @@ For each PMU placement problem, we prove it is NP-Complete, propose a simple gre
 
 In our final technical chapter, we design algorithms that provide fast recovery from link failures in a smart grid communication network. 
 We propose, design, and evaluate solutions to all three aspects of link failure recovery: (a) link failure detection, (b) algorithms for pre-computing backup multicast trees, and
-(c) fast backup tree installation. 
-To address (a), we design link-failure detection and reporting mechanisms that use OpenFlow -- an open standard that cleanly separates the control and data planes for use 
-in network management and control -- to detect link failures when and where they occur \emph{inside} the network.
+(c) fast backup tree installation. Because this requires modifying network switches and routers, we use OpenFlow -- an open standard that cleanly separates the control 
+and data planes for use in network management and control -- to program data plane forwarding.  This allows our algorithms to execute in the data plane.
+
+
+To address (a), we design link-failure detection and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
 For part (b), we formulate a new problem, \mcs, that pre-computes backup multicast trees with the aim of minimizing control plane signaling overhead. We prove \mc 
 is at least NP-hard and present a corresponding approximation algorithm.
 Lastly, two control plane algorithms are proposed that signal data plane switches to install pre-computed backup trees. 
@@ -115,16 +121,16 @@ The main contributions of this thesis are:
 	This problem is shown to be at least NP-hard, motivating the design of an approximation, \steiners. 
 	Next, we design two algorithms -- \pre and \post -- for fast backup tree installation. \pre pre-installs backup tree forwarding rules and
 	activates these rules after a link failure is detected, while, \post installs backup trees \emph{after} a link a failure is detected. 
-	Lastly, we present \merges, an algorithm that can be applied to \pre and \post to speed backup tree installations and reduces the amount of pre-installed forwarding state. 
+	Lastly, we present \merges, an algorithm that can be applied to \pre and \post to speed backup tree installations and reduce the amount of pre-installed forwarding state. 
 	\merge does so using local optimization to create a near minimal set of forwarding rules by ``merging'' forwarding rules in cases where multiple multicast trees have common forwarding behavior.
 
 	\item 
 	We use Mininet \cite{Lantz10} simulations to evaluate our algorithms over communication networks based on real portions of the power grid.
 	We find that \pcnt provides fast and accurate link loss estimates: after sampling only $75$ packets
 	the $95\%$ confidence interval is within $15\%$ of the true loss probability.  
-	Additionally, we find \pre yields faster recovery than \post -- 
-	\post sends up to $10$ times more control messages than \pre -- but at the cost of storage overhead at each switch (pre-installed backup trees can account for as much
-	as $35\%$ of the capacity a conventional OpenFlow switch \cite{Curtis11}).
+	Additionally, we find \pre yields faster recovery than \post ( 
+	\post sends up to $10$ times more control messages than \pres) but at the cost of storage overhead at each switch (pre-installed backup trees can account for as much
+	as $35\%$ of the capacity of a conventional OpenFlow switch \cite{Curtis11}).
 	Finally, we observe that \merge reduces control plane messaging and the amount of pre-installed forwarding state by a factor of $2$ to $2.5$ when compared to a standard multicast
 	implementation, resulting in faster installation and manageable sized flow tables.
 

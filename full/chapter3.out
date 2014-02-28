@@ -1,0 +1,35 @@
+\BOOKMARK [0][-]{chapter.1}{Recovery from Link Failures in a Smart Grid Communication Network}{}
+\BOOKMARK [1][-]{section.1.1}{Introduction}{chapter.1}
+\BOOKMARK [1][-]{section.1.2}{Preliminaries}{chapter.1}
+\BOOKMARK [2][-]{subsection.1.2.1}{PMU Applications and Their QoS Requirements}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.2}{Motivating Example}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.3}{Notation and Assumptions}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.4}{OpenFlow}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.5}{Multicast Implementation}{section.1.2}
+\BOOKMARK [1][-]{section.1.3}{Algorithms}{chapter.1}
+\BOOKMARK [2][-]{subsection.1.3.1}{Link Failure Detection Using OpenFlow}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.2}{Computing Backup Trees}{section.1.3}
+\BOOKMARK [3][-]{subsubsection.1.3.2.1}{Multicast Recycling Problem}{subsection.1.3.2}
+\BOOKMARK [3][-]{subsubsection.1.3.2.2}{Bunchy Approximation Algorithm}{subsection.1.3.2}
+\BOOKMARK [2][-]{subsection.1.3.3}{Installing Backup Trees}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.4}{Garbage Collection}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.5}{Optimized Multicast Implementation}{section.1.3}
+\BOOKMARK [3][-]{subsubsection.1.3.5.1}{Motivation: Basic Algorithm Inefficiencies}{subsection.1.3.5}
+\BOOKMARK [3][-]{subsubsection.1.3.5.2}{Merger Algorithm for Primary Trees}{subsection.1.3.5}
+\BOOKMARK [3][-]{subsubsection.1.3.5.3}{Merger Algorithm for Backup Trees}{subsection.1.3.5}
+\BOOKMARK [3][-]{subsubsection.1.3.5.4}{Merger Discussion}{subsection.1.3.5}
+\BOOKMARK [1][-]{section.1.4}{Related Work}{chapter.1}
+\BOOKMARK [2][-]{subsection.1.4.1}{Smart Grid Communication Networks}{section.1.4}
+\BOOKMARK [2][-]{subsection.1.4.2}{Detecting Packet Loss}{section.1.4}
+\BOOKMARK [2][-]{subsection.1.4.3}{Recovery from Link Failures}{section.1.4}
+\BOOKMARK [1][-]{section.1.5}{Evaluation}{chapter.1}
+\BOOKMARK [2][-]{subsection.1.5.1}{Link Failure Detection Simulations}{section.1.5}
+\BOOKMARK [2][-]{subsection.1.5.2}{Backup Tree Installation Simulations}{section.1.5}
+\BOOKMARK [3][-]{subsubsection.1.5.2.1}{Bunchy Results}{subsection.1.5.2}
+\BOOKMARK [3][-]{subsubsection.1.5.2.2}{Signaling Overhead}{subsection.1.5.2}
+\BOOKMARK [3][-]{subsubsection.1.5.2.3}{Time to Install Backup Trees}{subsection.1.5.2}
+\BOOKMARK [3][-]{subsubsection.1.5.2.4}{Switch Flow Table Size}{subsection.1.5.2}
+\BOOKMARK [3][-]{subsubsection.1.5.2.5}{Garbage Collection Overhead}{subsection.1.5.2}
+\BOOKMARK [3][-]{subsubsection.1.5.2.6}{Summary}{subsection.1.5.2}
+\BOOKMARK [1][-]{section.1.6}{Conclusions and Future Work}{chapter.1}
+\BOOKMARK [0][-]{chapter*.1}{Bibliography}{}

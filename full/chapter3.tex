@@ -216,9 +216,9 @@
 %% They are Mandatory; except that you could leave out the copyright page
 %% if you were preparing an M.S. thesis instead of a PhD dissertation.
 \frontmatter
-\maketitle
-\copyrightpage     %% not required for an M.S. thesis
-\signaturepage
+%\maketitle
+%\copyrightpage     %% not required for an M.S. thesis
+%\signaturepage
 
 %%
 %% Dedication is optional -- but this is how you create it
@@ -233,15 +233,15 @@
 %  Thanks to me. 
 
 
-\input{thesis-abstract}
+%\input{thesis-abstract}
 
 
 %%
 %% Table of contents is mandatory, lists of tables and figures are 
 %% mandatory if you have any tables or figures; must be in this order.
-\tableofcontents                % Table of contents
-\listoftables                   % List of Tables
-\listoffigures                  % List of Figures
+%\tableofcontents                % Table of contents
+%\listoftables                   % List of Tables
+%\listoffigures                  % List of Figures
 
 
 
@@ -256,87 +256,21 @@
 
 %\unnumberedchapter{Introduction}
 
-\input{intro.tex}
-
-\chapter{Recovery from False Routing State in Distributed Routing Algorithms}
-\label{ch:rollback}
-
-\input{rollback/intro.tex}
-
-
-\input{rollback/problem-stmt}
-
-\input{rollback/algorithms}
-
-
-\input{rollback/analysis}
-
-\input{rollback/experiments}
-
-\input{rollback/related}
-
-
-\input{rollback/conclusion}
-
-
-%\chapter{??? Background: Smart Grid and PMU Sensors ???}
-
-
-
-\chapter{PMU Sensor Placement for Measurement Error Detection in the Smart Grid}
-\label{ch:pmu}
-
-\input{pmu/intro}
-
-\input{pmu/prelim}
-
-\input{pmu/problem-stmt-inject}
-
-
-\input{pmu/approx} 
-
-
-\input{pmu/simulations-inject}
-
-\input{pmu/related}
-
-\input{pmu/conclude}
 
 \chapter{Recovery from Link Failures in a Smart Grid Communication Network}
 \label{ch:reliable-mcast}
 
-%\input{multicast/intro}
+\input{multicast/intro}
 
-%\input{multicast/prelim}
+\input{multicast/prelim}
 
-%\input{multicast/algs}
+\input{multicast/algs}
 
-%\input{multicast/related}
+\input{multicast/related}
 
-%\input{multicast/evaluation}
+\input{multicast/evaluation}
 
-%\input{multicast/conclude-mcast}
-
-
-
-%\input{multicast/reliable-mcast-tmp-placeholder.tex}
-
-\chapter{Thesis Conclusions and Future Work}
-\label{ch:conclusion}
-
-\input{conclude.tex}
-
-
-%% End of body
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\appendix
-
-\input{rollback/rollback-appendix.tex}
-
-\input{pmu/pmu-appendix.tex}
-
-%\input{multicast/appendix.tex}
+\input{multicast/conclude-mcast}
 
 
 %%
@@ -349,7 +283,7 @@
 %%
 %% A bibliography is required.
 \bibliographystyle{umthesis}
-\bibliography{thesis}
+\bibliography{chapter3}
 \end{document}
 
 %%% Local Variables: 
