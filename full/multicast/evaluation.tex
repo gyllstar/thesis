@@ -33,7 +33,7 @@ Then, we consider how controller and switch processing time increases as \pcnt m
 {\bf Accuracy of Loss Probability Estimates.}
 For the dumbbell topology shown in Figure \ref{fig:eval-pcount-setup}, we use \pcnt to measure the packet loss over link $(u,d)$.  We generate $m$ multicast groups
 where each $h_1,h_2, ..., h_m$ multicasts packets to terminal nodes $s_1, s_2, ..., s_m$ at a constant rate of $60$ packets per second, the standard sampling rate of PMUs.  \base is used
-to implement multicast, resulting in $m$ separate flow entries at $u$ and $d$.  At the end of the section we comment how our results apply to \merges. We let $m=\{10,20,30,40,50\}$
+to implement multicast, resulting in $m$ separate flow table entries at $u$ and $d$.  At the end of the section we comment how our results apply to \merges. We let $m=\{10,20,30,40,50\}$
 \footnote{Simulations run prohibitively slow for $m>50$ due to CPU overload.} %the CPU overhead of each of the $m$ constant bit rate flows made each simulation run prohibitively slow.}
 and, using Mininet, drop packet traversing $(u,d)$ using a Bernoulli process with loss probability $p=\{.01,.05,.10\}$.  
 %Let $w$ be \pcnt loss estimates are a function of its window size ($w$) and number of monitored link flows ($k$).
@@ -112,8 +112,8 @@ than $1\%$ of the overall processing time, part (d), the time to process statist
 %We measure the total switch processing time as the time between when \pcnt sends its first and last statistic query, minus the average controller-to-switch delay.  
 
 Figure \ref{fig:pcount-dtime} shows the processing time, computed as described in the previous paragraph, as a function of the number of flows \pcnt monitors, $k$.
-\footnote{Fake multicast groups and corresponding flow entries are generated and installed at $u$ and $d$ in cases where \pcnt monitors more than the $1$ multicast group.}
-Each data point is the mean computed over $50$ simulation runs. To measure the effect of flow table size on query processing time, we install $r$ additional flow entries at $u$ and $d$.
+\footnote{Fake multicast groups and corresponding flow table entries are generated and installed at $u$ and $d$ in cases where \pcnt monitors more than the $1$ multicast group.}
+Each data point is the mean computed over $50$ simulation runs. To measure the effect of flow table size on query processing time, we install $r$ additional flow table entries at $u$ and $d$.
 
 We find that processing time increases quadratically with $k$ and there is a significant gap in processing time between each $r$.  In practice, we expect non-empty flow tables so the $r=0$ curve
 is overly optimistic.  Therefore, to reasonably achieve sub-second processing time, our results show that fewer than $75$ flows can be monitored. 
@@ -139,7 +139,7 @@ However, we caution that the (Bernoulli) loss process is biased in favor of \pcn
 %that small $k$ should suffice.  As further evidence, we observed a small marginal increase in accuracy along with a significant penalty (in terms of detection time) resulting from using 
 %large $k$.  However, we caution that the (Bernoulli) loss process is biased in favor of \pcnt because we found loss rates to be nearly uniform across all flows traversing $(u,d)$.
 
-%In Section \ref{subsec:merge}, we stated that \merge can speed \pcnt processing because, with \merges, \pcnt can install and query fewer flow entries to achieve similar accuracy results
+%In Section \ref{subsec:merge}, we stated that \merge can speed \pcnt processing because, with \merges, \pcnt can install and query fewer flow table entries to achieve similar accuracy results
 %when monitoring more \base flows.
 %reduce switch processing time by reducing the number of \pcnt statistic queries since multiple flows may be using the same forwarding rule. 
 %Our results suggest that the savings in processing time can be significant. 
@@ -151,7 +151,7 @@ However, we caution that the (Bernoulli) loss process is biased in favor of \pcn
 
 %Our findings also confirm that our conjecture in Section \ref{subsec:merge} that \merge can improve \pcnt results.  Recall that \merge replaces individual forwarding rules (when possible) that 
 %have the same set of
-%outports with a single flow entry. As a result, when \pcnt copies the flow entry, $e_i$, of a monitored flow, $f_i$, for tagging and counting purposes, \pcnt indirectly monitors all other 
+%outports with a single flow table entry. As a result, when \pcnt copies the flow table entry, $e_i$, of a monitored flow, $f_i$, for tagging and counting purposes, \pcnt indirectly monitors all other 
 %flows using $e_i$ (as a result of \merges).  This allows \pcnt to derive the accuracy gains of monitoring multiple flows (each flow using $e_i$) but at the cost of monitoring a single flow 
 %(only a single \pcnt statistic query must be sent to $u$, rather than one query per flow using $e_i$). 
 %to estimate loss over a sample of more than $60$ packets/second, thereby boosting accuracy, yet only a single \pcnt statistic query must be sent to $u$ (rather than one query per flow using $e_i$
@@ -311,7 +311,7 @@ At $v$, the lower bound computation first finds the set of outports used by all 
 Among the remaining backup trees, the number of unique sets of outports, $b$, is equal to the minimum number of 
 forwarding rules that must be installed at $v$: if fewer than $b$ rules are installed at $v$, packets corresponding to at least one multicast group would not match with a rule that forwards
 packets out the correct set of ports.
-%Because at least a single flow entry is needed for each unique set of outports to ensure correct forwarding, the optimal solution cannot be less than the lower bound. 
+%Because at least a single flow table entry is needed for each unique set of outports to ensure correct forwarding, the optimal solution cannot be less than the lower bound. 
 
 As expected, we find that \pre requires less signaling overhead than \posts, including even \posts+\lbs.   \pre activates the backup trees by sending a control message
 (to install a pre-computed forwarding rule) to the root switch of each of backup tree using the failed link, whereas \post must signal multiple switches to install each 
@@ -331,7 +331,7 @@ as $m$ increases more graph edges are used: when $m=28$, $90\%$ of all network l
 This benefits \merge because it increases the likelihood that at any switch a backup tree shares the same outgoing links as at least one primary tree. 
 %This near network-wide use of graph edges is favorable for \merge because it increases the likelihood that at any switch a backup tree shares the same outgoing links as at least one primary tree. 
 Three, as $m$ increases more primary trees are affected by a link failure causing more backup trees to be installed for each link failure. 
-This provides additional opportunities for \merge to consolidate flow entries with other backup trees.
+This provides additional opportunities for \merge to consolidate flow table entries with other backup trees.
 %Three, as $m$ increases more backup trees are installed after a link failure since more primary tree are likely to use $l$. This provides additional opportunities for \merge to consolidate 
 %flows with other backup trees. %with common forwarding. 
 However, this third factor is less significant than the previous two, as only $25\%$ of \merge savings are due to consolidating flows with other backup trees.
@@ -353,7 +353,7 @@ We refer to this time duration as $t_c$.
 $t_c$  is a function of the controller transmission delay 
 (i.e., the time between when the first and last precomputed control messages are sent from the controller), the controller to switch RTT, and the time to install a forwarding rule at a switch.  
 
-We find the transmission delay to be negligible: on average, transmission delay is less than $2.8\%$ and $0.9\%$ of the time to install a \emph{single} flow entry at a switch,
+We find the transmission delay to be negligible: on average, transmission delay is less than $2.8\%$ and $0.9\%$ of the time to install a \emph{single} flow table entry at a switch,
 for \posts+\base and \posts+\merges, respectively.  Even if we conservatively assume that the inter-arrival time of installation messages at each switch is equal to the total transmission delay,
 it follows that each switch receives all control messages before completing the installation of its first backup tree rule.  Because rules are installed in parallel across switches, 
 the time to install all backup tree rules occurs when the switch with the most backup tree rules to install, $s_x$, installs its last rule.  If we assume $s_x$ has $c_x$ rules to install, let $t_d$ 
@@ -362,9 +362,9 @@ be the total transmission delay, and denote the average latency to install a sin
 	 
 Because Mininet lacks performance fidelity, we determine $t_i$ values using measurement results from the literature \cite{Ferguson13}, rather than measure rule installation times in Mininet.  
 Specifically, we assume the mean installation time per rule is $7.12$ms, as reported by Ferguson et al. \cite{Ferguson13} using the Pronto 3290 OpenFlow switch running the Indigo 2012.09.07 firmware.
-%Because Mininet lacks performance fidelity we use flow entry install times from a real OpenFlow switch (the Pronto 3290 switch running the Indigo 2012.09.07 firmware)
+%Because Mininet lacks performance fidelity we use flow table entry install times from a real OpenFlow switch (the Pronto 3290 switch running the Indigo 2012.09.07 firmware)
 %Unfortunately, because Mininet uses software rather than hardware switches, measuring switch installation times, $t_i$, in Mininet does not yield results that resemble those of 
-%real OpenFlow hardware switches.  Instead, we apply flow entry installation times reported in the literature \cite{Ferguson13} measured using the Pronto 3290 switch running the 
+%real OpenFlow hardware switches.  Instead, we apply flow table entry installation times reported in the literature \cite{Ferguson13} measured using the Pronto 3290 switch running the 
 %Indigo 2012.09.07 firmware%to our equation for $t_c$.  Specifically, we assume mean installation time per rule of $7.12$ ms \cite{Ferguson13}.  
 
 Figure \ref{fig:install-time57} shows the estimated elapsed time to install all backup trees as a function of $m$.  We set $RTT=0$ in this simulation.  The trends for each algorithm are a function 
@@ -380,8 +380,9 @@ Nonetheless, the extra milliseconds saved using \merge can be valuable to critic
 %{\bf Flow Table Size.}
 \subsubsection{Switch Flow Table Size}
 \label{subsubsec:eval-table-size}
-In our Section \ref{subsubsec:eval-signaling} simulations we found that \pre incurs less signaling overhead than \posts. Here we show that these savings come at a cost and quantify this penalty;
-\pre pre-installs large numbers of forwarding rules at the network switches resulting in bloated flow tables.
+In our Section \ref{subsubsec:eval-signaling} simulations we found that \pre incurs less signaling overhead than \posts. 
+Here we show that these savings come at a cost: \pres's pre-installed forwarding rules can account for a significant portion of limited OpenFlow switch capacity.
+%Here we show that these savings come at a cost and quantify this penalty; \pre pre-installs large numbers of forwarding rules at the network switches resulting in  bloated flow tables.
 
 Using the same setup as the other simulations in this section, we record the number of pre-installed backup tree rules at each switch during each simulation run.  
 Figure \ref{fig:preinstall57} shows the mean number of pre-installed rules per switch, $r$, as a function of $m$. 
@@ -402,7 +403,7 @@ pre-installed rules per backup tree is constant for all $m$.  Since larger $m$ i
 % if the backup tree uses the same outports as its primary tree at $v$.  Because these savings depend only on the relationship between a backup tree and its primary tree, tese savings are
 % independent of $m$ becaus % based on overlap between a backup and its primary tree
 
-Based on maximum flow table sizes of real OpenFlow switches (ranging from approximately $1500$ to $1900$ flow entries \cite{Curtis11,Ferguson13}), at most $r$ occupies  
+Based on maximum flow table sizes of real OpenFlow switches (ranging from approximately $1500$ to $1900$ flow table entries \cite{Curtis11,Ferguson13}), at most $r$ occupies  
 $19\%$ and $6.7\%$ of flow table space for \pres+\base and \pres+\merges, respectively.  We find that the switch with the most pre-installed forwarding rules (across all simulation runs) 
 has at most has $525$ pre-installed forwarding rules (occurs with \pres+\base when $m=28$).  At most, this accounts for $35\%$ of the switch's flow table capacity. %should be $12\%$ capacity for Merger
 
@@ -454,9 +455,9 @@ each primary tree link, amounting to approximately $32$ backup trees per primary
 \pres+\merge has up to an order of magnitude decrease in garbage collection versus \posts+\merges.
 
 The number of stale \pres+\merge forwarding rules actually decreases as $m$ grows.  
-Recall that for a primary tree using $l$, any of its rules is not stale if at least one other primary or backup tree uses this flow entry. 
+Recall that for a primary tree using $l$, any of its rules is not stale if at least one other primary or backup tree uses this flow table entry. 
 Because the number of pre-installed backup trees is so large (approximately $32m$), for large $m$, nearly all primary tree rules are still used after a link failure (resulting
-in a decrease in stale flow entries as $m$ grows).
+in a decrease in stale flow table entries as $m$ grows).
 
 %With \pres+\bases, a forwarding rule for primary tree, $T^l_i$, becomes stale (after $l$ fails) only if none of its approximately $32$ backup trees reuse this forwarding rule. In contrast, the same
 %forwarding rule is stale under \posts+\base if $T^l_i$'s backup tree for $l$ does not reuse the rule.   Since over thirty times more backup trees per primary tree are candidates to reuse
@@ -508,11 +509,11 @@ table capacity.
 
 
 %are both more primary trees installed in the network with forwarding rules that \merge can reuse
-%and more candidate backup tree flow entries that can be consolidated using \merges.  Thus, 
+%and more candidate backup tree flow table entries that can be consolidated using \merges.  Thus, 
 % larger m ==> more primary tree flows to reuse.  good covereage, 90% of graph edges are used by at least one PT.  
 % larger m ==> more backup trees
 
-%The ratio starts at $1$ when $m=1$ and increasing to a maximum of $2.71$ when $m=28$. As more $m$ grows, on average there are both more backup tree flow entries that can be consolidate using
+%The ratio starts at $1$ when $m=1$ and increasing to a maximum of $2.71$ when $m=28$. As more $m$ grows, on average there are both more backup tree flow table entries that can be consolidate using
 %\merge and more primary trees installed in the network that \merge can reuse, and thereby save additional sending more control messages.
 
 
@@ -532,11 +533,11 @@ table capacity.
 \begin{figure*}[t]
   \begin{center}
     \subfigure[Number of control messages to activate backup trees.]{\label{fig:msgs57}\includegraphics[scale=0.4]{figs/msgs-ieee57.pdf}}
-	\subfigure[Total time to install all backup tree flow entries.]{\label{fig:install-time57}\includegraphics[scale=0.4]{figs/install-time-ieee57.pdf}}
+	\subfigure[Total time to install all backup tree flow table entries.]{\label{fig:install-time57}\includegraphics[scale=0.4]{figs/install-time-ieee57.pdf}}
 	\subfigure[\pres: mean number of pre-installed rules per switch.]{\label{fig:preinstall57}\includegraphics[scale=0.4]{figs/preinstall-ieee57.pdf}}
     %\subfigure[\pres: maximum number of pre-installed rules at a single switch]{\label{fig:preinstall-max57}\includegraphics[scale=0.31]{figs/preinstall-max-ieee57.pdf}}
-	\subfigure[\posts: number of stale flow entries resulting from link failure. ]{\label{fig:reactive-garbage57}\includegraphics[scale=0.4]{figs/garbage-ieee57.pdf}}
-    \subfigure[\pres: number of stale flow entries resulting from link failure. ]{\label{fig:preinstall-garbage57}\includegraphics[scale=0.4]{figs/preinstall-garbage-ieee57.pdf}}
+	\subfigure[\posts: number of stale flow table entries resulting from link failure. ]{\label{fig:reactive-garbage57}\includegraphics[scale=0.4]{figs/garbage-ieee57.pdf}}
+    \subfigure[\pres: number of stale flow table entries resulting from link failure. ]{\label{fig:preinstall-garbage57}\includegraphics[scale=0.4]{figs/preinstall-garbage-ieee57.pdf}}
   \end{center} 
 	\caption{\post and \pre results for a single random link failure of synthetic topologies based on IEEE bus system $57$. 
 	Each data point is the mean over $105$ simulation runs and the $95\%$ confidence interval is shown in all plots expect (c).} %\ref{fig:preinstall57}.}

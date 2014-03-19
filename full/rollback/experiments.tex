@@ -3,7 +3,7 @@
 
 In this section, we use simulations to characterize the performance of each of our three recovery algorithms in terms of message and time overhead. 
 Our goal is to illustrate the relative performance of our recovery algorithms over different topology types (e.g., \er graphs, Internet-like graphs) and
-different network conditions (e.g., fixed link costs, changing link costs).
+different network conditions (e.g., fixed link weighs, changing link weights).
 
 
 %We build a custom simulator with a synchronous communication model: nodes send and receive messages at fixed epochs.  In each epoch, a node receives a
@@ -271,7 +271,7 @@ The simulation is setup so that the outside algorithm identifies all $m$ comprom
 After running the simulation for all possible values for $m$, we generate a new topology and repeat the above procedure. 
 We continue sampling topologies until the $90\%$ confidence interval for message overhead falls within $10\%$ of the mean message overhead. 
 
-First, we perform this simulation using \er graphs with fixed link costs.  The message overhead results are shown in Figure \ref{fig:many-fixed}(a) for $p=0.05$ and $n=100$. 
+First, we perform this simulation using \er graphs with fixed link weights.  The message overhead results are shown in Figure \ref{fig:many-fixed}(a) for $p=0.05$ and $n=100$. 
 {\footnote {\small We do not include the results for $p=\{0.15,0.25,0.50\}$ because they are consistent with the results for $p=0.05$.}}
 The relative performance of the three algorithms is consistent with the results from Simulation 1, in which we had a single compromised node.
 %We find the same trends we observed in Simulation 1 for large $k$ values in which there was a single compromised node.
@@ -403,31 +403,31 @@ compromised nodes.
 \subsection{Simulations using Graphs with Changing Link Weights}
 \label{subsec:change}
 
-So far, we have evaluated our algorithms over different topologies with fixed link costs in scenarios with single and multiple compromised nodes.
+So far, we have evaluated our algorithms over different topologies with fixed link weights in scenarios with single and multiple compromised nodes.
 We found that \cpr using poisoned reverse outperforms the other algorithms because \cpr removes false
 routing state with a single diffusing computation, rather than using an iterative distance vector process as in \second and \purges, and poisoned reverse removes
 all pairwise routing loops that occur during \cpr recovery. 
 
-In the next three simulations we evaluate our algorithms over graphs with changing link costs. We introduce link cost changes between the time \bad is compromised and when \bad is discovered 
+In the next three simulations we evaluate our algorithms over graphs with changing link weights. We introduce link weight changes between the time \bad is compromised and when \bad is discovered 
 (e.g., during $[t',t_b]$). 
-In particular, let there be $\lambda$ link cost changes per timestep, where $\lambda$ is deterministic. 
-To create a link cost change event, we choose a link (except for all $(v,\bar{v})$ links) whose link will change equiprobably among all links. 
-The new link cost is selected uniformly at random from $[1,n]$. 
+In particular, let there be $\lambda$ link weight changes per timestep, where $\lambda$ is deterministic. 
+To create a link weight change event, we choose a link (except for all $(v,\bar{v})$ links) whose link will change equiprobably among all links. 
+The new link weight is selected uniformly at random from $[1,n]$. 
 
-\subsubsection{Simulation 6: Effects of Link Cost Changes}
+\subsubsection{Simulation 6: Effects of Link Weight Changes}
 
-Except for $\lambda$, our simulation setup is identical to the one in Simulation 2. We let $\lambda = \{1,4,8\}$. In order to isolate the effects of link costs changes,
+Except for $\lambda$, our simulation setup is identical to the one in Simulation 2. We let $\lambda = \{1,4,8\}$. In order to isolate the effects of link weights changes,
 we assume that \cpr checkpoints at each timestep.
 
 Figure \ref{fig:lc} shows \purge yields the lowest message overhead for $p=.05$, but only slightly lower than \cprs. 
-\cprs's message overhead increases with larger $k$ because there are more link cost change events to process. After \cpr rolls back, it must process all link cost
+\cprs's message overhead increases with larger $k$ because there are more link weight change events to process. After \cpr rolls back, it must process all link weight
 changes that occurred in $[t',t_b]$. 
-In contrast, \second and \purge process some of the link cost change events during the interval $[t',t_b]$ as part of normal distance vector execution. 
+In contrast, \second and \purge process some of the link weight change events during the interval $[t',t_b]$ as part of normal distance vector execution. 
 In our simulation setup, these messages are not counted because 
 they do not occur in Step 4 (i.e., as part of the recovery process) of our simulation scenario described in Section \ref{sec:eval}.
 
 Our analysis further indicates that \second performance suffers because of the \infinity problem. %\purge and \second must 
-The gap between \second and the other algorithms shrinks as $\lambda$ increases because as $\lambda$ increases, link cost changes have a larger effect on message overhead.
+The gap between \second and the other algorithms shrinks as $\lambda$ increases because as $\lambda$ increases, link weight changes have a larger effect on message overhead.
 
 
 \begin{figure*}
@@ -456,33 +456,33 @@ link weights selected randomly with different $\lambda$ values.}
 %\end{figure*} 
 
 With larger $p$ values, $\lambda$ has a smaller effect on message complexity because more alternate paths are available. Thus when $p=0.15$ and $\lambda=1$,
-most of \purges's recovery effort is towards removing \badvector state, rather than processing link cost changes.  Because
-\cpr removes \badvector using a single diffusing computation and there are few link cost changes, \cpr has lower message overhead than \purge in this case. 
-As $\lambda$ increases, \cpr has higher message overhead than \purges: there are more link cost changes to process and \cpr must process all such link cost changes, 
-while \purge processes some link cost changes during the interval $[t',t_b]$ as part of normal distance vector execution. 
+most of \purges's recovery effort is towards removing \badvector state, rather than processing link weight changes.  Because
+\cpr removes \badvector using a single diffusing computation and there are few link weight changes, \cpr has lower message overhead than \purge in this case. 
+As $\lambda$ increases, \cpr has higher message overhead than \purges: there are more link weight changes to process and \cpr must process all such link weight changes, 
+while \purge processes some link weight changes during the interval $[t',t_b]$ as part of normal distance vector execution. 
 
 \subsubsection{Simulation 7: Applying Poisoned Reverse Heuristic}
 In this simulation, we apply poisoned reverse to each algorithm and repeat Simulation 6. Because \purges's diffusing computations only eliminate routing loops corresponding 
-to \badvector state, \purge is vulnerable to routing loops stemming from link cost changes.  Thus, contrary to Simulation 5, poisoned reverse improves \purge performance.
+to \badvector state, \purge is vulnerable to routing loops stemming from link weight changes.  Thus, contrary to Simulation 5, poisoned reverse improves \purge performance.
 The results are shown in Figure \ref{fig:prlc}. %Each algorithm using poisoned reverse has label ``{\tt algorithm-name}''+{\textsc PR}).
 Results for different $p$ values yield the same trends. 
 
 All three algorithms using poisoned reverse show remarkable performance gains.
-As confirmed by our profiling numbers, the improvements are significant because routing loops are more pervasive when link costs change.  
+As confirmed by our profiling numbers, the improvements are significant because routing loops are more pervasive when link weights change.  
 Accordingly, the poisoned reverse optimization yields greater benefits as $\lambda$ increases. % because larger $\lambda$ result in more routing loops. %for the standard \second and \cpr algorithms.
 
-%Each algorithm using poisoned reverse is vulnerable to routing loops larger than $2$ that originate from link cost changes,
+%Each algorithm using poisoned reverse is vulnerable to routing loops larger than $2$ that originate from link weight changes,
 \purges+{\textsc PR} removes all routing loops including loops with more than two nodes, while \seconds+{\textsc PR} does not. 
 For this reason, \purges+{\textsc PR} has lower message complexity.   %We are currently investigating this claim.
 %As in Simulation 3, \seconds+{\textsc PR} performs worse than \purges+{\textsc PR} because we believe that for \badvector state \emph{only},
 %\purges+{\textsc PR} removes routing loops larger than $2$ while \seconds+{\textsc PR} does not. Meanwhile, both 
-% \seconds+{\textsc PR} and \purges+{\textsc PR} use poisoned reverse to address routing loops resulting from link cost changes.  Thus both algorithms (and \cprs+{\textsc PR})
-%are equally vulnerable to routing loops  larger than $2$ originating from link cost changes.
+% \seconds+{\textsc PR} and \purges+{\textsc PR} use poisoned reverse to address routing loops resulting from link weight changes.  Thus both algorithms (and \cprs+{\textsc PR})
+%are equally vulnerable to routing loops  larger than $2$ originating from link weight changes.
 \cprs+{\textsc PR} has the lowest message complexity. %among the three algorithms. 
 In this simulation, the benefits of rolling back to a global snapshot taken before \bad was compromised outweigh the message overhead required to update stale state pertaining to 
-link cost changes that occurred during $[t',t_b]$. As $\lambda$ increases,
-the performance gap decreases because \cprs+{\textsc PR} must process all link cost changes that occurred in $[t',t_b]$ while \seconds+{\textsc PR}  and \purges+{\textsc PR}
-process some link cost change events during $[t',t_b]$ as part of normal distance vector execution.
+link weight changes that occurred during $[t',t_b]$. As $\lambda$ increases,
+the performance gap decreases because \cprs+{\textsc PR} must process all link weight changes that occurred in $[t',t_b]$ while \seconds+{\textsc PR}  and \purges+{\textsc PR}
+process some link weight change events during $[t',t_b]$ as part of normal distance vector execution.
 
 %However, we make the strong performance of \cprs+{\textsc PR} comes wiHh
 However, \cprs+{\textsc PR} only achieves such strong results by making two optimistic assumptions:  we assume perfectly synchronized clocks and checkpointing occurs at each timestep.
@@ -512,7 +512,7 @@ the interval $[t',t_b]$. Otherwise, our simulation setup is the same as Simulati
 
 Figure \ref{fig:lc-fixk} shows the results for an \er graph with link weights selected uniformly at random between $[1,n]$,
 $n=100$, $p=.05$, $\lambda=\{1,4,8\}$ and $k=2$. We plot message overhead against the number of timesteps \cpr must rollback, $z$. \cprs's message overhead increases with larger $z$ 
-because as $z$ increases there are more link cost change events to process. \second and \purge have constant message overhead because they operate independent of $z$.
+because as $z$ increases there are more link weight change events to process. \second and \purge have constant message overhead because they operate independent of $z$.
 
 We conclude that as the frequency of \cpr snapshots decreases, \cpr incurs higher message overhead.  Therefore, when choosing the frequency of checkpoints,
 the trade-off between storage and message overhead must be carefully considered. 
@@ -537,25 +537,25 @@ rollback. Note the y-axes have different scales.}
 
 Our results show \cpr using poisoned reverse yields the lowest message and time overhead in all scenarios. \cpr benefits from removing false state with a single
 diffusing computation. Also, applying poisoned reverse significantly reduces \cpr message complexity by eliminating pairwise routing loops resulting from
-link cost changes. However, \cpr has storage overhead, requires loosely synchronized clocks, and requires the time \bad was compromised.
+link weight changes. However, \cpr has storage overhead, requires loosely synchronized clocks, and requires the time \bad was compromised.
 
 \seconds's performance is determined by the \infinity problem. In the case of \er graphs with fixed unit link weights, the \infinity problem was minimal, 
 helping \second perform better than \purges. % In all other scenarios, poisoned reverse significantly improves \second performance because routing loops are pervasive.
 For all other topologies, poisoned reverse significantly improves \second performance because routing loops are pervasive.
 Still, \second using poisoned reverse is not as efficient as \cpr using poisoned reverse and \purges.
 
-In cases where link costs change, we found that \purge using poisoned reverse is only slightly worse than \cprs+{\textsc PR}. % with poisoned reverse. 
+In cases where link weights change, we found that \purge using poisoned reverse is only slightly worse than \cprs+{\textsc PR}. % with poisoned reverse. 
 Unlike \cprs, \purge makes use of computations that follow the injection of false state, that do not depend on false routing state.  
-Because \purge does not make the assumptions that \cpr requires, \purge using poisoned reverse is a suitable alternative for topologies with link cost changes.
+Because \purge does not make the assumptions that \cpr requires, \purge using poisoned reverse is a suitable alternative for topologies with link weight changes.
 %In contrast to \cprs, \purge makes no assumptions 
-%other than the identification of \bads, making \purge a suitable algorithm for topologies with link cost changes.
+%other than the identification of \bads, making \purge a suitable algorithm for topologies with link weight changes.
 
 %\purge avoids the \infinity problem by first globally invalidating false state.  Therefore in cases where the \infinity problem is 
 %significant, \purge outperforms \seconds.
 
-%When considering graphs with changing link costs, \cprs's performance suffers because it must process all valid link cost changes that occurred since \bad was compromised.
+%When considering graphs with changing link weights, \cprs's performance suffers because it must process all valid link weight changes that occurred since \bad was compromised.
 %Meanwhile, \second and \purge make use of computations that followed the injection of false state, that do not depend on false routing state. However, \seconds's performance degrades 
-%because of the \infinity problem.  \purge eliminates the \infinity problem and therefore yields the best performance over topologies with changing link costs.
+%because of the \infinity problem.  \purge eliminates the \infinity problem and therefore yields the best performance over topologies with changing link weights.
 
 Finally, we found that an additional challenge with \cpr is setting the parameter which determines checkpoint frequency.
 Frequent checkpointing yields lower message and time overhead at the cost of more storage overhead. Ultimately, application-specific factors must be considered

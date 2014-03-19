@@ -13,8 +13,8 @@ We propose a set of algorithms, collectively referred to as \mdrs, that make mul
 	%minimize control plane signaling overhead, prove \mc is at least NP-hard, and provide an approximation algorithm for \mc called \steiners.
 
 	\item {\bf Fast install of pre-computed backup trees} by reusing existing forwarding rules installed in the network, sharing forwarding rules among backup trees with common links, and
-	in some cases pre-installing forwarding rules before link failures occur (Section \ref{subsec:install-backups}).  The backup trees are computed using \steiner from part (2) and \pcnts, from
-	part (1), triggers their installation.
+	in some cases pre-installing forwarding rules before link failures occur (Section \ref{subsec:install-backups}).  
+	The backup trees are computed using \steiner from part (2). \pcnts, from part (1), triggers the installation of a set of backup trees.
 
 	 %backup tree installed and shown in Figure \ref{fig:intuition-example-t2}).
 	

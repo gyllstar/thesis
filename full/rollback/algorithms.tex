@@ -130,7 +130,9 @@ Note that a consequence of the diffusing computation is that not only is all \ba
 Consider the case when \bad is detected before node $i$ receives \badvectors.
 It is possible that $i$ uses \oldvector to reach a destination, $d$. In this case, the diffusing computation will set $i$'s distance to $d$ to $\infty$.
 
-An advantage of \purge is that it makes no synchronization assumptions. Also, the diffusing computations ensure that the \infinity problem does not occur by removing
+An advantage of \purge is that it operates without the need for any clock synchronization.  We will find that \cprs, unlike \purges, either requires extra computation to maintain logical clocks or
+assumes clocks are loosely synchronized. %no effort is required to synchronize clocks makes no synchronization assumptions. 
+Also, \purges's diffusing computations ensure that the \infinity problem does not occur by removing
 false state from the entire network. However, globally invalidating false state can be wasteful if valid alternate paths are locally available. 
 
 
@@ -151,7 +153,7 @@ using logical clocks.
 For each node, $i \in G$, \cpr adds a time dimension to \minvi and \dmatrixis, which \cpr then uses to locally archive a complete history of values. 
 Once the compromised node is discovered, 
 the archive allows the system to rollback to 
-a system snapshot from a time before \bad was compromised. From this point, \cpr needs to remove \bad and \oldvector and update stale distance values resulting from link cost changes.
+a system snapshot from a time before \bad was compromised. From this point, \cpr needs to remove \bad and \oldvector and update stale distance values resulting from link weight changes.
 We describe each algorithm step in detail. % (1) Create a \minv and \dmatrix archive. (2) roll back to a valid snapshot, and (3) steps after the rollback. 
 
 {\bf Step 1: Create a \minv and \dmatrix archive.} 
@@ -165,8 +167,8 @@ We describe each algorithm step in detail. % (1) Create a \minv and \dmatrix arc
 	Each node has a choice of archiving at a given frequency (e.g., every $m$ timesteps) or after some number of distance value changes (e.g., each time a distance 
 	value changes).  Each node must choose the same option, which is specified as an input parameter to \cprs. A node archives independently of all other nodes.
   A side effect of independent archiving, is that even with perfectly synchronized clocks, the union of all snapshots may not constitute a globally consistent snapshot. 
-  For example, a link cost change event may only have propagated 
-  through part of the network, in which case the snapshot for some nodes will reflect this link cost change (i.e., among nodes that have learned of the event) 
+  For example, a link weight change event may only have propagated 
+  through part of the network, in which case the snapshot for some nodes will reflect this link weight change (i.e., among nodes that have learned of the event) 
   while for other nodes no local snapshot will reflect the occurrence of this event. We will see that a globally consistent snapshot is not required for correctness.  
 
 {\bf Step 2: Rolling back to a valid snapshot.} 
@@ -180,7 +182,7 @@ with a timestamp less that $t'$).  A pseudo-code specification of this rollback 
 
 {\bf Step 3: Steps after rollback.} After Step 2 completes, the algorithm in Section \ref{subsec:preprocess} is executed.
 There are two issues to address.
-First, some nodes may be using \oldvectors.  Second, some nodes may have stale state as a result of link cost changes that occurred during $[t',t_b]$ and 
+First, some nodes may be using \oldvectors.  Second, some nodes may have stale state as a result of link weight changes that occurred during $[t',t_b]$ and 
 consequently are not reflected in the snapshot. 
 To resolve these issues, each neighbor, $i$, of \bads, sets its distance to \bad to $\infty$ and then selects new least cost values that avoid the compromised node, triggering
 the execution of distance vector to update the remaining distance vectors.  That is, for any destination, $d$, where $i$ routes via \bad to reach $d$,
@@ -195,7 +197,7 @@ the only difference between the actual system state and that depicted in Figure 
 $(i,$\bads$)=50$ rather than $\infty$. Step 3 in \cpr makes this change.  Because no nodes use \oldvectors, no other changes take place.
 
 Rather than using an iterative process to remove false state (like in \second and \purges), \cpr does so in one diffusing computation.
-However, \cpr incurs storage overhead resulting from periodic snapshots of \minv and \dmatrixs.  Also, after rolling back, stale state may exist if link cost changes occur during $[t',t_b]$.
+However, \cpr incurs storage overhead resulting from periodic snapshots of \minv and \dmatrixs.  Also, after rolling back, stale state may exist if link weight changes occur during $[t',t_b]$.
 This can be expensive to update.
 Finally, unlike \purge and \seconds, \cpr requires loosely synchronized clocks because without a bound on the clock offset, nodes may rollback to highly inconsistent local snapshots.
 Although correct, this would severely degrade \cpr performance.
@@ -257,7 +259,7 @@ execute the specified changes to distance vector.
 Without this change it is possible that the recovery algorithm will not terminate.  Consider the case of two compromised nodes, $\overline{v}_1$ and $\overline{v}_2$,
 where $\overline{v}_2$ is compromised during the recovery triggered by $\overline{v}_1$'s compromise.  In this case, two executions of the recovery algorithm are triggered: one when
 $\overline{v}_1$ is compromised and the other when $\overline{v}_2$ is compromised.
- Recall that all three recovery algorithms set all link costs to $\overline{v}_1$ to $\infty$ (e.g., $(v_i,\overline{v}_1)=\infty, \forall v_i \in adj(\overline{v}_1)$).
+ Recall that all three recovery algorithms set all link weights to $\overline{v}_1$ to $\infty$ (e.g., $(v_i,\overline{v}_1)=\infty, \forall v_i \in adj(\overline{v}_1)$).
 If the first distance vector execution triggered by $\overline{v}_1$'s compromise is not modified to terminate least cost computations to $\overline{v}_2$, the distance vector step of the 
 recovery algorithm would never complete because the least cost to $\overline{v}_2$ is $\infty$. 
 

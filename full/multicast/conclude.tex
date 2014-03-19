@@ -2,7 +2,7 @@
 \label{sec:thesis-summary}
 
 %This thesis examined component failures in communication networks and algorithms to make networks robust to these failures.  
-This thesis presented algorithms to make communication networks robust to component failures. % in communication networks and algorithms to make networks robust to these failures.  
+This thesis examined algorithms to make communication networks robust to component failures. % in communication networks and algorithms to make networks robust to these failures.  
 Three separate but related problems were considered: node (i.e., switch or router) failure in traditional networks such as the Internet or wireless sensor networks,
 the failure of critical sensors that measure voltage and current throughout the smart grid, and link failures in a smart grid communication network.
 
@@ -56,7 +56,7 @@ respond to other possible false state values. Some interesting alternatives incl
 We would also like to see how our distributed recovery algorithms compare with a Software Defined Networking (SDN) based approach to false state recovery. 
 It is likely that the concerns over convergence time addressed by our distributed recovery algorithms are non-factors with an SDN approach.  With SDN, recovery paths can be
 computed centrally at the controller (as we did when computing backup multicast trees in Chapter \ref{ch:reliable-mcast}), negating the need for switches to exchange messages to compute
-new paths. However, new challenges are likely to emerge with an SDN-based approach. For example, in what order should routers be signaled to install new routes such that 
+new paths. However, new challenges are likely arise with an SDN-based approach. For example, in what order should routers be signaled to install new routes such that 
 the \infinity problem is minimized?
 %and then installed at the switches because SDN's centralized management and control enables 
 %is centralized with SDN the issue of convergence time that dominated our distributed recovery algorithms disappear. 
@@ -88,17 +88,15 @@ interesting to quantify the savings (in terms of switch processing time) of this
 \pcnt simulation results suggest that these savings could be significant. 
 %Lastly, the complexity of the problem \merge addresses is an open-question: find the minimum number of forwarding rules for a set of multicast trees. 
 Lastly, the problem \merge addresses -- find the minimum number of forwarding rules for a set of multicast trees -- has unknown complexity.
-We conjectured that this problem is NP-hard in Section \ref{subsubsec:merge-discuss}. %3.3.5.4.
+We conjectured that this problem is NP-hard in Section \ref{subsubsec:merge-discuss}. 
 
 % what problems can OF programmed network solve that cannot in standard system.  no longer constrained by what protocols vendors choose to implement, 
 This thesis provided some encouraging initial results of how SDN (and specifically OpenFlow) can simplify fault detection and recovery but we did so under somewhat favorable conditions.  For example,
-in Chapter \ref{ch:reliable-mcast} we assumed that any non-OpenFlow switches or routers had no influence on our recovery algorithms (this is the same as assuming 
-that all network switches support OpenFlow). 
-In practice, it is likely that OpenFlow switches must coexist with existing network infrastructure (e.g., IP routers and switches), which will likely complicate matters.  One potential
-issue is that many backbone IP routers use MPLS to reroute flows in response to link failures.  This would result in new paths between OpenFlow switches. 
-%, using non-OpenFlow switches, between OpenFlow switches. 
-In these cases, it is unclear if OpenFlow switches and the control plane needs to be aware of these path changes. %  in what cases these changes can be ignored. 
+in Chapter \ref{ch:reliable-mcast} we assumed that any non-OpenFlow switches or routers had no influence on our recovery algorithms (or equivalently that all network switches support OpenFlow). 
+In practice, it is likely that OpenFlow switches will coexist with existing network infrastructure (e.g., IP routers and switches), which will likely complicate matters.  One potential
+issue is that many backbone IP routers use MPLS to reroute flows in response to link failures.  This would result in new paths, using non-OpenFlow switches, between OpenFlow switches. 
+In these cases, it is unclear if OpenFlow switches and the control plane needs to be aware of these path changes and in what cases these changes can be ignored. 
 Also what is the best way for the OpenFlow controller to monitor the state of non-OpenFlow switches and routers? 
-Would it be sufficient to passively monitor control messages sent among IP routers?  If so, how much control state needs to be tracked and what is the cost of doing so? 
+Would it be sufficient to passively monitor control messages sent among IP routers?  If so, how much control state needs to be tracked and at what cost? 
 %These are just a few of the open questions regarding how OpenFlow-based fault recovery algorithms can effectively coexist with similar distributed algorithms 
 %built into operational IP routers and switches. 

@@ -53,8 +53,8 @@ Chen, J., and Abur, A.
 \newblock {\em Power Systems, IEEE Transactions on 21}, 4 (2006), 1608 --1615.
 
 \bibitem{Curtis11}
-Curtis, Andrew~R, Mogul, Jeffrey~C, Tourrilhes, Jean, Yalagandula, Praveen,
-  Sharma, Puneet, and Banerjee, Sujata.
+Curtis, A., Mogul, J., Tourrilhes, J., Yalagandula, P., Sharma, Puneet, and
+  Banerjee, S.
 \newblock Devoflow: Scaling flow management for high-performance networks.
 \newblock In {\em ACM SIGCOMM Computer Communication Review\/} (2011), vol.~41,
   ACM, pp.~254--265.
@@ -175,6 +175,11 @@ Lomet, D., Barga, R., Mokbel, M., and Shegalov, G.
 \newblock In {\em ICDE '06: Proceedings of the 22nd International Conference on
   Data Engineering\/} (Washington, DC, USA, 2006), IEEE Computer Society,
   p.~35.
+
+\bibitem{Pox}
+Mccauley, J.
+\newblock P{O}{X}: {A} {P}ython-based {O}penflow {C}ontroller.
+\newblock \url{http://www.noxrepo.org/pox/about-pox/}.
 
 \bibitem{Mili90}
 Mili, L., Baldwin, T., and Adapa, R.

@@ -1,12 +1,12 @@
+
 \begin{abstract}
 
-Communication network components -- routers, links connecting routers, and sensors -- inevitably fail, causing service outages and a potentially unusable network. 
-Recovering quickly from these failures is vital to both reducing short-term disruption and increasing long-term network survivability. 
-In this thesis, we consider instances of component failure in the Internet and in networked cyber-physical systems, such as the communication network used by the modern electric power grid 
-(termed the \emph{smart grid}). 
-We design algorithms that make these networks more robust to component failure.
-This thesis divides into three parts: (a) recovery from malicious or misconfigured nodes injecting false information into a distributed system (e.g., the Internet), (b) placing smart grid sensors to provide measurement error detection, and 
-(c) fast recovery from link failures in a smart grid communication network. 
+
+In this thesis, we consider instances of component failure in the Internet and in networked cyber-physical systems,
+such as the communication network used by the modern electric power grid (termed the \emph{smart grid}). We design algorithms that make these networks more robust to various component failures,
+including failed routers, failures of links connecting routers, and failed sensors.
+This thesis divides into three parts: recovery from malicious or misconfigured nodes injecting false information into a distributed system (e.g., the Internet),
+placing smart grid sensors to provide measurement error detection, and fast recovery from link failures in a smart grid communication network. 
 
 
 
@@ -17,7 +17,7 @@ route via the misconfigured node, resulting in suboptimal routing and network co
 
 
 The last two parts of this thesis consider robustness in the context of the electric power grid. 
-We study a type of sensor, a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
+We study the use and placement of a sensor, called a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
 PMUs provide voltage and current measurements at a sampling rate orders of magnitude higher than the status quo.  As a result, PMUs can 
 both drastically improve existing power grid operations and enable an entirely new set of applications, such as the reliable integration of renewable energy resources. 
 However, PMU applications require \emph{correct} (addressed in thesis part 2) and \emph{timely} (covered in thesis part 3) PMU data. 
@@ -42,8 +42,8 @@ Lastly, two control plane algorithms are proposed that signal data plane switche
 An optimized version of each installation algorithm is designed that finds a near minimum set of forwarding rules 
 by sharing forwarding rules across multicast groups. This optimization
 %by using OpenFlow to dynamically write (and delete) identifiers in packet headers to allow forwarding rules to be shared across multicast groups. This optimization
-reduces backup tree install time and control state.  
-We implement these algorithms using the POX open-source OpenFlow controller and evaluate them using the Mininet emulator. 
+reduces backup tree install time and associated control state.  
+We implement these algorithms using the POX open-source OpenFlow controller and evaluate them using the Mininet emulator, quantifying control plane signaling and installation time. 
 		
 
 %for fast installation of backup trees that both use OpenFlow to signal switches to install backup trees. 

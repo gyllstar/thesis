@@ -209,7 +209,7 @@ All important timesteps are shown in Figure \ref{fig:timeline}.
 %We first state our assumptions and then define correctness. Finally, we prove the correctness of each algorithm. 
 We make the following assumptions in our proofs. All the initial \dmatrix values are non-negative. Furthermore, all \minv values periodically
 exchanged between neighboring nodes are non-negative. 
-All $v \in V$ know their adjacent link costs. All link weights in $G$ (and therefore $G'$ as well) are non-negative and do not change.
+All $v \in V$ know their adjacent link weights. All link weights in $G$ (and therefore $G'$ as well) are non-negative and do not change.
 $G$ is finite and connected. Finally, we assume reliable communication. 
 
 \begin{define} 
@@ -353,7 +353,7 @@ Let $C(i,j) = \delta_f(i,j) - \delta_{\hat{t}}(i,j)$.  That is, $C(i,j)$ refers 
 \label{subsec:trends}
 
 In this section we formally characterize how \minv values change during recovery. The properties established in this section will aid
-in understanding the simulation results presented in Section \ref{sec:eval}. Our proofs assume that link costs remain fixed during recovery (i.e., during $[t',t_b]$).
+in understanding the simulation results presented in Section \ref{sec:eval}. Our proofs assume that link weights remain fixed during recovery (i.e., during $[t',t_b]$).
 We prove properties about \minv in order provide a precise characterization of recovery trends.  
 In particular, our proofs establish that:
 %We do not characterize system behavior for \second
@@ -376,7 +376,7 @@ In particular, our proofs establish that:
 \end{itemize}
 The first two statements apply to any recovery algorithm because they make no claims about \minv values during recovery. 
 %These results are only relevant to \second and \purge recovery. \minv values during \cpr recovery do not follow these rules because it is possible
-%that when rolling back link costs have different values such that the conditions for our claims below do not hold.
+%that when rolling back link weights have different values such that the conditions for our claims below do not hold.
 
 \begin{theorem}
 \label{thm:start}
@@ -419,14 +419,14 @@ reaching the final correct least cost.
 \subsection{Communication Complexity}
 \label{subsec:complex}
 
-Next, we derive communication complexity bounds for each recovery algorithm. First, we consider graphs where link costs remain fixed
-(Section \ref{subsub:diffuse-complex} - \ref{subsubsec:purge-analysis}). Then, we derive bounds where link costs can change (Section \ref{subsubsec:linkchange-complex}).
+Next, we derive communication complexity bounds for each recovery algorithm. First, we consider graphs where link weights remain fixed
+(Section \ref{subsub:diffuse-complex} - \ref{subsubsec:purge-analysis}). Then, we derive bounds where link weights can change (Section \ref{subsubsec:linkchange-complex}).
 
 We make the following assumptions in our complexity analysis:
 \begin{itemize}
 	\item There is only a single compromised node, \bads.
-	\item We assume all nodes have unit link cost of $1$ and that \bad falsely claims a cost of $1$ to each $j \in V'$ (e.g., $\forall j \in V', \delta_s(\overline{v},j) = 1$).
-	\item Since we assume unit link costs of $1$, a link cost increase correspond to the removal of a link and a link cost decrease corresponds to the addition of a link.
+	\item We assume all nodes have unit link weight of $1$ and that \bad falsely claims a cost of $1$ to each $j \in V'$ (e.g., $\forall j \in V', \delta_s(\overline{v},j) = 1$).
+	\item Since we assume unit link weights of $1$, a link weight increase correspond to the removal of a link and a link weight decrease corresponds to the addition of a link.
 \end{itemize}
 
 \subsubsection{Diffusing Computation Analysis}
@@ -466,7 +466,7 @@ communication complexity, yielding $O(mE)$ communication complexity. %for diffus
 
 
 %{\bf summary of graph and similarity of DV and \seconds} \\
-Johnson \cite{Johnson84} studies DV over topologies with bidirectional links and unit link costs of $1$.  Specifically, Johnson analyzes DV update 
+Johnson \cite{Johnson84} studies DV over topologies with bidirectional links and unit link weights of $1$.  Specifically, Johnson analyzes DV update 
 activity after the failure of a single network resource, in which a resource is either a node or a link.  She assumes that nodes adjacent to a failed resource detect 
 the failure and then react according to DV: in the case of a failed node, each node sets its distance to the failed node to $n$ and no link connected to the 
 failed node is used in the final correct shortest paths. 
@@ -811,27 +811,27 @@ since there are $n-1$ nodes, each with a maximum of $m$ neighbors, and each node
 
 
 
-\subsubsection{Analysis with Link Cost Changes}
+\subsubsection{Analysis that Considers Graphs with Link Weight Changes}
 \label{subsubsec:linkchange-complex}
 
 
-In this section, we analyze each of our algorithms in the case where $w$ link cost changes occur.  Because we assume unit link costs of $1$, a link cost decrease corresponds to the 
-addition of a new link and a link cost increase corresponds to the removal of a link.  In our analysis, we assume that all $w$ link cost changes finish propagating before \bad is detected 
+In this section, we analyze each of our algorithms in the case where $w$ link weight changes occur.  Because we assume unit link weights of $1$, a link weight decrease corresponds to the 
+addition of a new link and a link weight increase corresponds to the removal of a link.  In our analysis, we assume that all $w$ link weight changes finish propagating before \bad is detected 
 (e.g., before $t_b$).
 
 The analysis for \second and \purge from Section \ref{subsubsec:second-analysis} and Section \ref{subsubsec:purge-analysis}, respectively, does not change.  This is the 
-case because \second and \purge do not roll back in time, and thus all $w$ link cost changes are accounted for when recovery begins at $t_b$.  
-The \cpr analysis from Section \ref{subsubsec:cpr-analysis} changes because after rolling back, all $w$ link cost changes need to be replayed. 
+case because \second and \purge do not roll back in time, and thus all $w$ link weight changes are accounted for when recovery begins at $t_b$.  
+The \cpr analysis from Section \ref{subsubsec:cpr-analysis} changes because after rolling back, all $w$ link weight changes need to be replayed. 
 
-Let $\delta_{f}'(i,a)$ be node $i$'s final least cost to $a$ if no link cost changes occur during $[t',t_b]$.  Define 
+Let $\delta_{f}'(i,a)$ be node $i$'s final least cost to $a$ if no link weight changes occur during $[t',t_b]$.  Define 
 $C'(i,j) = \delta_{f}'(i,a) - \delta_{\hat{t}}(i,j)$.
 
-The communication complexity for a link cost increase is $O(n^2)$ \cite{Johnson84} and $O(E)$ for a link cost decrease \cite{Johnson84b}.  Let there be $u$ link cost increases (e.g., $u$ links are 
-removed from $G$) and $w-u$ link cost decreases (e.g., $w-u$ links are added to $G$).
-At worst, the link cost changes are processed after \bad recovery completes. As a result, \cpr communication complexity with link cost changes is bounded above by:
-%with $w$ link cost changes, we now add an $O(wn^2)$ term to Equation \ref{thm:second-ub}:
-%The communication complexity for a link cost increase is $O(n^2)$ \cite{Johnson84} and $O(E)$ for a link cost decrease \cite{Johnson84b}.  Thus, link cost increases dominate
-%communication complexity. At worst, the link cost changes are processed after \bad recovery completes. As a result, with $w$ link cost changes, we now add an $O(wn^2)$ term to Equation \ref{thm:second-ub}:
+The communication complexity for a link weight increase is $O(n^2)$ \cite{Johnson84} and $O(E)$ for a link weight decrease \cite{Johnson84b}.  Let there be $u$ link weight increases (e.g., $u$ links are 
+removed from $G$) and $w-u$ link weight decreases (e.g., $w-u$ links are added to $G$).
+At worst, the link weight changes are processed after \bad recovery completes. As a result, \cpr communication complexity with link weight changes is bounded above by:
+%with $w$ link weight changes, we now add an $O(wn^2)$ term to Equation \ref{thm:second-ub}:
+%The communication complexity for a link weight increase is $O(n^2)$ \cite{Johnson84} and $O(E)$ for a link weight decrease \cite{Johnson84b}.  Thus, link weight increases dominate
+%communication complexity. At worst, the link weight changes are processed after \bad recovery completes. As a result, with $w$ link weight changes, we now add an $O(wn^2)$ term to Equation \ref{thm:second-ub}:
 \begin{eqnarray}
 \label{thm:cpr-link-change}
 \sum_{i \in V'} \max_{j \in V', i \neq j} \left( C'(i,j) \right) adj(i) + O(un^2) + O\left((w-u)E\right)
@@ -841,13 +841,13 @@ At worst, the link cost changes are processed after \bad recovery completes. As 
 
 \subsubsection{Discussion}
 
-The communication complexity for \seconds, \cprs, and \purge are all $O(mnd)$ over graphs with fixed unit link costs.  It is not surprising that the communication complexity is the same because all three algorithms use DV as their final step and
+The communication complexity for \seconds, \cprs, and \purge are all $O(mnd)$ over graphs with fixed unit link weights.  It is not surprising that the communication complexity is the same because all three algorithms use DV as their final step and
 DV asymptotically dominates the communication complexity of each recovery algorithm.  Thus, the difference in message complexity between the three algorithms, found in our simulations, amounts to 
 marginal differences in each algorithm's hidden constant in the stated message complexity bound.
 %is determined by the hidden constants. % in the communication complexity results. 
 
-We also bounded the communication overhead incurred by \cpr under conditions of link cost changes.  This overhead is not incurred by \second and \purge because do not 
-roll back in time, and thus all link cost changes are accounted for when recovery begins. % at $t_b$. 
+We also bounded the communication overhead incurred by \cpr under conditions of link weight changes.  This overhead is not incurred by \second and \purge because do not 
+roll back in time, and thus all link weight changes are accounted for when recovery begins. % at $t_b$. 
 
 
 

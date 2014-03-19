@@ -5,6 +5,13 @@ Almes, G., Kalidindi, S., and Zekauskas, M.
 \newblock A one-way packet loss metric for ippm.
 \newblock Tech. rep., RFC 2680, September, 1999.
 
+\bibitem{Andersson05}
+Andersson, G, Donalek, P, Farmer, R, Hatziargyriou, N, Kamwa, I, Kundur, P,
+  Martins, N, Paserba, J, Pourbeik, P, Sanchez-Gasca, J, et~al.
+\newblock Causes of the 2003 major grid blackouts in north america and europe,
+  and recommended means to improve system dynamic performance.
+\newblock {\em Power Systems, IEEE Transactions on 20}, 4 (2005), 1922--1928.
+
 \bibitem{Bakken11}
 Bakken, D.E., Bose, A., Hauser, C.H., Whitehead, D.E., and Zweigle, G.C.
 \newblock Smart generation and transmission with coherent, real-time data.
@@ -28,6 +35,12 @@ Bobba, R., Heine, E., Khurana, H., and Yardley, T.
 \newblock In {\em Innovative Smart Grid Technologies (ISGT), 2010\/} (2010),
   IEEE, pp.~1--8.
 
+\bibitem{Bu02}
+Bu, T., Duffield, N.G., Presti, F., and Towsley, D.F.
+\newblock Network tomography on general topologies.
+\newblock In {\em ACM SIGMETRICS Performance Evaluation Review\/} (2002),
+  vol.~30, ACM, pp.~21--30.
+
 \bibitem{Caceres99}
 C{\'a}ceres, R., Duffield, N.G., Horowitz, J., and Towsley, D.F.
 \newblock Multicast-based inference of network-internal loss characteristics.
@@ -48,8 +61,8 @@ Cui, J.H., Faloutsos, M., and Gerla, M.
 \newblock {\em Network, IEEE 18}, 2 (2004), 26--34.
 
 \bibitem{Curtis11}
-Curtis, Andrew~R, Mogul, Jeffrey~C, Tourrilhes, Jean, Yalagandula, Praveen,
-  Sharma, Puneet, and Banerjee, Sujata.
+Curtis, A., Mogul, J., Tourrilhes, J., Yalagandula, P., Sharma, Puneet, and
+  Banerjee, S.
 \newblock Devoflow: Scaling flow management for high-performance networks.
 \newblock In {\em ACM SIGCOMM Computer Communication Review\/} (2011), vol.~41,
   ACM, pp.~254--265.

@@ -2,15 +2,15 @@
 \label{subsec:basic}
 
 In keeping with its role as a general framework that provides primitives for programmable networks, OpenFlow does not explicitly provide an implementation for multicast. 
-Instead, we design our own multicast implementation called \bases.  \base assign a multicast IP address to each multicast group and use
+Thus, we design our own multicast implementation called \bases.  \base assigns a multicast IP address to each multicast group and uses
 this address to setup the flow tables at the multicast tree switches.  
   \footnote{Because multicast group membership is static for power grid applications (Section \ref{subsec:pmu-requirements}, 
   we simply determine the members of each multicast group by reading their static assignment from a text file.  Note that if dynamic group membership were to be required, we could 
   replace this static policy using a protocol like IGMP. }
 
-After the controller computes a multicast tree (described in Section \ref{subsec:min-control}), $T_i = (V_i,E_i,r,S)$, \base installs a flow entry at each switch in $V_i$. The flow entry
-matches packets using the group's multicast address (all other field are left as wildcards) and sends a copy of each packet out the ports corresponding to the switch's 
-outgoing links in $E_i$. If a switch in $E_i$ is adjacent to a downstream host, $h_j$, in the multicast group, then the flow entry rewrites the destination layer 2 and 3 addresses of the 
+After the controller computes a multicast tree (described in Section \ref{subsec:min-control}), $T_i = (V_i,E_i,r,S)$, \base installs a flow table entry at each switch in $V_i$. The flow table entry
+matches packets using the group's multicast address (all other field are left as wildcards) and forwards a copy of each packet out the ports corresponding to the switch's 
+outgoing links in $E_i$. If a switch in $E_i$ is adjacent to a downstream host, $h_j$, in the multicast group, then the flow table entry rewrites the destination layer 2 and 3 addresses of the 
 packet copy sent to $h_j$ to $h_j$'s layer 2 and 3 addresses.
 \footnote{Our initial plan was to use the group table abstraction described in the OpenFlow 1.1 specification \cite{OpenFlowSpec1.1} to implement multicast but, unfortunately,
 as of the writing of this chapter, this feature is not yet supported by the POX controller \cite{Pox} used to implement our algorithms and 

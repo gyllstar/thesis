@@ -1,21 +1,11 @@
 This is BibTeX, Version 0.99c (Web2C 7.5.6)
-The top-level auxiliary file: thesis.aux
+The top-level auxiliary file: chapter3.aux
 The style file: umthesis.bst
-Database file #1: thesis.bib
-Warning--string name "sept." is undefined
---line 433 of file thesis.bib
-Warning--string name "june" is undefined
---line 491 of file thesis.bib
-Warning--string name "nov." is undefined
---line 593 of file thesis.bib
-A bad cross reference---entry "Gyllstrom10"
-refers to entry "DBLP:conf/networking/2010", which doesn't exist
-Warning--I didn't find a database entry for "DBLP:conf/networking/2010"
-Warning--to sort, need author or key in 2003Blackout
-Warning--to sort, need author or key in Rocketfuel
-Warning--to sort, need author or key in GT-ITM
+Database file #1: chapter3.bib
+Warning--I didn't find a database entry for "Ji03"
+Warning--I didn't find a database entry for "Clark88"
+Warning--can't use both volume and number fields in Bu02
 Warning--can't use both volume and number fields in Curtis11
-Warning--empty booktitle in Johnson84b
-Warning--empty institution in Xu05
+Warning--empty journal in Rosen01
 Warning--there's a month but no year in IndiaBlackout
-(There was 1 error message)
+(There were 6 warnings)

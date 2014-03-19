@@ -2,22 +2,24 @@
 
 Communication network components (routers, links, and sensors) fail. %over the lifetime of the network 
 These failures can cause widespread network service disruption and outages, and potentially critical errors for network applications.
-\textit{In this thesis, we examine how networks -- traditional networks and networked cyber-physical systems, such as the smart grid -- can be made more robust to component failure.}
+\textit{In this thesis, we examine how networks -- traditional networks and networked cyber-physical systems, such as the electric power grid -- can be made more robust to component failures.}
 
-We propose on-demand recovery algorithms for distributed network algorithms that optimize for control message overhead and convergence time,
-and preplanned approaches to recovery for electric power grid applications, where reliability is key. 
-An electric power grid consists of a set of buses -– electric substations, power generation centers, or aggregation points of electrical loads -– and transmission lines connecting those buses.
-We refer to modern and future electric power grids that automate power grid operations using sensors and wide-area communication as the \emph{smart grid}.
+%We propose on-demand recovery algorithms for distributed network algorithms that optimize for control message overhead and convergence time,
+%and preplanned approaches to recovery for electric power grid applications, where reliability is key. 
+%An electric power grid consists of a set of buses -– electric substations, power generation centers, or aggregation points of electrical loads -– and transmission lines connecting those buses.
+%We refer to modern and future electric power grids that automate power grid operations using sensors and wide-area communication as the \emph{smart grid}.
 
 
 
 
 \section{Thesis Overview}
 
-\subsection{Component Failure in Communication Networks}
+\subsection{Component Failures in Communication Networks}
 
-In this thesis, we consider three separate but related problems: node (i.e., switch or router) failure in traditional networks such as the Internet or wireless sensor networks,
-the failure of critical sensors that measure voltage and current throughout the smart grid, and link failures in a smart grid communication network.
+We consider three separate but related problems in this thesis: node (i.e., switch or router) failure in traditional networks such as the Internet or wireless sensor networks,
+the failure of critical sensors that measure voltage and current throughout the smart grid, and link failures in a smart grid communication network.  The term \emph{smart grid} refers to 
+modern and future electric power grids that automate power grid operations using sensors and wide-area communication.
+
 For distributed network algorithms, a malicious or misconfigured node can inject and spread incorrect state throughout the distributed system. 
 Such false state can degrade the performance of the network or render it unusable. For example, in 1997 a significant portion of Internet traffic was routed through a 
 single misconfigured router that had spread false routing state to several Internet routers.  As a result, a large potion of the Internet became inoperable for several hours \cite{Neumann97}. 
@@ -29,7 +31,7 @@ For example, if smart grid sensors or links in its supporting communication netw
 Critical smart grid applications required to operate and manage a power grid are especially vulnerable to such failures because typically these applications have strict data delivery requirements,
 needing both ultra low latency and assurance that data is received correctly. 
 In the worst case, component failure can lead to a cascade of power grid failures like the August 2003 blackout in the USA \cite{2003Blackout} and the 
-recent power grid failures in India \cite{IndiaBlackout}.
+recent power grid failures in India that left hundreds of millions of people without power  \cite{IndiaBlackout}.
 
 
 
@@ -55,10 +57,10 @@ no least cost path routes through a compromised node.
 %Recovery is correct if the routing tables of all nodes have converged to a global state where all nodes have removed each compromised node as a destination
 %and no node has a least cost path to any destination that routes through a compromised node.  
 
-The second and third thesis chapters consider robustness from component failure  in the context of the smart grid. Because reliability is a key requirement for the smart grid, we focus on 
-preplanned approaches to failure recovery.
+The second and third thesis chapters consider robustness from component failure  in the context of the smart grid. Because reliability is a key requirement for the smart grid, each chapter focuses 
+on preplanned approaches to failure recovery.
 
-In our second thesis chapter, we study a sensor, called a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
+In our second thesis chapter, we study the placement of a sensor, called a Phasor Measurement Unit (PMU), currently being deployed in electric power grids worldwide. 
 PMUs provide voltage and current measurements at a sampling rate orders of magnitude higher than the status quo.  As a result, PMUs can 
 both drastically improve existing power grid operations and enable an entirely new set of applications, such as the reliable integration of renewable energy resources. 
 We formulate a set of problems that consider PMU measurement errors, which have been observed in practice.  Specifically, we specify four PMU placement problems
@@ -68,18 +70,19 @@ For each PMU placement problem, we prove it is NP-Complete, propose a simple gre
 In our final technical chapter, we design algorithms that provide fast recovery from link failures in a smart grid communication network. 
 We propose, design, and evaluate solutions to all three aspects of link failure recovery: (a) link failure detection, (b) algorithms for pre-computing backup multicast trees, and
 (c) fast backup tree installation. Because this requires modifying network switches and routers, we use OpenFlow -- an open standard that cleanly separates the control 
-and data planes for use in network management and control -- to program data plane forwarding.  This allows our algorithms to execute in the data plane.
+and data planes for use in network management and control -- to program data plane forwarding using novel control plane algorithms. 
 
 
 To address (a), we design link-failure detection and reporting mechanisms that use OpenFlow to detect link failures when and where they occur \emph{inside} the network.
-For part (b), we formulate a new problem, \mcs, that pre-computes backup multicast trees with the aim of minimizing control plane signaling overhead. We prove \mc 
+For part (b), we formulate a new problem, \mcs, that aims to pre-compute backup multicast trees that minimize control plane signaling overhead. We prove \mc 
 is at least NP-hard and present a corresponding approximation algorithm.
 Lastly, two control plane algorithms are proposed that signal data plane switches to install pre-computed backup trees. 
 An optimized version of each installation algorithm is designed that finds a near minimum set of forwarding rules 
 by sharing forwarding rules across multicast groups. This optimization
 %by using OpenFlow to dynamically write (and delete) identifiers in packet headers to allow forwarding rules to be shared across multicast groups. This optimization
 reduces backup tree install time and control state.  
-We implement these algorithms using the POX open-source OpenFlow controller and evaluate them using the Mininet emulator. 
+We implement these algorithms using the POX open-source OpenFlow controller \cite{Pox} and evaluate them using the Mininet emulator \cite{Lantz10}, quantifying control plane signaling and 
+installation time.
 
 
 
@@ -100,7 +103,7 @@ The main contributions of this thesis are:
 	
 
 	\item We use simulations and analysis to evaluate \seconds, \purges, and \cpr in terms of control message overhead and convergence time. We find that \second performs poorly due to routing loops.  
-	Over topologies with fixed link costs, \purge performs nearly as well as \cpr even though our simulations and analysis assume near perfect conditions for \cprs.
+	Over topologies with fixed link weights, \purge performs nearly as well as \cpr even though our simulations and analysis assume near perfect conditions for \cprs.
 	Over more realistic scenarios in which link weights can change, we find that \purge yields lower message complexity and faster convergence time than \cpr and \seconds. 
 
 
@@ -128,8 +131,8 @@ The main contributions of this thesis are:
 	We use Mininet \cite{Lantz10} simulations to evaluate our algorithms over communication networks based on real portions of the power grid.
 	We find that \pcnt provides fast and accurate link loss estimates: after sampling only $75$ packets
 	the $95\%$ confidence interval is within $15\%$ of the true loss probability.  
-	Additionally, we find \pre yields faster recovery than \post ( 
-	\post sends up to $10$ times more control messages than \pres) but at the cost of storage overhead at each switch (pre-installed backup trees can account for as much
+	Additionally, we find \pre yields faster recovery than \post (\post sends up to $10$ times more control messages than \pres) 
+	but at the cost of storage overhead at each switch (pre-installed backup trees can account for as much
 	as $35\%$ of the capacity of a conventional OpenFlow switch \cite{Curtis11}).
 	Finally, we observe that \merge reduces control plane messaging and the amount of pre-installed forwarding state by a factor of $2$ to $2.5$ when compared to a standard multicast
 	implementation, resulting in faster installation and manageable sized flow tables.

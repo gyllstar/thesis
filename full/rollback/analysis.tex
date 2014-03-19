@@ -6,14 +6,14 @@ Here we summarize the results from our analysis, the detailed proofs can be foun
 Using a synchronous communication model, we derive communication complexity bounds for each algorithm.  Our analysis assumes: a graph with unit link weights of $1$,
 that only a single node is compromised, and that the compromised node
 falsely claims a cost of $1$ to every node in the graph. 
-For graphs with fixed link costs, we find that the communication complexity of all three algorithms is bounded above by $O(mnd)$  where $d$ is the diameter, $n$ is the number of nodes, and $m$ the maximum out-degree of any node.
+For graphs with fixed link weights, we find that the communication complexity of all three algorithms is bounded above by $O(mnd)$  where $d$ is the diameter, $n$ is the number of nodes, and $m$ the maximum out-degree of any node.
 
-In the second part of our analysis, we consider graphs where link costs can change. Again, we assume a graph with unit link weights of $1$ and a single compromised node that declares a cost of $1$ to every node.
-Additionally, we let link costs increase between the time the malicious node is compromised and the time at which error recovery is initiated.  
+In the second part of our analysis, we consider graphs where link weights can change. Again, we assume a graph with unit link weights of $1$ and a single compromised node that declares a cost of $1$ to every node.
+Additionally, we let link weights increase between the time the malicious node is compromised and the time at which error recovery is initiated.  
 We assume that across all network links, the total increase in link weights is $w$ units.
 We find that \cpr incurs additional overhead (not experienced by \second and \purges) because \cpr must update stale state after rolling back. 
 \second and \purge avoid the issue of stale state because neither algorithm rolls back in time.  As a result, the message complexity for \second and \purge is still bounded by
-$O(mnd)$ when link costs can change, while \cpr is not. \cprs's upper bound becomes $O(mnd) + O(wn^2)$. 
+$O(mnd)$ when link weights can change, while \cpr is not. \cprs's upper bound becomes $O(mnd) + O(wn^2)$. 
 
 
 

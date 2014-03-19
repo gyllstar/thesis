@@ -15,8 +15,8 @@ our problem is similar to that of recovering from malicious but committed databa
 \cite{Liu98} and Ammann et al \cite{Liu00} develop algorithms to restore a database to a valid state after a malicious transaction has been identified. 
 \purges's algorithm to globally invalidate
 false state can be interpreted as a distributed implementation of the dependency graph approach by Liu et al. \cite{Liu00}.  Additionally,
-if we treat link cost change events that occur after the compromised node has been discovered as database transactions, we face a similar design decision as in  \cite{Liu98}: 
-do we wait until recovery is complete before applying link cost changes or do we allow the link cost changes to execute concurrently?
+if we treat link weight change events that occur after the compromised node has been discovered as database transactions, we face a similar design decision as in  \cite{Liu98}: 
+do we wait until recovery is complete before applying link weight changes or do we allow the link weight changes to execute concurrently?
 
 %the purge phase in effect finds all nodes that either directly or transitively use \bad as an intermediate node.
 
@@ -88,7 +88,7 @@ implicitly undoes the effects of any messages sent after the snapshot timestamp.
 %To summarize, at a basic level both approaches leverage system snapshots for recovery but the connections do not run any deeper. 
 
 
-%Before describing our recovery algorithms, we first present a useful analogy: a link cost change event in distance vector is like a distributed 
+%Before describing our recovery algorithms, we first present a useful analogy: a link weight change event in distance vector is like a distributed 
 %database transaction. A database transaction is a sequence of read and writes of tuples. In a distributed database these read and writes can occur over several 
 %different sites. Similarly, in DV a \lcd can cause a sequence of reads and writes. If the \lcd
 %results in a new \minv, update messages are sent.  Nodes that receive these update messages  \emph{read} the new \minv values and update their 

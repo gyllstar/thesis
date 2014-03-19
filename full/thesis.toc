@@ -3,60 +3,60 @@
 \contentsline {FrontMatter}{\MakeTextUppercase {List of Figures}}{xi}{chapter*.4}
 \contentsline {Chapter}{\MakeTextUppercase {Introduction}}{1}{chapter*.5}
 \contentsline {section}{\numberline {0.1}Thesis Overview}{1}{section.0.1}
-\contentsline {subsection}{\numberline {0.1.1}Component Failure in Communication Networks}{1}{subsection.0.1.1}
+\contentsline {subsection}{\numberline {0.1.1}Component Failures in Communication Networks}{1}{subsection.0.1.1}
 \contentsline {subsection}{\numberline {0.1.2}Approaches to Making Networks More Robust to Failures}{2}{subsection.0.1.2}
 \contentsline {section}{\numberline {0.2}Thesis Contributions}{4}{section.0.2}
 \contentsline {section}{\numberline {0.3}Thesis Outline}{6}{section.0.3}
-\contentsline {Chapter}{\numberline {1.}\MakeTextUppercase {Recovery from False Routing State in Distributed Routing Algorithms}}{8}{chapter.1}
-\contentsline {section}{\numberline {1.1}Introduction}{8}{section.1.1}
-\contentsline {section}{\numberline {1.2}Problem Formulation}{10}{section.1.2}
-\contentsline {section}{\numberline {1.3}Recovery Algorithms}{12}{section.1.3}
-\contentsline {subsection}{\numberline {1.3.1}Preprocessing}{13}{subsection.1.3.1}
-\contentsline {subsection}{\numberline {1.3.2}The 2nd Best Algorithm}{14}{subsection.1.3.2}
-\contentsline {subsection}{\numberline {1.3.3}The Purge Algorithm}{16}{subsection.1.3.3}
-\contentsline {subsection}{\numberline {1.3.4}The CPR Algorithm}{17}{subsection.1.3.4}
-\contentsline {subsection}{\numberline {1.3.5}Multiple Compromised Nodes}{21}{subsection.1.3.5}
-\contentsline {section}{\numberline {1.4}Analysis of Algorithms}{22}{section.1.4}
-\contentsline {section}{\numberline {1.5}Simulation Study}{23}{section.1.5}
-\contentsline {subsection}{\numberline {1.5.1}Simulations using Graphs with Fixed Link Weights}{24}{subsection.1.5.1}
-\contentsline {subsubsection}{\numberline {1.5.1.1}Simulation 1: Erd\"{o}s-R\'enyi Graphs with Fixed Unit Link Weights}{24}{subsubsection.1.5.1.1}
-\contentsline {subsubsection}{\numberline {1.5.1.2}Simulation 2: Erd\"{o}s-R\'enyi Graphs with Fixed but Randomly Chosen Link Weights}{28}{subsubsection.1.5.1.2}
-\contentsline {subsubsection}{\numberline {1.5.1.3}Simulation 3: Internet-like Topologies}{30}{subsubsection.1.5.1.3}
-\contentsline {subsubsection}{\numberline {1.5.1.4}Simulation 4: Multiple Compromised Nodes}{31}{subsubsection.1.5.1.4}
-\contentsline {subsubsection}{\numberline {1.5.1.5}Simulation 5: Adding Poisoned Reverse}{33}{subsubsection.1.5.1.5}
-\contentsline {subsection}{\numberline {1.5.2}Simulations using Graphs with Changing Link Weights}{38}{subsection.1.5.2}
-\contentsline {subsubsection}{\numberline {1.5.2.1}Simulation 6: Effects of Link Cost Changes}{38}{subsubsection.1.5.2.1}
-\contentsline {subsubsection}{\numberline {1.5.2.2}Simulation 7: Applying Poisoned Reverse Heuristic}{39}{subsubsection.1.5.2.2}
-\contentsline {subsubsection}{\numberline {1.5.2.3}Simulation 8: Effects of Checkpoint Frequency}{41}{subsubsection.1.5.2.3}
-\contentsline {subsection}{\numberline {1.5.3}Summary of Simulation Results}{44}{subsection.1.5.3}
-\contentsline {section}{\numberline {1.6}Related Work}{44}{section.1.6}
-\contentsline {section}{\numberline {1.7}Conclusions}{46}{section.1.7}
-\contentsline {Chapter}{\numberline {2.}\MakeTextUppercase {PMU Sensor Placement for Measurement Error Detection in the Smart Grid}}{47}{chapter.2}
-\contentsline {section}{\numberline {2.1}Introduction}{47}{section.2.1}
-\contentsline {section}{\numberline {2.2}Preliminaries}{50}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Assumptions, Notation, and Terminology}{50}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Observability Rules}{50}{subsection.2.2.2}
-\contentsline {subsection}{\numberline {2.2.3}Cross-Validation Rules}{52}{subsection.2.2.3}
-\contentsline {section}{\numberline {2.3}Four NP-Complete PMU Placement Problems}{53}{section.2.3}
-\contentsline {subsection}{\numberline {2.3.1}NP-Completeness Overview and Proof Strategy}{53}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}The {\textsc {FullObserve} }Problem}{56}{subsection.2.3.2}
-\contentsline {subsection}{\numberline {2.3.3}The {\textsc {MaxObserve} }Problem}{60}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}The {\textsc {FullObserve-XV} }Problem}{62}{subsection.2.3.4}
-\contentsline {subsection}{\numberline {2.3.5}The {\textsc {MaxObserve-XV} }Problem}{65}{subsection.2.3.5}
-\contentsline {subsection}{\numberline {2.3.6}Proving NPC for Additional Topologies}{68}{subsection.2.3.6}
-\contentsline {section}{\numberline {2.4}Approximation Algorithms}{69}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Greedy Approximations}{72}{subsection.2.4.1}
-\contentsline {subsection}{\numberline {2.4.2}Observability Rules as Submodular Functions?}{72}{subsection.2.4.2}
-\contentsline {section}{\numberline {2.5}Simulation Study}{74}{section.2.5}
-\contentsline {subsection}{\numberline {2.5.1}Simulation 1: Impact of Number of PMUs}{76}{subsection.2.5.1}
-\contentsline {subsection}{\numberline {2.5.2}Simulation 2: Impact of Number of Zero-Injection Nodes}{78}{subsection.2.5.2}
-\contentsline {subsection}{\numberline {2.5.3}Simulation 3: Synthetic vs Actual IEEE Graphs}{79}{subsection.2.5.3}
-\contentsline {section}{\numberline {2.6}Related Work}{81}{section.2.6}
-\contentsline {section}{\numberline {2.7}Conclusions}{82}{section.2.7}
-\contentsline {Chapter}{\numberline {3.}\MakeTextUppercase {Recovery from Link Failures in a Smart Grid Communication Network}}{84}{chapter.3}
-\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Conclusions and Future Work}}{85}{chapter.4}
-\contentsline {section}{\numberline {4.1}Thesis Summary}{85}{section.4.1}
-\contentsline {section}{\numberline {4.2}Future Work}{87}{section.4.2}
+\contentsline {Chapter}{\numberline {1.}\MakeTextUppercase {Recovery from False Routing State in Distributed Routing Algorithms}}{7}{chapter.1}
+\contentsline {section}{\numberline {1.1}Introduction}{7}{section.1.1}
+\contentsline {section}{\numberline {1.2}Problem Formulation}{9}{section.1.2}
+\contentsline {section}{\numberline {1.3}Recovery Algorithms}{11}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Preprocessing}{12}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}The 2nd Best Algorithm}{13}{subsection.1.3.2}
+\contentsline {subsection}{\numberline {1.3.3}The Purge Algorithm}{15}{subsection.1.3.3}
+\contentsline {subsection}{\numberline {1.3.4}The CPR Algorithm}{16}{subsection.1.3.4}
+\contentsline {subsection}{\numberline {1.3.5}Multiple Compromised Nodes}{20}{subsection.1.3.5}
+\contentsline {section}{\numberline {1.4}Analysis of Algorithms}{21}{section.1.4}
+\contentsline {section}{\numberline {1.5}Simulation Study}{22}{section.1.5}
+\contentsline {subsection}{\numberline {1.5.1}Simulations using Graphs with Fixed Link Weights}{23}{subsection.1.5.1}
+\contentsline {subsubsection}{\numberline {1.5.1.1}Simulation 1: Erd\"{o}s-R\'enyi Graphs with Fixed Unit Link Weights}{23}{subsubsection.1.5.1.1}
+\contentsline {subsubsection}{\numberline {1.5.1.2}Simulation 2: Erd\"{o}s-R\'enyi Graphs with Fixed but Randomly Chosen Link Weights}{27}{subsubsection.1.5.1.2}
+\contentsline {subsubsection}{\numberline {1.5.1.3}Simulation 3: Internet-like Topologies}{29}{subsubsection.1.5.1.3}
+\contentsline {subsubsection}{\numberline {1.5.1.4}Simulation 4: Multiple Compromised Nodes}{30}{subsubsection.1.5.1.4}
+\contentsline {subsubsection}{\numberline {1.5.1.5}Simulation 5: Adding Poisoned Reverse}{32}{subsubsection.1.5.1.5}
+\contentsline {subsection}{\numberline {1.5.2}Simulations using Graphs with Changing Link Weights}{37}{subsection.1.5.2}
+\contentsline {subsubsection}{\numberline {1.5.2.1}Simulation 6: Effects of Link Weight Changes}{37}{subsubsection.1.5.2.1}
+\contentsline {subsubsection}{\numberline {1.5.2.2}Simulation 7: Applying Poisoned Reverse Heuristic}{38}{subsubsection.1.5.2.2}
+\contentsline {subsubsection}{\numberline {1.5.2.3}Simulation 8: Effects of Checkpoint Frequency}{40}{subsubsection.1.5.2.3}
+\contentsline {subsection}{\numberline {1.5.3}Summary of Simulation Results}{43}{subsection.1.5.3}
+\contentsline {section}{\numberline {1.6}Related Work}{43}{section.1.6}
+\contentsline {section}{\numberline {1.7}Conclusions}{45}{section.1.7}
+\contentsline {Chapter}{\numberline {2.}\MakeTextUppercase {PMU Sensor Placement for Measurement Error Detection in the Smart Grid}}{46}{chapter.2}
+\contentsline {section}{\numberline {2.1}Introduction}{46}{section.2.1}
+\contentsline {section}{\numberline {2.2}Preliminaries}{49}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Assumptions, Notation, and Terminology}{49}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Observability Rules}{49}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Cross-Validation Rules}{51}{subsection.2.2.3}
+\contentsline {section}{\numberline {2.3}Four NP-Complete PMU Placement Problems}{52}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}NP-Completeness Overview and Proof Strategy}{52}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}The {\textsc {FullObserve} }Problem}{55}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}The {\textsc {MaxObserve} }Problem}{59}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}The {\textsc {FullObserve-XV} }Problem}{61}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.5}The {\textsc {MaxObserve-XV} }Problem}{64}{subsection.2.3.5}
+\contentsline {subsection}{\numberline {2.3.6}Proving NPC for Additional Topologies}{67}{subsection.2.3.6}
+\contentsline {section}{\numberline {2.4}Approximation Algorithms}{68}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Greedy Approximations}{71}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}Observability Rules as Submodular Functions?}{71}{subsection.2.4.2}
+\contentsline {section}{\numberline {2.5}Simulation Study}{73}{section.2.5}
+\contentsline {subsection}{\numberline {2.5.1}Simulation 1: Impact of Number of PMUs}{75}{subsection.2.5.1}
+\contentsline {subsection}{\numberline {2.5.2}Simulation 2: Impact of Number of Zero-Injection Nodes}{77}{subsection.2.5.2}
+\contentsline {subsection}{\numberline {2.5.3}Simulation 3: Synthetic vs Actual IEEE Graphs}{78}{subsection.2.5.3}
+\contentsline {section}{\numberline {2.6}Related Work}{80}{section.2.6}
+\contentsline {section}{\numberline {2.7}Conclusions}{81}{section.2.7}
+\contentsline {Chapter}{\numberline {3.}\MakeTextUppercase {Recovery from Link Failures in a Smart Grid Communication Network}}{83}{chapter.3}
+\contentsline {Chapter}{\numberline {4.}\MakeTextUppercase {Thesis Conclusions and Future Work}}{84}{chapter.4}
+\contentsline {section}{\numberline {4.1}Thesis Summary}{84}{section.4.1}
+\contentsline {section}{\numberline {4.2}Future Work}{86}{section.4.2}
 \setcounter {tocdepth}{0}
 \contentsline {Appendix}{\numberline {A.}\MakeTextUppercase {Pseudo-Code and Analysis of Distance Vector Recovery Algorithms}}{89}{appendix.A}
 \contentsline {section}{\numberline {A.1}Recovery Algorithm Pseudo-Code}{89}{section.A.1}
@@ -68,7 +68,7 @@
 \contentsline {subsubsection}{\numberline {A.3.2.2}\textsc {2nd-Best} Analysis}{99}{subsubsection.A.3.2.2}
 \contentsline {subsubsection}{\numberline {A.3.2.3}\textsc {CPR} Analysis}{102}{subsubsection.A.3.2.3}
 \contentsline {subsubsection}{\numberline {A.3.2.4}{\textsc {Purge} }Analysis}{103}{subsubsection.A.3.2.4}
-\contentsline {subsubsection}{\numberline {A.3.2.5}Analysis with Link Cost Changes}{107}{subsubsection.A.3.2.5}
+\contentsline {subsubsection}{\numberline {A.3.2.5}Analysis that Considers Graphs with Link Weight Changes}{107}{subsubsection.A.3.2.5}
 \contentsline {subsubsection}{\numberline {A.3.2.6}Discussion}{108}{subsubsection.A.3.2.6}
 \contentsline {Appendix}{\numberline {B.}\MakeTextUppercase {Additional PMU Placement Problem Proofs}}{109}{appendix.B}
 \contentsline {section}{\numberline {B.1}NP-Completeness Proofs for PMU Placement in Zero-Injection Graphs}{109}{section.B.1}
