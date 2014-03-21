@@ -11,8 +11,8 @@ each flow table entry installed at $v$ and the multicast trees using the flow ta
 When $l$ fails, the garbage collection routine determines the set of stale forwarding rules for each $T^l_i \in T^l$ by consulting  {\tt rule\_map}.
 A stale rule exists at each $v \in V_i \setminus \hat{V}_i^l$ (i.e., nodes unique to the primary tree) and each $d \in D_i^l$ (nodes where the backup tree diverges from the primary tree).
 %Based on this criteria, \mdr consults {\tt rule\_map} to find all stale flow table entries.
-Finally, each stale forwarding rule is either explicitly removed (if using a hard state signaling protocol \cite{Ji03}) 
-or \mdr allows the forwarding rule to timeout (if using a soft state signaling algorithm \cite{Clark88}).
+Finally, each stale forwarding rule is either explicitly removed (if using a hard-state signaling protocol \cite{Ji03}) 
+or \mdr allows the forwarding rule to timeout (if using a soft-state signaling algorithm \cite{Clark88}).
 
 
 

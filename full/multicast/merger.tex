@@ -5,7 +5,7 @@
 % REVISED STRUCTURE: (a) merger is optimization to \base.  given a set of directed trees, \merge produces small set of fwd rules.  apply to PTs and backup trees, to get less control 
 % 		state and faster install.  (b) basic inefficiency, the example,  (c) outline of section
 As an optimization to the \base multicast implementation, described in Section \ref{subsec:openflow}, we present the \merge algorithm.  
-Given a set of directed trees, produces a near-minimum set of OpenFlow forwarding rules by
+Given a set of directed trees, \merge produces a near-minimum set of OpenFlow forwarding rules by
 consolidating flow table entries at each node where multiple trees use the same set of out-links.  \merge reduces the control state (i.e., number of forwarding rules) necessary to 
 multicast packets and, when applied to installing backup trees, can yield faster recovery since fewer control messages are needed to activate backup trees.
 
@@ -15,7 +15,7 @@ multicast packets and, when applied to installing backup trees, can yield faster
 %can only support a limited number of flow table entries.
 %Additionally, \merge can yield faster recovery when backup trees are installed using \posts.  Fewer backup tree flow table entries translates to fewer control messages to activate backup trees.
 
-In the next section (\ref{subsubsec:merge-motivate}), we motivate the need for \merge by showing some of the inefficiencies of \bases.  Next, Section \ref{subsubsec:merge-primary} 
+In the next section (\ref{subsubsec:merge-motivate}), we motivate the need for \merge by demonstrating several inefficiencies in \bases.  Next, Section \ref{subsubsec:merge-primary} 
 presents a simplified version of  \merge that considers only primary trees.  Then, we extend
 \merge in Section \ref{subsubsec:merge-backup} to account for backup trees.  Section \ref{subsubsec:merge-discuss} concludes the section with a discussion of how \merge affects garbage
 collection and \pcnts, along with informal commentary on its optimality.
@@ -32,8 +32,8 @@ collection and \pcnts, along with informal commentary on its optimality.
 \subsubsection{Motivation: \basen Algorithm Inefficiencies}
 \label{subsubsec:merge-motivate}
 
-The \base multicast implementation creates a flow table entry at each node of a multicast tree that matches using the tree's multicast address. 
-As a result, a switch, $v$, may have multiple flow table entries executing the same actions.  This occurs when multicast trees share the same outgoing links at $v$. 
+The \base multicast implementation creates a flow table entry at each node of a multicast tree that matches incoming packets using the tree's multicast address. 
+As a result, a switch, $v$, may have multiple flow table entries executing the same forwarding actions.  This occurs when multicast trees share the same outgoing links at $v$. 
 \footnote{In cases where the tree can either be a primary tree or backup tree, we refer to the tree as a multicast tree.}
 These inefficiencies are the motivation for developing the \merge algorithm, which replaces the set of flow table entries \base would create at $v$ with a single flow table entry. 
 To do so, \merge writes a common identifier, or tag, in packet headers at the node immediately upstream from $v$. Using this tag, \merge creates a \emph{single} rule at $v$ to match and 
@@ -41,7 +41,8 @@ forward packets of \emph{all} trees with the same outgoing links at $v$.
 
 Consider the simple example shown in Figure \ref{fig:merger-example} with two multicast trees $T_1$ and $T_2$. The directed links used by each tree are marked.
 \base creates a flow table entry for $T_1$ at $a$, $c$, $d$, $e$, and $f$ and a flow table entry at $b$, $c$, $d$, $e$, and $g$ for $T_2$.  Because 
-$T_1$ and $T_2$ both use the same outgoing links at $c$ and $d$, only a single forwarding rule is needed at each node.  This is what \merge creates and in the next two sections we describe how.
+$T_1$ and $T_2$ both use the same outgoing links at $c$ and $d$, only a single forwarding rule is needed at each node.  In the next two sections we describe how \merge 
+finds duplicate forwarding actions and creates forwarding rules shared by multiple multicast trees.
 
 %In contrast, \merge leverages that $T_1$ and $T_2$ both use the same outgoing links at $c$ and $d$ to replace the two separate flow table entries at $c$ and $d$, created under \bases, with a single 
 %forwarding rule. To do so, \merge first creates an action at $a$ and $b$ to write an identifier in the packet headers of all packets traversing $(a,c)$ and $(b,c)$.
@@ -60,10 +61,13 @@ Upstream from $v$, \merge writes an identifier, or \emph{tag}, in packet headers
 %\merge writes this tag in the packet header at the node immediately upstream from $v$. % in the packet header of all packets corresponding to any of these multicast trees. 
 The tag is removed downstream from $v$ where the trees diverge. 
 
-A tag is a globally unique Ethernet address \merge writes in a packet header's {\tt dl\_dst} field (i.e., the Ethernet destination address).  When possible, \merge flow table entries use 
+A tag is a globally unique Ethernet address that \merge writes in a packet header's {\tt dl\_dst} field (i.e., the Ethernet destination address).  When possible, \merge flow table entries use 
 tags to match and forward packets, meaning that packets are matched solely on their {\tt dl\_dst} value.
 When the same Ethernet address is applied to the packets of more than one multicast tree, we refer to this as a \emph{group tag}.  A \emph{single tag} is an 
-Ethernet address used by only one tree. We use the term \emph{tag} to generically refer to either a group or single tag.
+Ethernet address used by only one tree. We use the term \emph{tag} to generically refer to either a group or single tag. Note that, like \bases, \merge has each switch
+adjacent to a downstream host, $h_j$, overwrite the destination layer 2 (including the {\tt dl\_dst} field) and 3 fields in the packet forwarded to $h_j$, setting these fields to $h_j$'s layer
+2 and 3 addresses.  This allows \merge to safely modify the {\tt dl\_dst} field inside the multicast tree for its tagging purposes, 
+while ensuring successful forwarding of packets to each multicast group host.
 %\footnote{In some cases, packets corresponding to a multicast tree $T_i$ already have a tag written in their packet header upon reaching node $u$.  If this same tag is used to match packets 
 %at $d$ where $(u,d) \in T_i$ no action is created at $u$ to write this same tag. However, for ease of explanation, we say that \merge writes the tag at $u$.}
 
@@ -85,9 +89,10 @@ For each link $(u,d) \in T_i$ as shown in Figure \ref{fig:merger-ud}, \merge det
 
 	\item If $|S| \geq 1$, \merge creates an action to write a group tag at $u$.  For each $T_j \in S \cup \{T_i\}$, \merge finds the rule at $u$ used to forward $T_j$ and appends an action
 	to write a group tag to the rule's action list.
-	Then, a single rule is created at $d$ that matches packets using this group tag and has an initial action list forwarding packets out the appropriate ports.
+	Then, a single rule is created at $d$ that matches packets using this group tag and has an initial action list forwarding packets out the appropriate ports. 
+	%This rule is installed with higher priority than the original 
 
-	\item If $S = \emptyset$, \merge peaks upstream at $u$ to determine whether to use a single tag or $T_i$'s multicast destination address to match $T_i$'s packets at $d$. 
+	\item If $S = \emptyset$, \merge looks upstream at $u$ to determine whether to use a single tag or $T_i$'s multicast destination address to match $T_i$'s packets at $d$. 
 	When $T_i$ is matched using either a single tag or its multicast destination address at $u$, \merge creates a rule at $d$ to match packets using a single tag and writes this single
 	tag at $u$.  Otherwise, \merge creates a rule at $d$ matching packets using $T_i$'s multicast destination address (no action is needed at $u$).  
 	%\footnote{If we were to write $T_i$'s single tag at $u$, this tag would be erroneously be applied to any other multicast tree using the same group tag as $T_i$ to match packets at $u$. }
@@ -116,13 +121,13 @@ Then, \merge creates a flow table entry at $c$ that matches packets with {\tt dl
 \subsubsection{\mergen Algorithm for Backup Trees}
 \label{subsubsec:merge-backup}
 
-Having discussed \merge for the primary tree case, we are now ready to extend \merge to generate forwarding rules for backup trees.  \merge 
+Having discussed \merge for the primary tree case, we are now ready to extend \merge to generate merged forwarding rules for backup trees.  \merge 
 aims to reuse forwarding rules of primary trees because these rules are already installed in the network, allowing the installation algorithm
-(e.g., \pre or \posts) to avoid installation a new forwarding rule.  In cases where primary tree rules cannot be reused, \merge consolidates
+(e.g., \pre or \posts) to avoid installation of redundant forwarding rules.  In cases where primary tree rules cannot be reused, \merge consolidates
 flow table entries with other backup trees that have common forwarding behavior.
 
 %We describe the case of generating forwarding rules for a set of backup trees, $\hat{T}^l$, using $l$. 
-For a set of backup trees, $\hat{T}^l$, \merge generates backup tree forwarding rules as follows. 
+For a set of backup trees, $\hat{T}^l$, \merge generates backup-tree forwarding rules as follows. 
 \merge executes two rounds of BFS, traversing all
 $\hat{T}^l_i \in \hat{T}^l$ in each round.  In the first round, for each $\hat{T}_i^l$, \merge finds each node where $\hat{T}_i^l$ has the same outgoing links as a primary tree.  
 If so, $\hat{T}_i^l$ reuses the primary tree flow table entry at this node, $v$: \merge writes the primary tree tag at $v$'s parent node
@@ -130,12 +135,12 @@ allowing $\hat{T}_i^l$ packets to be forwarded using the primary tree rule, and 
 
 In the second round of BFSs, \merge consolidates flow table entries among the other backup trees for $l$
 at nodes where primary tree tag reuse was not possible.  
-To do so, the algorithm from Section \ref{subsubsec:merge-primary} is executed but comparing $\hat{T}_i^l$'s outgoing links with the outgoing links of 
+To do so, the algorithm from Section \ref{subsubsec:merge-primary} is executed but compares $\hat{T}_i^l$'s outgoing links with the outgoing links of 
 each $\hat{T}_j^l \neq \hat{T}_i^l$ at nodes where $\hat{T}_i^l$ and $\hat{T}_j^l$ were unable to reuse primary tree tags. 
 
 When \merge is applied to \pre and \post (referred to as \pres+\merge and \posts+\merges) the tag becomes the sole match criteria used by its flow table entry, with one exception.  This 
 occurs with \pres+\merge when a {\tt bid} is required to distinguish between a backup and primary tree, as described in Section \ref{subsec:install-backups}. In those cases, the 
-{\tt bid} and {\tt dl\_dst} fields are both used as match criteria.
+{\tt bid} and {\tt dl\_dst} fields are both used as matching criteria.
 
 %\merge attempts to reuse flow table entries of primary trees already installed in the network that share forwarding behavior with a backup tree. 
 %First, \merge attempts to reuse flow table entries of primary trees already installed in the network that share forwarding behavior with a backup tree.  At nodes where this possible, no 
@@ -152,20 +157,20 @@ occurs with \pres+\merge when a {\tt bid} is required to distinguish between a b
 \label{subsubsec:merge-discuss}
 
 %Now that we have presented the core of aspects of \merges, we comment on. We comment on a number of 
-To unify our presentation of \merges, we comment on some of the properties of the algorithm along with the implications of using \merge on other important aspects of \mdrs.
+We conclude our presentation of \merge by commenting on some of the properties of the algorithm along with the implications of using \merge on other important aspects of \mdrs.
 %In the following order, we discuss the advantages of using \merges, \merge time complexity, \merges's implications on garbage collection, \merges's ``do not harm'' property, and
 %how \pcnt monitors \merge flows. 
 
 {\bf Benefits.}
 In comparison with \bases, \merge reduces the number of forwarding rules required to install each multicast tree.  As a result,
-\merge is more space efficient and can yield faster backup tree installation.
+\merge is more space efficient and can yield faster backup tree installation; in Section \ref{subsec:eval-backuptrees} we quantitatively evaluate these gains.
 %By reducing the number of forwarding rules required to install each multicast tree, \merge is more space efficient and can yield faster backup tree installationi with \posts+\merges.
 Recall that for each primary tree, \mdr pre-computes a backup tree for each of its links.  In this scenario \pres+\merge can significantly reduce the number of pre-installed rules.
 These savings are especially important because, as noted in Section \ref{subsec:openflow}, OpenFlow switches can only support a limited number of flow table entries.
 With \posts, \merge can yield faster recovery because fewer backup tree flow table entries translates into fewer control messages to activate backup trees.
 
 {\bf Time Complexity.}
-Like \bases, \merge complexity is bounded by the breadth-first search (BFS) executed for each of the $m$ multicast trees given as input.  At each node, $v$, visited in the BFS, \merge
+Like \bases, \merges's complexity is bounded by the breadth-first search (BFS) executed for each of the $m$ multicast trees given as input.  At each node, $v$, visited in the BFS, \merge
 compares the out-links used by all other multicast trees that use $v$.  Since there can be at most $m$ such trees, this takes $O(m)$ time.  If we let $n$ be the number of graph nodes,
 each BFS takes $O(mn)$ time \footnote{BFS has $O(|V|+|E|)$ complexity. In our case, each BFS is over a directed tree, meaning the number of edges traversed in each BFS is $O(n-1)$.  
 Therefore, we can simplify BFS time complexity to $O(n)$.}
@@ -205,8 +210,8 @@ As with \bases, \merge garbage collection can find any stale forwarding rules by
 
 {\bf Do No Harm.} 
 We say that \merge is an algorithm that does ``no harm''  \footnote{This is similar in spirit to the Hippocratic Oath taken by physicians that they will ``never do harm [to patients]'' }
-because (a) \merge never creates more flow table entries than \base and (b) when generating rules for backup trees, \merge makes no modifications to flow table entries of primary trees that do not use the 
-failed link. We informally prove each of these properties below.
+because (a) \merge never creates more flow table entries than \base and (b) when generating rules for backup trees, \merge makes no modifications to flow table entries of primary trees 
+that do not use the failed link. We informally demonstrate each of these properties below.
 
 Regarding (a), consider an arbitrary multicast tree (primary of backup tree), $T_i$. \merge creates at most one flow table entry at any $v \in T_i$.  
 The flow table entry, $e_i$, either matches and forwards packets using a group tag, a single tag, or using the $T_i$'s multicast address.  Any $e_i$ tagging actions 
@@ -214,7 +219,7 @@ are simply appended to $e_i$'s action list (when \merge visits $T_i$'s children 
 \merge creates the same number of flow table entries as \bases.  
 
 Now consider property (b) where we let $T_j$ refer to a primary tree not using $l$. By construction, \merge only creates flow table entries and new actions for the backup trees of 
-link $l$ (i.e., $\hat{T}^l$). These flow table entries have distinct match criteria than those \merge creates for $T_j$.  If a backup tree reuses $T_j$'s flow table entry at $v$, 
+link $l$ (i.e., $\hat{T}^l$). These flow table entries have different match criteria than $T_j$'s.  If a backup tree reuses $T_j$'s flow table entry at $v$, 
 no changes are made to this flow table entry.  Lastly, \mdrs's garbage collection algorithm ensures that no $T_j$ flow table entry is removed.
 
 %As an aside, \merges's do no harm property ensures that under \merges, garbage collection has fewer flow table entries to remove than with \bases.  Intuitively, this 
@@ -229,9 +234,9 @@ Consider again Figure \ref{fig:merger-example} but replace $T_1$ with $S_1$ and 
 In this scenario, \merge writes the same group tag, denoted {\tt 12}, at $a$ and $b$ for each tree in $S_1$ and $S_2$.  Then, at $c$ and $d$ \merge installs a single rule that matches and forwards 
 using the {\tt 12} tag.  Lastly, for each $T_i \in S_1 \cup S_2$, a rule is created at $e$ that matches packets using each $T_i$'s multicast address.  %This results in 
 
-A better solution in this example is to use a different group tag for $S_1$ and $S_2$.  Under this proposal, let {\tt 11} be the group tag applied to each tree in $S_1$ 
-at $a$ and {\tt 22} the tag we write 
-in the packet header of each tree in $S_2$.  These group tags can be used create two separate rules at $c$, $d$, and $e$ to forward $S_1$ packets based on {\tt 11} and $S_2$ packets using {\tt 22}.
+A better solution in this example would be to use a different group tag for $S_1$ and $S_2$.  In this case, let {\tt 11} be the group tag applied to each tree in $S_1$ 
+at $a$ and {\tt 22} the tag written
+in the packet header of each tree in $S_2$.  These group tags can be used to create two separate rules at $c$, $d$, and $e$ to forward $S_1$ packets based on {\tt 11} and $S_2$ packets using {\tt 22}.
 By using different tags for $S_1$ and $S_2$, we avoid having to create $2k$ separate rules for each tree in $S_1 \cup S_2$ at $e$, clearly a better solution that the 
 one produced by \merges. 
 
@@ -250,30 +255,30 @@ we conjecture that no polynomial time $\mathcal{A}$ exists. %a polynomial time a
 %Consider the following example.  S_1 and S_2 denote a set of trees and let S = S_1 \cup S_2.   Merger creates an action at a and b to write group tag, denoted 12,  for each tree in S_1 and S_2.  Then, at u a single rule matches and forwards using the 12 tag.  Lastly, a rule is created at d for each tree in S that matches using the tree's destination address to ensure correct forwarding at d.  A better approach is to write group tag 11 at a for S_1 and group tag 22 for S_2 at b.   We can use these group tags to match and forward -- using two separate rules -- at u and d using group tags 11 and 22.   Using different tags for S_1 and S_2 makes it unnecessary to create a separate rule for each tree in S at d.   The same challenge arises if u and d were connected using additional links all used by S. 
 
 {\bf Implications for \pcnts.}
-\pcnt requires no changes to monitor packet loss of flows forwarded using \merge rules. However, we make 
+\pcnt requires no changes to monitor the packet loss of flows forwarded using \merge rules. However, we make 
 the case here that \merge can improve the accuracy of \pcnt loss rate estimates and reduce the time to compute these estimates.  In Section
 \ref{subsec:eval-pcount}, we will find that our simulations bear out the qualitative argument made here.
 
 % (a) can tune k.  cost associated with each k
 Recall from Section \ref{subsec:pcnt} that with \pcnt the number of monitored flows, $k$, can be tuned.
-Determining an appropriate $k$ parameter involves a trade-off between the accuracy of packet loss estimates and time: larger $k$ yield more accurate packet loss estimates
+Determining an appropriate value for $k$ involves a trade-off between the accuracy of packet loss estimates and time: larger $k$ yield more accurate packet loss estimates
 but at the cost of slower detection times (the time between when packet loss occurs and when it is detected). Detection times of a monitored link, $(u,d)$, increase with larger $k$
-for two reasons. One, for each of the $k$ flows, \pcnt makes a copy of the flow's forwarding rule at $u$ and $d$ in order tag and count packets.  Two, 
+for two reasons. First, for each of the $k$ flows, \pcnt makes a copy of the flow's forwarding rule at $u$ and $d$ in order tag and count packets.  Secondly, 
 \pcnt sends $k$ queries to $u$ to read the state of each flow table entry generated by \pcnts. % generated flow table entry and a single aggregate statistic query to $d$.
 
 %a function of the number of statistic queries \pcnt sends. % to the switches of a monitored link.  
 %Recall from Section \ref{subsec:pcnt}, when estimating packet loss of a link, $(u,d)$, \pcnt makes a copy of the flow table entry at $u$ and $d$, for each flow \pcnt monitors. 
 
-With \merge the same flow table entry, $e_i$, can be used by multiple ($r$) flows.  In these cases, \pcnt only needs to explicitly monitor one of these flows to measure
-the packet loss of all $r$ flows.  That is, \pcnt can monitor the loss of all $r$ flows with cost of monitoring a single flow:
+With \merges, the same flow table entry, $e_i$, can be used by $r$ multiple flows.  In these cases, \pcnt only needs to explicitly monitor one of these flows to measure
+the packet loss of all $r$ flows.  That is, \pcnt can monitor the loss of all $r$ flows at the cost of monitoring a single flow:
 the one copy of $e_i$ \pcnt makes at $u$ and $d$ ensures that packets of any of these $r$ flows are tagged and counted and
-only a single statistic query is needed to retrieve $e_i$'s packet count.
+thus only a single statistic query is needed to retrieve $e_i$'s packet count.
 
 Consider the example in Figure \ref{fig:intuition-example-t1} and suppose that \pcnt monitors link $(g,l)$. 
 Two multicast flows -- $f_b$ for primary tree $T_b$ and $f_c$ for primary tree $T_c$ -- traverse
 $(g,l)$.  \base creates a separate forwarding rule for $f_b$ and $f_c$ at $g$ while \merge generates a single forwarding rule at $g$ used by both $f_b$ and $f_c$.  As a result, 
-with \merges, \pcnt can track the  packet loss of $f_b$ and $f_c$ by querying just the shared \merge forwarding rule at $g$ (rather than interact with two separate \base forwarding rules).
-These savings are quantified using simulations in Section \ref{subsec:eval-pcount}.
+with \merges, \pcnt can track the  packet loss of $f_b$ and $f_c$ by querying just the single shared \merge forwarding rule at $g$ (rather than interact with two separate \base forwarding rules).
+These savings are quantified via simulation in Section \ref{subsec:eval-pcount}.
 
 %Recall from Section \ref{subsec:pcnt} that with \pcnt the number of monitored flows, $k$, can be tuned.  Determining an appropriate $k$ parameter involves a trade-off between the accuracy of
 %packet loss estimates and time: larger $k$ yield more accurate packet loss estimates but at the cost of slower detection times (the time between when packet loss occurs and when it is detected).

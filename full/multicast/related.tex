@@ -10,12 +10,12 @@ Related work divides into the following categories: smart grid communication net
 \label{subsec:related-grid-comm}
 
 
-The Gridstat project, started in 1999, was one of the first research projects to consider smart grid communication.\footnote{\url{http://gridstat.net/}}
+The Gridstat project, started in 1999, was one of the first research projects to consider smart grid communication abstractions.\footnote{\url{http://gridstat.net/}}
 Our work has benefited from their detailed requirements specification \cite{Bakken11}.
-Gridstat proposes a publish-subscribe architecture for PMU data dissemination. By design, subscription criteria are simple to enable fast forwarding of PMU data.
+Gridstat proposes a publish-subscribe architecture for PMU data dissemination. By design, subscription criteria are simple in order to ensure fast forwarding of PMU data.
 %(and as a measure towards meeting the low latency requirements of PMU applications).  
 
-Gridstat separates their system into a data plane and a management plane. The management plane keeps track of subscriptions,
+Gridstat is separated into a data plane and a management plane. The management plane keeps track of subscriptions,
 monitors the quality of service provided by the data plane, and computes paths from subscribers to publishers.  To increase reliability, each Gridstat publisher sends data over multiple paths
 to each subscriber. Each of these paths is a part of a different (edge-disjoint) multicast tree.  Meanwhile, the data plane simply forwards data according to the paths and subscription 
 criteria maintained by the management plane.  
@@ -24,12 +24,12 @@ In North America, all PMU deployments are overseen by the North American Synchro
 communication network used to deliver PMU data, called NASPInet. The interested reader can consult \cite{Naspi10} for more details.
 %\xxx{Mention: (a) hub-and-spoke architecture, (b) PMU data aggregated by Phasor Data Concentrator, (c) not sure if use multicast? }
 
-Although Gridstat \cite{Bakken11} and NASPI \cite{Naspi10} have similarities with \mdrs, these projects have a different focus than ours.  Gridstat and NASPI specify overlay networks 
+Although Gridstat \cite{Bakken11} and NASPI \cite{Naspi10} have similarities with \mdrs, these projects have a different focus than ours.  Gridstat and NASPI are overlay networks 
 built on top of existing network protocols (e.g., IP, MPLS), while the emphasis of our work is in making network protocols more robust to handle PMU application requirements. 
 
 Hopkinson et al \cite{Hopkinson09} propose a Smart Grid communication architecture that handles heterogeneous traffic: traffic with strict timing requirements (e.g., protection systems), 
-periodic traffic with greater tolerance for delay, and aperiodic traffic. They advocate multi-tiered data dissemination that uses a technology such as MPLS to make hard
-bandwidth reservations for critical applications, Gridstat to handle predictable traffic with less strict delivery requirements, and finally Astrolab (which uses a gossip protocol) 
+periodic traffic with greater tolerance for delay, and aperiodic traffic. They advocate a multi-tiered data dissemination that uses a technology such as MPLS to make hard
+bandwidth reservations for critical applications, the use of Gridstat to handle predictable traffic with less strict delivery requirements, and finally the use of Astrolab (which uses a gossip protocol) 
 to manage aperiodic traffic sent over the remaining available bandwidth. They advocate hard bandwidth reservations -- modeled as a multi-commodity flow problem -- for critical Smart
 Grid applications.
 
@@ -47,17 +47,18 @@ measure packet loss in our problem setting. For example, the loss model proposed
 packet loss estimates to converge on the true underlying packet loss rate.  In our problem, where packet loss must be detected at small time scales, these $2000$ probe messages 
 would either need to be sent at a high rate to detect packet loss at small time scales (e.g., to detect packet loss at $1$ second intervals, probe messages would need to be sent at a rate 
 $30$ times higher than PMU sending rates of $60$ msgs/sec) \footnote{The would likely lead to inaccurate results \cite{Barford04}.}
-or require a prohibitively large window of time if probes are sent at a rate proportional to PMU measurement rates
+or require a prohibitively large window of time if probes were sent at a rate proportional to PMU measurement rates
 (e.g., over $30$ seconds is required to send $2000$ probes at a rate of $60$ msgs/sec).   
 \pcnt provides faster and more accurate loss estimates of individual links than these approaches based on end-to-end measurements 
-because \pcnt directly measures actual traffic \emph{inside} the network.
+since it directly measures actual traffic \emph{inside} the network.
 
 
 %Because the time delay between when the loss occurs and when it is detected needs to be small 
 
 Friedl et al. \cite{Friedl09} propose a \emph{passive} measurement algorithm that directly measures actual network traffic to determine application-level packet loss rates. 
-Unfortunately, their approach can only measure packet loss after a flow is expired.  This makes their algorithm unsuitable for our purposes because
-PMU application flows are long lasting (running continuously for days, weeks, and even years).  \pcnt has no restriction that packet loss can only be measured over expired flows.
+Unfortunately, their approach can only measure packet loss after a flow is expired.  
+Since PMU application flows are long lasting (running continuously for days, weeks, and even years), this makes their algorithm unsuitable for our purposes.
+\pcnt has no such restriction that packet loss can only be measured over expired flows.
 %For this reason we propose a new algorithm that provides in-network packet loss detection for long running active flows (Section \ref{subsec:detection}).
 
 %C\`{a}ceres et al. \cite{Caceres99} report impressive accuracy results 
@@ -73,7 +74,7 @@ PMU application flows are long lasting (running continuously for days, weeks, an
 %potentially skew measurements -- especially since accurate packet loss estimates require a high sampling probing rate -- leading to inaccurate results \cite{Barford04}. 
 
 
-A standard Internet-based approach to passive monitoring of packet loss is to query the native Management Information Base (MIB) counters stored at each router using Simple Network
+A standard Internet-based approach to passive monitoring of packet loss is to query the native Management Information Base (MIB) counters stored at each router using the Simple Network
 Management Protocol (SNMP) \cite{Barford04}. This approach is well-suited for course-grained packet loss measurements but not for the fine-grained packet loss detection required
 by critical PMU applications.  Specifically, this approach cannot provide synchronized reads of packet counts across routers/switches, resulting inaccuracies too large for the applications
 we target.
@@ -111,7 +112,7 @@ MPLS is commonly used to extend IP routing with traffic engineering capabilities
 MPLS pre-computes backup paths for link and router (node) failures and stores these paths at the node immediately upstream from the failed component. 
 This allows for fast, localized recovery: the node detecting a link or node failure immediately reroutes packets along its pre-computed backup path.  
 Unfortunately, MPLS cannot be directly applied to our multicast problem scenario because MPLS addresses unicast communication (a backup unicast path applied to a multicast tree may not
-not result in a valid tree).
+result in a valid tree).
 However, \pre is in-part inspired by MPLS fast reroute's approach of storing pre-computed backup paths inside the network.
 %Unfortunately, MPLS only addresses unicast IP and therefore if MPLS-based backup paths were to applied to multicast, a valid mulicast tree may not result. 
 
@@ -124,7 +125,7 @@ However, \pre is in-part inspired by MPLS fast reroute's approach of storing pre
 Past approaches use local/myopic optimization criteria (i.e., constraints specified over a \emph{single} multicast tree),
 while we consider global (network-wide) criteria (i.e., constraints specified across \emph{multiple} multicast trees).  
 \footnote{Li et al. \cite{Li06} is an exception; they compute backup paths that aim to minimize the total bandwidth reserved by all backup paths.}
-In addition, none of these approaches seek to reuse already installed forwarding rules or minimize control signaling as \mc does.
+In addition, none of these approaches seek to reuse already installed forwarding rules or minimize control signaling, as \mc does.
 Instead, backup paths or trees are computed with one of the following objective functions: maximize node (link) disjointedness with the primary 
 path \cite{Cui04,Fei01,Luebben09,Medard99}, minimize bandwidth used \cite{Wu97}, minimize backup bandwidth reservations \cite{Kodialam02,Lau05,Li06}, minimize the number of group
 members that become disconnected after a link failure \cite{Pointurier02}, or minimize path length \cite{Tian05}.
@@ -141,9 +142,9 @@ typically have a large number of short-lived multicast groups and dynamic group 
 
 Our algorithms for installing backup trees avoid the scalability issues addressed by prior work \cite{Cui04,Fei01,Medard99}.  SDN allows backup trees to be pre-computed offline and stored (in the
 case of \posts) at the controller, thus introducing no extra forwarding state at the switches.  In the case of \pres, where backup trees are pre-installed in the network, managing
-extra forwarding state is tractable because the smart grid operating environment is very different from the Internet-based applications discussed in the literature.  
-Specifically, the smart grid is many orders of magnitude smaller that the Internet and smart grid multicast group membership is mostly static \cite{Bakken11}
-(a utility company subscribing to a PMU data stream are likely to always want to receive updates from this PMU).  As a result, the volume of pre-installed state is manageable and 
+extra forwarding state is tractable because  
+the smart grid is many orders of magnitude smaller than the Internet and smart grid multicast group membership is mostly static \cite{Bakken11}
+(for example, a utility company subscribing to a PMU data stream are likely to always want to receive updates from this PMU).  As a result, the volume of pre-installed state is manageable and 
 requires infrequent updates.
 
 In the context of OpenFlow, Kotani et al. \cite{Kotani12} propose an approach for fast switching between IP multicast trees, where 

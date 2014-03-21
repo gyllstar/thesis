@@ -54,6 +54,12 @@ Charikar, M., Chekuri, C., Cheung, T., Dai, Z., Goel, A., Guha, S., and Li, M.
   Discrete algorithms\/} (1998), Society for Industrial and Applied
   Mathematics, pp.~192--200.
 
+\bibitem{Clark88}
+Clark, D.
+\newblock The design philosophy of the {D}{A}{R}{P}{A} internet protocols.
+\newblock {\em ACM SIGCOMM Computer Communication Review 18}, 4 (1988),
+  106--114.
+
 \bibitem{Cui04}
 Cui, J.H., Faloutsos, M., and Gerla, M.
 \newblock An architecture for scalable, efficient, and fast fault-tolerant
@@ -96,6 +102,13 @@ Gyllstrom, D., Rosensweig, E., and Kurose, J.
 Hopkinson, K., Roberts, G., Wang, X., and Thorp, J.
 \newblock Quality-of-service considerations in utility communication networks.
 \newblock {\em Power Delivery, IEEE Transactions on 24}, 3 (2009), 1465--1474.
+
+\bibitem{Ji03}
+Ji, P., Ge, Z., Kurose, J., and Towsley, D.
+\newblock A comparison of hard-state and soft-state signaling protocols.
+\newblock In {\em Proceedings of the 2003 conference on Applications,
+  technologies, architectures, and protocols for computer communications\/}
+  (2003), ACM, pp.~251--262.
 
 \bibitem{Johnson07}
 Johnson, Anthony, Tucker, Robert, Tran, Thuan, Paserba, John, Sullivan, Dan,

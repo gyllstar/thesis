@@ -92,13 +92,28 @@ We conjectured that this problem is NP-hard in Section \ref{subsubsec:merge-disc
 
 % what problems can OF programmed network solve that cannot in standard system.  no longer constrained by what protocols vendors choose to implement, 
 This thesis provided some encouraging initial results of how SDN (and specifically OpenFlow) can simplify fault detection and recovery but we did so under somewhat favorable conditions.  For example,
-in Chapter \ref{ch:reliable-mcast} we assumed that any non-OpenFlow switches or routers had no influence on our recovery algorithms (this is the same as assuming 
+in Chapter \ref{ch:reliable-mcast} we assumed that any non-OpenFlow switches or routers had no influence on our recovery algorithms (this is equivalent to assuming 
 that all network switches support OpenFlow). 
-In practice, it is likely that OpenFlow switches must coexist with existing network infrastructure (e.g., IP routers and switches), which will likely complicate matters.  One potential
+In practice, it is likely that OpenFlow switches will coexist with existing network infrastructure (e.g., IP routers and switches), which will likely complicate matters.  One potential
 issue is that many backbone IP routers use MPLS to reroute flows in response to link failures.  This would result in new paths between OpenFlow switches. 
 %, using non-OpenFlow switches, between OpenFlow switches. 
-In these cases, it is unclear if OpenFlow switches and the control plane needs to be aware of these path changes. %  in what cases these changes can be ignored. 
+In these cases, it is unclear if OpenFlow switches and the control plane need to be aware of these path changes. %  in what cases these changes can be ignored. 
 Also what is the best way for the OpenFlow controller to monitor the state of non-OpenFlow switches and routers? 
 Would it be sufficient to passively monitor control messages sent among IP routers?  If so, how much control state needs to be tracked and what is the cost of doing so? 
 %These are just a few of the open questions regarding how OpenFlow-based fault recovery algorithms can effectively coexist with similar distributed algorithms 
 %built into operational IP routers and switches. 
+
+Our hope is that the preliminary results in Chapter \ref{ch:reliable-mcast} will encourage other researchers to develop OpenFlow-based solutions for smart grid communication.  One promising
+topic, not addressed in this thesis, is traffic engineering, which figures to play an important role in smart grid data dissemination. 
+We believe OpenFlow's capabilities to directly control traffic flows makes OpenFlow well-suited to designing simple and effective traffic engineering solutions for the smart grid.
+
+More broadly, we believe OpenFlow and software-defined networking (SDN) in general is the ``right'' approach to designing a smart grid communication network.  In particular, we feel a smart grid
+network should be open: practitioners and researchers should have access to operational switches and routers.  It is difficult to predict how well proposed algorithms will work in a live smart
+grid network, especially considering some of the challenging QoS requirements of smart grid applications (highlighted in Chapter \ref{subsec:pmu-requirements}).  Even more challenging is anticipating
+all the new applications and future uses of a smart grid network. SDN and OpenFlow allow the network and its algorithms to evolve as these new requirements and network applications emerge.  Through the 
+growth of the Internet, we have learned the high cost of trying to retrofit a closed system to meet unforeseen requirements and demands.  Building a smart grid communication network using SDN
+will position the network to help avoid repeating this critical flaw in the Internet design. As former president George W. Bush said, 
+\begin{quote}
+``There's an old saying in Tennessee —- I know it's in Texas, probably in Tennessee —- that says, `fool me once, shame on ... shame on you. Fool me ... you can't get fooled again!' ''
+ \footnote{\url{http://content.time.com/time/specials/packages/article/0,28804,1870938_1870943_1870944,00.html}}
+\end{quote}

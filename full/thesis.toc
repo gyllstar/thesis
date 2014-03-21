@@ -58,23 +58,23 @@
 \contentsline {section}{\numberline {4.1}Thesis Summary}{84}{section.4.1}
 \contentsline {section}{\numberline {4.2}Future Work}{86}{section.4.2}
 \setcounter {tocdepth}{0}
-\contentsline {Appendix}{\numberline {A.}\MakeTextUppercase {Pseudo-Code and Analysis of Distance Vector Recovery Algorithms}}{89}{appendix.A}
-\contentsline {section}{\numberline {A.1}Recovery Algorithm Pseudo-Code}{89}{section.A.1}
-\contentsline {section}{\numberline {A.2}Correctness of Recovery Algorithms}{92}{section.A.2}
-\contentsline {section}{\numberline {A.3}Analysis of Recovery Algorithms}{95}{section.A.3}
-\contentsline {subsection}{\numberline {A.3.1}Properties of Recovery Algorithms}{96}{subsection.A.3.1}
-\contentsline {subsection}{\numberline {A.3.2}Communication Complexity}{98}{subsection.A.3.2}
-\contentsline {subsubsection}{\numberline {A.3.2.1}Diffusing Computation Analysis}{98}{subsubsection.A.3.2.1}
-\contentsline {subsubsection}{\numberline {A.3.2.2}\textsc {2nd-Best} Analysis}{99}{subsubsection.A.3.2.2}
-\contentsline {subsubsection}{\numberline {A.3.2.3}\textsc {CPR} Analysis}{102}{subsubsection.A.3.2.3}
-\contentsline {subsubsection}{\numberline {A.3.2.4}{\textsc {Purge} }Analysis}{103}{subsubsection.A.3.2.4}
-\contentsline {subsubsection}{\numberline {A.3.2.5}Analysis that Considers Graphs with Link Weight Changes}{107}{subsubsection.A.3.2.5}
-\contentsline {subsubsection}{\numberline {A.3.2.6}Discussion}{108}{subsubsection.A.3.2.6}
-\contentsline {Appendix}{\numberline {B.}\MakeTextUppercase {Additional PMU Placement Problem Proofs}}{109}{appendix.B}
-\contentsline {section}{\numberline {B.1}NP-Completeness Proofs for PMU Placement in Zero-Injection Graphs}{109}{section.B.1}
-\contentsline {subsection}{\numberline {B.1.1}{\textsc {MaxObserve} }Problem for Zero-Injection Graphs}{110}{subsection.B.1.1}
-\contentsline {subsection}{\numberline {B.1.2}{\textsc {FullObserve-XV} }Problem for Zero-Injection Graphs}{113}{subsection.B.1.2}
-\contentsline {subsection}{\numberline {B.1.3}{\textsc {MaxObserve-XV} }Problem for Zero-Injection Graphs}{116}{subsection.B.1.3}
-\contentsline {subsection}{\numberline {B.1.4}Extending Gadgets to Cover a Range of $m$ and $|V|$ values}{118}{subsection.B.1.4}
-\contentsline {section}{\numberline {B.2}Approximation Algorithm Complexity Proofs}{120}{section.B.2}
-\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{125}{appendix*.6}
+\contentsline {Appendix}{\numberline {A.}\MakeTextUppercase {Pseudo-Code and Analysis of Distance Vector Recovery Algorithms}}{90}{appendix.A}
+\contentsline {section}{\numberline {A.1}Recovery Algorithm Pseudo-Code}{90}{section.A.1}
+\contentsline {section}{\numberline {A.2}Correctness of Recovery Algorithms}{93}{section.A.2}
+\contentsline {section}{\numberline {A.3}Analysis of Recovery Algorithms}{96}{section.A.3}
+\contentsline {subsection}{\numberline {A.3.1}Properties of Recovery Algorithms}{97}{subsection.A.3.1}
+\contentsline {subsection}{\numberline {A.3.2}Communication Complexity}{99}{subsection.A.3.2}
+\contentsline {subsubsection}{\numberline {A.3.2.1}Diffusing Computation Analysis}{99}{subsubsection.A.3.2.1}
+\contentsline {subsubsection}{\numberline {A.3.2.2}\textsc {2nd-Best} Analysis}{100}{subsubsection.A.3.2.2}
+\contentsline {subsubsection}{\numberline {A.3.2.3}\textsc {CPR} Analysis}{103}{subsubsection.A.3.2.3}
+\contentsline {subsubsection}{\numberline {A.3.2.4}{\textsc {Purge} }Analysis}{104}{subsubsection.A.3.2.4}
+\contentsline {subsubsection}{\numberline {A.3.2.5}Analysis that Considers Graphs with Link Weight Changes}{108}{subsubsection.A.3.2.5}
+\contentsline {subsubsection}{\numberline {A.3.2.6}Discussion}{109}{subsubsection.A.3.2.6}
+\contentsline {Appendix}{\numberline {B.}\MakeTextUppercase {Additional PMU Placement Problem Proofs}}{110}{appendix.B}
+\contentsline {section}{\numberline {B.1}NP-Completeness Proofs for PMU Placement in Zero-Injection Graphs}{110}{section.B.1}
+\contentsline {subsection}{\numberline {B.1.1}{\textsc {MaxObserve} }Problem for Zero-Injection Graphs}{111}{subsection.B.1.1}
+\contentsline {subsection}{\numberline {B.1.2}{\textsc {FullObserve-XV} }Problem for Zero-Injection Graphs}{114}{subsection.B.1.2}
+\contentsline {subsection}{\numberline {B.1.3}{\textsc {MaxObserve-XV} }Problem for Zero-Injection Graphs}{117}{subsection.B.1.3}
+\contentsline {subsection}{\numberline {B.1.4}Extending Gadgets to Cover a Range of $m$ and $|V|$ values}{119}{subsection.B.1.4}
+\contentsline {section}{\numberline {B.2}Approximation Algorithm Complexity Proofs}{121}{section.B.2}
+\contentsline {BackMatter}{\MakeTextUppercase {Bibliography}}{126}{appendix*.6}
